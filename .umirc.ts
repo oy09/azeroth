@@ -8,6 +8,10 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
+  antd: {},
+  sass: {
+    implementation: require('node-sass'),
+  },
   favicon: './favicon.png',
   title: process.env.APP_TITLE,
   ignoreMomentLocale: true,
