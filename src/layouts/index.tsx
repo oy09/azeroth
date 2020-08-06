@@ -1,14 +1,10 @@
 import React from 'react';
+import BasicLayout from './BasicLayout';
 
 export interface LayoutProps {}
 
 const Layout: React.FC<LayoutProps> = props => {
-  return (
-    <div>
-      <div>title</div>
-      <div>{props.children}</div>
-    </div>
-  );
+  return <BasicLayout>{props.children}</BasicLayout>;
 };
 
 export default Layout;
