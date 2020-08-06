@@ -1,5 +1,9 @@
 @charset "utf-8";
+@import '~@/styles/variable.scss';
 
-.BasicLayout {
-  //
+.#{$prefix}-basicLayout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
 }

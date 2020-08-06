@@ -3,11 +3,13 @@ import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
 import { Layout } from 'antd';
 import RouteContext from '@/utils/RouteContext';
+import AppMain from './AppMain';
 
 export interface BasicLayoutProps {
   prefixCls?: string;
   className?: string;
   style?: CSSProperties;
+  contentStyle?: CSSProperties;
   logo?: React.ReactNode;
   collapsed?: boolean;
   siderWidth?: number;
@@ -26,13 +28,17 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     isMobile,
     collapsed,
     siderWidth,
-    fixSiderbar,
+    contentStyle,
+    ...rest
   } = props;
 
   const basicClassName = `${prefixCls}-basicLayout`;
   const className = classnames(props.className, basicClassName, {
-    [`${basicClassName}-fix-siderbar`]: fixSiderbar,
     [`${basicClassName}-mobile`]: isMobile,
+  });
+
+  const contextClassName = classnames(`${basicClassName}-content`, {
+    //
   });
 
   return (
@@ -44,20 +50,28 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         siderWidth,
       }}
     >
-      <Layout
-        style={{
-          minHeight: '100%',
-          ...style,
-        }}
-        hasSider
-      >
-        <div>siderMenuDom</div>
-        <Layout>
-          <div>headerMenuDom</div>
-          <div>{props.children}</div>
-          <div>footerDom</div>
+      <div className={className}>
+        <Layout
+          style={{
+            minHeight: '100%',
+            ...style,
+          }}
+          hasSider
+        >
+          <div>siderMenuDom</div>
+          <Layout>
+            <div>headerMenuDom</div>
+            <AppMain
+              {...rest}
+              className={contextClassName}
+              style={contentStyle}
+            >
+              {props.children}
+            </AppMain>
+            <div>footerDom</div>
+          </Layout>
         </Layout>
-      </Layout>
+      </div>
     </RouteContext.Provider>
   );
 };
