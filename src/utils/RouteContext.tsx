@@ -7,6 +7,7 @@ export interface RouteContextType {
   collapsed?: boolean;
   siderWidth?: number;
   prefixCls?: string;
+  title?: string;
 }
 
 const routeContext: React.Context<RouteContextType> = createContext({});
