@@ -1,5 +1,5 @@
 import './BasicLayout.scss';
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import classnames from 'classnames';
 import { Layout } from 'antd';
 import { omit } from 'lodash';
@@ -35,12 +35,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     style,
     prefixCls,
     isMobile,
-    collapsed,
+    // collapsed,
     siderWidth,
     contentStyle,
-    onCollapse,
+    // onCollapse,
     ...rest
   } = props;
+
+  const [collapsed, onCollapse] = useState(props.collapsed);
 
   const menuData = [] as MenuDataItem[];
 
