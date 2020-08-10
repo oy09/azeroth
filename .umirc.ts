@@ -27,8 +27,8 @@ export default defineConfig({
   links: [],
   styles: [],
   analyze: {
+    analyzerMode: 'server',
     analyzerPort: 9999,
-    analyzerHost: '0.0.0.0',
     openAnalyzer: true,
     generateStatsFile: false,
     logLevel: 'info',
