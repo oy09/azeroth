@@ -20,6 +20,7 @@
     ]
   },
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
     "@ant-design/pro-layout": "^5.0.12",
     "@types/lodash": "^4.14.159",
     "@umijs/plugin-sass": "^1.1.1",
