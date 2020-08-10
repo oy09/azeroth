@@ -17,7 +17,7 @@ export type BasicLayoutProps = SiderbarProps & {
   logo?: React.ReactNode;
   collapsed?: boolean;
   siderWidth?: number;
-  onCollapse?: WithFalse<(collapsed?: boolean) => void>;
+  onCollapse?: (collapsed: boolean) => void;
   footerRender?: WithFalse<
     (props: any, defaultDom: React.ReactNode) => React.ReactNode
   >;
