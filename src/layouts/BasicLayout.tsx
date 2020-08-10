@@ -2,10 +2,14 @@ import './BasicLayout.scss';
 import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
 import { Layout } from 'antd';
+import { omit } from 'lodash';
+import { WithFalse, MenuDataItem } from '@/typing';
 import RouteContext from '@/utils/RouteContext';
 import AppMain from './AppMain';
+import Siderbar, { SiderbarProps } from './Siderbar';
+import defaultSetting from './defaultSettings';
 
-export interface BasicLayoutProps {
+export type BasicLayoutProps = SiderbarProps & {
   prefixCls?: string;
   className?: string;
   style?: CSSProperties;
@@ -13,13 +17,18 @@ export interface BasicLayoutProps {
   logo?: React.ReactNode;
   collapsed?: boolean;
   siderWidth?: number;
-  onCollapse?: any;
-  menuItemRender?: any;
-  footerRender?: any;
-  menuDataRender?: any;
-  fixSiderbar?: boolean;
+  onCollapse?: WithFalse<(collapsed?: boolean) => void>;
+  footerRender?: WithFalse<
+    (props: any, defaultDom: React.ReactNode) => React.ReactNode
+  >;
+  menuDataRender?: (data: MenuDataItem[]) => MenuDataItem[];
   isMobile?: boolean;
-}
+  fixSiderbar?: boolean;
+};
+
+const renderSiderbar = (props: BasicLayoutProps): React.ReactNode => {
+  return <Siderbar {...props} />;
+};
 
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const {
@@ -29,8 +38,27 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     collapsed,
     siderWidth,
     contentStyle,
+    onCollapse,
     ...rest
   } = props;
+
+  const menuData = [] as MenuDataItem[];
+
+  const defaultProps = omit(
+    {
+      ...props,
+    },
+    ['className', 'style'],
+  );
+
+  const siderbarDom = renderSiderbar({
+    ...defaultProps,
+    menuData,
+    isMobile,
+    collapsed,
+    onCollapse,
+    theme: 'dark',
+  });
 
   const basicClassName = `${prefixCls}-basicLayout`;
   const className = classnames(props.className, basicClassName, {
@@ -48,6 +76,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         isMobile,
         collapsed,
         siderWidth,
+        menuData,
       }}
     >
       <div className={className}>
@@ -58,7 +87,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           }}
           hasSider
         >
-          <div>siderMenuDom</div>
+          {siderbarDom}
           <Layout>
             <div>headerMenuDom</div>
             <AppMain
@@ -77,9 +106,10 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
 };
 
 BasicLayout.defaultProps = {
+  ...defaultSetting,
+  logo: './favicon.png',
   prefixCls: 'az',
   siderWidth: 208,
-  fixSiderbar: true,
 };
 
 export default BasicLayout;

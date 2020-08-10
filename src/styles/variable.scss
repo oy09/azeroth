@@ -1,7 +1,9 @@
 @charset "utf-8";
 
 $prefix: 'az';
+$layout-sider-background: #001529;
 
 :export {
   prefix: $prefix;
+  layout-sider-background: $layout-sider-background;
 }
