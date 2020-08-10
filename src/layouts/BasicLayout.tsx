@@ -5,6 +5,7 @@ import { Layout } from 'antd';
 import { omit } from 'lodash';
 import { WithFalse, MenuDataItem } from '@/typing';
 import RouteContext from '@/utils/RouteContext';
+import useMergedState from '@/utils/hooks/useMergedState';
 import AppMain from './AppMain';
 import Siderbar, { SiderbarProps } from './Siderbar';
 import defaultSetting from './defaultSettings';
@@ -38,11 +39,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     // collapsed,
     siderWidth,
     contentStyle,
-    // onCollapse,
+    onCollapse: propsOnCollapse,
     ...rest
   } = props;
 
-  const [collapsed, onCollapse] = useState(props.collapsed);
+  const [collapsed, onCollapse] = useMergedState<boolean>(false, {
+    value: props.collapsed,
+    onChange: propsOnCollapse,
+  });
 
   const menuData = [] as MenuDataItem[];
 
