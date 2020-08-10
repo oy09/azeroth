@@ -6,6 +6,7 @@ import { Layout } from 'antd';
 import { WithFalse, MenuDataItem } from '@/typing';
 import { MenuTheme } from 'antd/es/menu/MenuContext';
 import { Menu } from 'antd';
+import MenuList from './MenuList';
 
 export interface SiderbarProps {
   className?: string;
@@ -14,6 +15,9 @@ export interface SiderbarProps {
   siderWidth?: number;
   menuHeaderRender?: WithFalse<
     (props: SiderbarProps, defaultDom: React.ReactNode) => React.ReactNode
+  >;
+  menuContentRender?: WithFalse<
+    (props: any, defaultDom: React.ReactNode) => React.ReactNode
   >;
   menuExtraRender?: WithFalse<(props: SiderbarProps) => React.ReactNode>;
   collapsedButtonRender?: WithFalse<(collapsed?: boolean) => React.ReactNode>;
@@ -69,21 +73,33 @@ const Siderbar: React.FC<SiderbarProps> = props => {
     prefixCls = 'az',
     siderWidth,
     onCollapse,
+    onOpenChange,
     onMenuHeaderClick,
     collapsedButtonRender = defaultRenderCollapsedButton,
+    menuContentRender,
     menuExtraRender,
   } = props;
   console.log('props:', props);
-
-  const headerDom = defaultRenderLogoAndTitle(props);
-  const extraDom = menuExtraRender && menuExtraRender(props);
-  const menuListDom = null; // 创建MenuList组件
 
   const baseClassName = `${prefixCls}-sidebar`;
   const sidebarClassName = classnames(`${baseClassName}`, {
     [`${baseClassName}-fixed`]: fixSiderbar,
     [`${baseClassName}-light`]: theme === 'light',
   });
+
+  const headerDom = defaultRenderLogoAndTitle(props);
+  const extraDom = menuExtraRender && menuExtraRender(props);
+  const menuListDom = menuContentRender !== false && (
+    <MenuList
+      {...props}
+      style={{
+        width: '100%',
+      }}
+      mode="inline"
+      handleOpenChange={onOpenChange}
+      className={`${baseClassName}-menu`}
+    />
+  ); // 创建MenuList组件
 
   return (
     <>
