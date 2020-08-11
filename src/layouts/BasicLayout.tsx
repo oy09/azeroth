@@ -1,31 +1,33 @@
 import './BasicLayout.scss';
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
 import { Layout } from 'antd';
 import { omit } from 'lodash';
-import { WithFalse, MenuDataItem } from '@/typing';
+import { WithFalse, MenuDataItem, RouterTypes, Route } from '@/typing';
 import RouteContext from '@/utils/RouteContext';
 import useMergedState from '@/utils/hooks/useMergedState';
+import getMenuData from '@/utils/getMenuData';
 import AppMain from './AppMain';
 import Siderbar, { SiderbarProps } from './Siderbar';
 import defaultSetting from './defaultSettings';
 
-export type BasicLayoutProps = SiderbarProps & {
-  prefixCls?: string;
-  className?: string;
-  style?: CSSProperties;
-  contentStyle?: CSSProperties;
-  logo?: React.ReactNode;
-  collapsed?: boolean;
-  siderWidth?: number;
-  onCollapse?: (collapsed: boolean) => void;
-  footerRender?: WithFalse<
-    (props: any, defaultDom: React.ReactNode) => React.ReactNode
-  >;
-  menuDataRender?: (data: MenuDataItem[]) => MenuDataItem[];
-  isMobile?: boolean;
-  fixSiderbar?: boolean;
-};
+export type BasicLayoutProps = Partial<RouterTypes<Route>> &
+  SiderbarProps & {
+    prefixCls?: string;
+    className?: string;
+    style?: CSSProperties;
+    contentStyle?: CSSProperties;
+    logo?: React.ReactNode;
+    collapsed?: boolean;
+    siderWidth?: number;
+    onCollapse?: (collapsed: boolean) => void;
+    footerRender?: WithFalse<
+      (props: any, defaultDom: React.ReactNode) => React.ReactNode
+    >;
+    menuDataRender?: (data: MenuDataItem[]) => MenuDataItem[];
+    isMobile?: boolean;
+    fixSiderbar?: boolean;
+  };
 
 const renderSiderbar = (props: BasicLayoutProps): React.ReactNode => {
   return <Siderbar {...props} />;
@@ -37,18 +39,25 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     prefixCls,
     isMobile,
     // collapsed,
+    route = {
+      routes: [],
+    },
     siderWidth,
     contentStyle,
     onCollapse: propsOnCollapse,
     ...rest
   } = props;
+  const { routes = [] } = route;
+  console.log('basicLayout.route:', props);
 
   const [collapsed, onCollapse] = useMergedState<boolean>(false, {
     value: props.collapsed,
     onChange: propsOnCollapse,
   });
-
-  const menuData = [] as MenuDataItem[];
+  const [menuInfoData] = useMergedState<{ menuData?: MenuDataItem[] }>(() =>
+    getMenuData(routes),
+  );
+  const { menuData } = menuInfoData;
 
   const defaultProps = omit(
     {

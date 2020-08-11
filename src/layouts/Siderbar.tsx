@@ -79,7 +79,6 @@ const Siderbar: React.FC<SiderbarProps> = props => {
     menuContentRender,
     menuExtraRender,
   } = props;
-  console.log('props:', props);
 
   const baseClassName = `${prefixCls}-sidebar`;
   const sidebarClassName = classnames(`${baseClassName}`, {

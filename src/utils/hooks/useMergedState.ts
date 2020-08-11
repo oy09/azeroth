@@ -12,7 +12,6 @@ export default function useMergedState<T, R = T>(
 ): [R, (value: T) => void] {
   const { defaultValue, value, onChange } = option || {};
   const [innerValue, setInnerValue] = React.useState<T>(() => {
-    console.log('lazy useState');
     if (value !== undefined) {
       return value;
     }
