@@ -3,7 +3,7 @@ import { IRoute } from 'umi';
 const routes: IRoute[] = [
   {
     path: '/',
-    component: '@/layouts',
+    component: '@/layouts/AuthorizeLayout',
     roles: ['admin', 'guest'],
     routes: [
       {
@@ -28,8 +28,12 @@ const routes: IRoute[] = [
   },
   {
     path: '/user',
-    component: '@/layouts',
+    component: '@/layouts/UserLayout',
     routes: [
+      {
+        path: '/user',
+        redirect: '/user/login',
+      },
       {
         path: 'login',
         title: '登录',
@@ -37,6 +41,14 @@ const routes: IRoute[] = [
         component: '@/pages/test1',
       },
     ],
+  },
+  {
+    path: '/404',
+    component: '@/pages/404',
+  },
+  {
+    path: '*',
+    redirect: '/404',
   },
 ];
 

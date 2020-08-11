@@ -47,8 +47,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     onCollapse: propsOnCollapse,
     ...rest
   } = props;
+  console.log('basicLayout props:', props);
   const { routes = [] } = route;
-  console.log('basicLayout.route:', props);
 
   const [collapsed, onCollapse] = useMergedState<boolean>(false, {
     value: props.collapsed,
