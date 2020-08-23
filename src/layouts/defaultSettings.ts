@@ -2,7 +2,7 @@ import { MenuTheme } from 'antd/es/menu/MenuContext';
 
 export interface PureSettings {
   navTheme: MenuTheme | 'realDark' | undefined;
-  headerHiehgt?: number;
+  headerHeight?: number;
   fixSiderbar: boolean;
   title: string;
   primaryColor?: string;

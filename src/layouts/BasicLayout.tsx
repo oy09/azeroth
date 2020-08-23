@@ -10,13 +10,15 @@ import getMenuData from '@/utils/getMenuData';
 import getMatchMenu from '@/utils/getMatchMenu';
 import AppMain from './AppMain';
 import Siderbar, { SiderbarProps } from './Siderbar';
+import Header, { HeaderProps } from './Header';
 import defaultSetting from './defaultSettings';
 import useDocumentTitle, {
   Info as TitleInfo,
 } from '@/utils/hooks/useDocumentTitle';
 
 export type BasicLayoutProps = Partial<RouterTypes<Route>> &
-  SiderbarProps & {
+  SiderbarProps &
+  HeaderProps & {
     prefixCls?: string;
     className?: string;
     style?: CSSProperties;
@@ -28,6 +30,9 @@ export type BasicLayoutProps = Partial<RouterTypes<Route>> &
     footerRender?: WithFalse<
       (props: any, defaultDom: React.ReactNode) => React.ReactNode
     >;
+    headerRender?: WithFalse<
+      (props: any, defautDom: React.ReactNode) => React.ReactNode
+    >;
     menuDataRender?: (data: MenuDataItem[]) => MenuDataItem[];
     isMobile?: boolean;
     fixSiderbar?: boolean;
@@ -35,6 +40,21 @@ export type BasicLayoutProps = Partial<RouterTypes<Route>> &
 
 const renderSiderbar = (props: BasicLayoutProps): React.ReactNode => {
   return <Siderbar {...props} />;
+};
+
+const renderHeader = (props: BasicLayoutProps): React.ReactNode => {
+  if (props.headerRender === false) {
+    return null;
+  }
+  return <Header {...props} />;
+};
+
+const renderFooter = (props: BasicLayoutProps): React.ReactNode => {
+  const { footerRender } = props;
+  if (footerRender === false) {
+    return null;
+  }
+  return <div>footer</div>;
 };
 
 const renderDeafultTitle = (
@@ -98,6 +118,22 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     theme: 'dark',
   });
 
+  const headerDom = renderHeader({
+    ...defaultProps,
+    menuData,
+    isMobile,
+    collapsed,
+    onCollapse,
+    theme: 'dark',
+    headerHeight: 48,
+  });
+
+  const footerDom = renderFooter({
+    ...defaultProps,
+    isMobile,
+    collapsed,
+  });
+
   const basicClassName = `${prefixCls}-basicLayout`;
   const className = classnames(props.className, basicClassName, {
     [`${basicClassName}-mobile`]: isMobile,
@@ -127,7 +163,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         >
           {siderbarDom}
           <Layout>
-            <div>headerMenuDom</div>
+            {headerDom}
             <AppMain
               {...rest}
               className={contextClassName}
@@ -135,7 +171,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
             >
               {props.children}
             </AppMain>
-            <div>footerDom</div>
+            {footerDom}
           </Layout>
         </Layout>
       </div>
