@@ -30,11 +30,9 @@ const defaultFilterMenuData = (data: MenuDataItem[] = []): MenuDataItem[] => {
 };
 
 const getMenuData = (routes: Route[] = []) => {
-  console.log('getMenuData.routes:', routes);
-  const menuData = defaultFilterMenuData(routes);
-
+  const data = defaultFilterMenuData(routes);
   return {
-    menuData,
+    menuData: data,
   };
 };
 
