@@ -34,7 +34,7 @@ const routes: IRoute[] = [
         path: 'home',
         title: '首页',
         name: 'home',
-        icon: 'smile',
+        icon: 'dashboard',
         component: '@/pages/test1',
       },
       {

@@ -112,7 +112,6 @@ class MenuUtil {
   }
 
   getMenuItemPath(data: MenuDataItem, isChildren: boolean) {
-    // TODO 1. icon 2.href 3.name 4. customItem
     const { path, target } = data;
     const itemPath = path || '/';
     const name = this.getInitName(data);
