@@ -6,6 +6,7 @@ export interface PureSettings {
   fixSiderbar: boolean;
   title: string;
   primaryColor?: string;
+  iconfontUrl?: string;
 }
 
 export type LayoutSetting = PureSettings;

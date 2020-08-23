@@ -1,9 +1,11 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useState, useRef } from 'react';
 import { Menu } from 'antd';
+import Icon, { createFromIconfontCN } from '@ant-design/icons';
 import { MenuProps, MenuMode } from 'antd/es/menu';
 import { MenuTheme } from 'antd/es/menu/MenuContext';
 import { WithFalse, MenuDataItem } from '@/typing';
-import Item from 'antd/lib/list/Item';
+import { isImg, isUrl } from '@/utils/typeUtils';
+import defaultSetting from './defaultSettings';
 
 export interface MenuListProps {
   className?: string;
@@ -16,13 +18,17 @@ export interface MenuListProps {
   theme?: MenuTheme;
   mode?: MenuMode;
   menuData?: MenuDataItem[];
+  postMenuData?: (menuData?: MenuDataItem[]) => MenuDataItem[];
   isMobile?: boolean;
 }
 
+let IconFont = createFromIconfontCN({
+  scriptUrl: defaultSetting.iconfontUrl,
+});
+
 const MenuList: React.FC<MenuListProps> = props => {
-  const { mode, style, theme, className, menuProps } = props;
-  const utils = new MenuUtil(props);
-  console.log('menuData:', props.menuData);
+  const { mode, style, theme, className, menuProps, menuData } = props;
+  const [menuUtils] = useState(() => new MenuUtil(props));
 
   return (
     <Menu
@@ -36,12 +42,32 @@ const MenuList: React.FC<MenuListProps> = props => {
       defaultOpenKeys={[]}
       {...menuProps}
     >
-      {utils.getNavMenu(props.menuData, false)}
+      {menuUtils.getNavMenu(menuData, false)}
     </Menu>
   );
 };
 
 export default MenuList;
+
+/**
+ * 创建图标
+ */
+const getIcon = (icon: string | React.ReactNode): React.ReactNode => {
+  if (typeof icon === 'string' && icon !== '') {
+    if (isUrl(icon) || isImg(icon)) {
+      return (
+        <Icon
+          component={() => (
+            <img src={icon} alt="icon" className="az-siderbar-menu-icon" />
+          )}
+        />
+      );
+    } else if (icon.startsWith('icon-')) {
+      return <IconFont type={icon} />;
+    }
+  }
+  return icon;
+};
 
 class MenuUtil {
   props: MenuListProps;
@@ -83,7 +109,29 @@ class MenuUtil {
   }
 
   getMenuItemPath(data: MenuDataItem, isChildren: boolean) {
-    return data.name;
+    // TODO 1. icon 2.href 3.name 4. customItem
+    const { path, target } = data;
+    const itemPath = path || '/';
+    const name = this.getInitName(data);
+    const icon = isChildren ? null : getIcon(data.icon);
+    let defaultItem = (
+      <>
+        {icon}
+        <span className="oz-menu-item-title">{name}</span>
+      </>
+    );
+    const isHttpUrl = isUrl(itemPath);
+
+    if (isHttpUrl) {
+      defaultItem = (
+        <a href={itemPath} target={target}>
+          {icon}
+          <span>{name}</span>
+        </a>
+      );
+    }
+
+    return defaultItem;
   }
 
   getInitName(data: MenuDataItem) {

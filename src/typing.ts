@@ -15,6 +15,7 @@ export interface MenuDataItem {
   hidden?: boolean;
   children?: MenuDataItem[];
   roles?: string[] | string;
+  target?: string;
   [key: string]: any;
 }
 
