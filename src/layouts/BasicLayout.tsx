@@ -11,6 +11,7 @@ import getMatchMenu from '@/utils/getMatchMenu';
 import AppMain from './AppMain';
 import Siderbar, { SiderbarProps } from './Siderbar';
 import Header, { HeaderProps } from './Header';
+import Footer, { FooterProps } from './Footer';
 import defaultSetting from './defaultSettings';
 import useDocumentTitle, {
   Info as TitleInfo,
@@ -18,7 +19,8 @@ import useDocumentTitle, {
 
 export type BasicLayoutProps = Partial<RouterTypes<Route>> &
   SiderbarProps &
-  HeaderProps & {
+  HeaderProps &
+  FooterProps & {
     prefixCls?: string;
     className?: string;
     style?: CSSProperties;
@@ -54,7 +56,7 @@ const renderFooter = (props: BasicLayoutProps): React.ReactNode => {
   if (footerRender === false) {
     return null;
   }
-  return <div>footer</div>;
+  return <Footer {...props} />;
 };
 
 const renderDeafultTitle = (
