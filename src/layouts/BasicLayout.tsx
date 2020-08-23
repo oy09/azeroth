@@ -2,7 +2,7 @@ import './BasicLayout.scss';
 import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
 import { Layout } from 'antd';
-import { omit } from 'lodash';
+import { omit, result } from 'lodash';
 import { WithFalse, MenuDataItem, RouterTypes, Route } from '@/typing';
 import RouteContext from '@/utils/RouteContext';
 import useMergedState from '@/utils/hooks/useMergedState';
@@ -39,6 +39,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     prefixCls,
     isMobile,
     // collapsed,
+    location,
     route = {
       routes: [],
     },
@@ -57,6 +58,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const [menuInfoData] = useMergedState<{ menuData?: MenuDataItem[] }>(() =>
     getMenuData(routes),
   );
+
   const { menuData } = menuInfoData;
 
   const defaultProps = omit(

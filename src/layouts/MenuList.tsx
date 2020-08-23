@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState, useRef } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import { Menu } from 'antd';
 import Icon, { createFromIconfontCN } from '@ant-design/icons';
 import { MenuProps, MenuMode } from 'antd/es/menu';
