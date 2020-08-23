@@ -2,6 +2,26 @@ import { IRoute } from 'umi';
 
 const routes: IRoute[] = [
   {
+    path: '/user',
+    component: '@/layouts/UserLayout',
+    routes: [
+      {
+        path: '/user',
+        redirect: '/user/login',
+      },
+      {
+        path: 'login',
+        title: '登录',
+        name: 'login',
+        component: '@/pages/test1',
+      },
+    ],
+  },
+  {
+    path: '/404',
+    component: '@/pages/404',
+  },
+  {
     path: '/',
     component: '@/layouts/AuthorizeLayout',
     roles: ['admin', 'guest'],
@@ -25,26 +45,6 @@ const routes: IRoute[] = [
         component: '@/pages/test1',
       },
     ],
-  },
-  {
-    path: '/user',
-    component: '@/layouts/UserLayout',
-    routes: [
-      {
-        path: '/user',
-        redirect: '/user/login',
-      },
-      {
-        path: 'login',
-        title: '登录',
-        name: 'login',
-        component: '@/pages/test1',
-      },
-    ],
-  },
-  {
-    path: '/404',
-    component: '@/pages/404',
   },
   {
     path: '*',
