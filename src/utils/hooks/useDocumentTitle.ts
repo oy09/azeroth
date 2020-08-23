@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-interface Info {
+export interface Info {
   title: string;
   id: string;
   pageName: string;
@@ -16,6 +16,7 @@ const useDocumentTitle = (option: Info, defaultTitle: string) => {
     typeof option.pageName === 'string' ? option.title : defaultTitle;
   useEffect(() => {
     if (titleText) {
+      console.log('title:', titleText);
       document.title = titleText;
     }
   }, [option.title]);

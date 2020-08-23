@@ -11,7 +11,9 @@ import getMatchMenu from '@/utils/getMatchMenu';
 import AppMain from './AppMain';
 import Siderbar, { SiderbarProps } from './Siderbar';
 import defaultSetting from './defaultSettings';
-import useDocumentTitle from '@/utils/hooks/useDocumentTitle';
+import useDocumentTitle, {
+  Info as TitleInfo,
+} from '@/utils/hooks/useDocumentTitle';
 
 export type BasicLayoutProps = Partial<RouterTypes<Route>> &
   SiderbarProps & {
@@ -38,12 +40,14 @@ const renderSiderbar = (props: BasicLayoutProps): React.ReactNode => {
 const renderDeafultTitle = (
   props: BasicLayoutProps,
   menuData?: MenuDataItem[],
-) => {
+): TitleInfo => {
+  const getTitle = (item: MenuDataItem) => `${item.title}-${props.title}`;
+
   const currentRoute = getMatchMenu(props.location?.pathname, menuData);
 
   return {
-    title: currentRoute.title || '',
-    id: currentRoute.key || '',
+    title: getTitle(currentRoute),
+    id: '',
     pageName: currentRoute.title || '',
   };
 };
@@ -75,6 +79,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   );
 
   const { menuData } = menuInfoData;
+  const pageInfo = renderDeafultTitle(props, menuData);
+  useDocumentTitle(pageInfo, '123');
 
   const defaultProps = omit(
     {
