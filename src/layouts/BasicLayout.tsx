@@ -7,10 +7,11 @@ import { WithFalse, MenuDataItem, RouterTypes, Route } from '@/typing';
 import RouteContext from '@/utils/RouteContext';
 import useMergedState from '@/utils/hooks/useMergedState';
 import getMenuData from '@/utils/getMenuData';
-import { getMatchMenu } from '@umijs/route-utils';
+import getMatchMenu from '@/utils/getMatchMenu';
 import AppMain from './AppMain';
 import Siderbar, { SiderbarProps } from './Siderbar';
 import defaultSetting from './defaultSettings';
+import useDocumentTitle from '@/utils/hooks/useDocumentTitle';
 
 export type BasicLayoutProps = Partial<RouterTypes<Route>> &
   SiderbarProps & {
@@ -32,6 +33,19 @@ export type BasicLayoutProps = Partial<RouterTypes<Route>> &
 
 const renderSiderbar = (props: BasicLayoutProps): React.ReactNode => {
   return <Siderbar {...props} />;
+};
+
+const renderDeafultTitle = (
+  props: BasicLayoutProps,
+  menuData?: MenuDataItem[],
+) => {
+  const currentRoute = getMatchMenu(props.location?.pathname, menuData);
+
+  return {
+    title: currentRoute.title || '',
+    id: currentRoute.key || '',
+    pageName: currentRoute.title || '',
+  };
 };
 
 const BasicLayout: React.FC<BasicLayoutProps> = props => {

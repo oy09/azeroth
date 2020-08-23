@@ -1,5 +1,6 @@
 import React, { CSSProperties, useState } from 'react';
 import { Menu } from 'antd';
+import { Link } from 'umi';
 import Icon, { createFromIconfontCN } from '@ant-design/icons';
 import { MenuProps, MenuMode } from 'antd/es/menu';
 import { MenuTheme } from 'antd/es/menu/MenuContext';
@@ -132,8 +133,7 @@ class MenuUtil {
         </a>
       );
     }
-
-    return defaultItem;
+    return <Link to={data.path as string}>{defaultItem}</Link>;
   }
 
   getInitName(data: MenuDataItem) {

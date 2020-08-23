@@ -41,7 +41,7 @@ const routes: IRoute[] = [
         path: 'icon',
         title: '图标',
         name: 'icon',
-        icon: 'icon',
+        icon: 'table',
         component: '@/pages/test1',
       },
     ],
