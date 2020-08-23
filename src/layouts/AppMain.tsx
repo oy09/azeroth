@@ -8,7 +8,6 @@ export interface AppMainProps {
 
 const AppMain: React.FC<AppMainProps> = props => {
   const { style, className, children } = props;
-  console.log('children:', children);
 
   return (
     <Layout.Content className={className} style={style}>
