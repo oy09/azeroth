@@ -55,6 +55,7 @@ export default MenuList;
 const getIcon = (icon: string | React.ReactNode): React.ReactNode => {
   if (typeof icon === 'string' && icon !== '') {
     if (isUrl(icon) || isImg(icon)) {
+      // 外链资源
       return (
         <Icon
           component={() => (
@@ -63,6 +64,7 @@ const getIcon = (icon: string | React.ReactNode): React.ReactNode => {
         />
       );
     } else if (icon.startsWith('icon-')) {
+      // 本地资源
       return <IconFont type={icon} />;
     }
   }
