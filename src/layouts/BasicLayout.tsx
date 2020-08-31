@@ -65,8 +65,9 @@ const renderDeafultTitle = (
 ): TitleInfo => {
   const getTitle = (item: MenuDataItem) => `${item.title}-${props.title}`;
 
-  const currentRoute = getMatchMenu(props.location?.pathname, menuData);
-
+  const currentRoute = getMatchMenu(props.location?.pathname, menuData) || {
+    title: props.title,
+  };
   return {
     title: getTitle(currentRoute),
     id: '',
