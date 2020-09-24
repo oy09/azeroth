@@ -18,7 +18,22 @@ export type HeaderProps = Partial<PureSettings> & {
 
 class Header extends React.PureComponent<HeaderProps, any> {
   renderContent() {
-    let defaultDom = <div style={{ background: '#fff' }}>header dom</div>;
+    const { prefixCls } = this.props;
+    const headerClass = `${prefixCls}-pro-global-header`;
+    const navClass = `${prefixCls}-pro-global-index-navcrumb`;
+
+    let defaultDom = (
+      <div style={{ background: '#fff' }} className={headerClass}>
+        <div className={navClass}>面包屑导航</div>
+        <div style={{ flex: '1 1 0%' }}></div>
+        <div className="pro-global-index-right">
+          <span>使用文档</span>
+          <span>消息通知</span>
+          <span>用户icon</span>
+          <span>iln8</span>
+        </div>
+      </div>
+    );
 
     return defaultDom;
   }
