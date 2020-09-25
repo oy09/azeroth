@@ -111,7 +111,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
 
   const { menuData } = menuInfoData;
   const pageInfo = renderDeafultTitle(props, menuData);
-  useDocumentTitle(pageInfo, '123');
+  useDocumentTitle(pageInfo, '智能管理平台');
 
   const defaultProps = omit(
     {
@@ -182,7 +182,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           {siderbarDom}
           <Layout>
             {headerDom}
-            {navDom}
             <AppMain
               {...rest}
               className={contextClassName}

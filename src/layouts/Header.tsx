@@ -2,7 +2,8 @@ import './Header.scss';
 
 import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
-import { Layout } from 'antd';
+import { Layout, Breadcrumb } from 'antd';
+import { BreadcrumbProps } from 'antd/lib/breadcrumb';
 import { PureSettings } from './defaultSettings';
 import { WithFalse } from '@/typing';
 
@@ -17,6 +18,8 @@ export type HeaderProps = Partial<PureSettings> & {
   headerHeight?: number;
   contentRender?: WithFalse<(props: HeaderProps) => React.ReactNode>;
   rightContentRender?: WithFalse<(props: HeaderProps) => React.ReactNode>;
+  // 需要面包屑数据
+  routes?: BreadcrumbProps['routes'];
 };
 
 class Header extends React.PureComponent<HeaderProps, any> {
@@ -28,7 +31,14 @@ class Header extends React.PureComponent<HeaderProps, any> {
 
     let defaultDom = (
       <div style={{ background: '#fff' }} className={headerCls}>
-        <div className={navCls}>breadcrumb</div>
+        <div className={navCls}>
+          <Breadcrumb>
+            <Breadcrumb.Item>首页</Breadcrumb.Item>
+            <Breadcrumb.Item>二级页面</Breadcrumb.Item>
+            <Breadcrumb.Item>三级页面</Breadcrumb.Item>
+            <Breadcrumb.Item>四级页面</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <div style={{ flex: '1 1 0%' }}>
           {contentRender && contentRender(this.props)}
         </div>
