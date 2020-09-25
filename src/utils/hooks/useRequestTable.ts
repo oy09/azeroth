@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import useDebounceFn from './useDebounceFn';
+import usePrevious from './usePrevious';
 
-export interface RequestData<T> {
+export interface ResponseData<T> {
   data: T[];
   success?: boolean;
   total?: number;
   [key: string]: any;
 }
 
-export interface useReqeustTableAction<T extends RequestData<any>> {
+export interface useReqeustTableAction<T extends ResponseData<any>> {
   dataSouce: T['data'] | T;
   loading: boolean | undefined;
   hasMore: boolean;
@@ -30,7 +31,7 @@ interface PageInfo {
   hasMore: boolean;
 }
 
-const useReqeustTable = <T extends RequestData<any>>(
+const useReqeustTable = <T extends ResponseData<any>>(
   getData: (params: { current: number; pageSize: number }) => Promise<T>,
   defaultData?: Partial<T['data']>,
   options?: {
@@ -48,6 +49,7 @@ const useReqeustTable = <T extends RequestData<any>>(
     onRequestError,
     effects = [],
   } = options || {};
+  let isMount = true;
 
   const [list, setList] = useState<T['data']>(defaultData as T['data']);
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
@@ -58,9 +60,12 @@ const useReqeustTable = <T extends RequestData<any>>(
     hasMore: false,
   });
 
+  const prePage = usePrevious(pageInfo.page);
+  const prePageSize = usePrevious(pageInfo.pageSize);
+
   // 加载数据
   const fetchList = async (isAppend?: boolean) => {
-    if (loading) {
+    if (loading || !isMount) {
       return;
     }
     setLoading(true);
@@ -117,8 +122,16 @@ const useReqeustTable = <T extends RequestData<any>>(
 
   const fetchDebounceList = useDebounceFn(fetchList, [], 300);
 
+  // page变化，自动刷新数据
   useEffect(() => {
     const { page, pageSize } = pageInfo;
+    if (
+      (!prePage || prePage === page) &&
+      (!prePageSize || prePageSize === pageSize)
+    ) {
+      return () => undefined;
+    }
+
     if (page !== undefined && list.length <= pageSize) {
       fetchDebounceList.run();
       return () => fetchDebounceList.cancel();
@@ -126,26 +139,34 @@ const useReqeustTable = <T extends RequestData<any>>(
     return () => undefined;
   }, [pageInfo.page]);
 
+  // 修改pageSize返回第一页
   useEffect(() => {
+    if (!prePageSize) {
+      return () => undefined;
+    }
     setList([]);
     setPageInfo({ ...pageInfo, page: 1 });
     fetchDebounceList.run();
     return () => fetchDebounceList.cancel();
   }, [pageInfo.pageSize]);
 
+  // 依赖发生变化，重新请求数据
   useEffect(() => {
     fetchDebounceList.run();
 
-    return () => fetchDebounceList.cancel();
+    return () => {
+      fetchDebounceList.cancel();
+      isMount = false;
+    };
   }, effects);
 
   return {
     dataSouce: list,
     loading,
-    hasMore: false,
-    current: 0,
-    pageSize: 0,
-    total: 0,
+    hasMore: pageInfo.hasMore,
+    current: pageInfo.page,
+    pageSize: pageInfo.pageSize,
+    total: pageInfo.total,
     cancel: () => fetchDebounceList.cancel(),
     reload: async () => fetchDebounceList.run(),
     fetchMore,
