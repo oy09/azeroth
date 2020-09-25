@@ -51,6 +51,14 @@ const renderHeader = (props: BasicLayoutProps): React.ReactNode => {
   return <Header {...props} />;
 };
 
+const renderNavTag = (props: BasicLayoutProps): React.ReactNode => {
+  const style: CSSProperties = {
+    padding: '10px 0',
+  };
+
+  return <div style={style}>nav tag list</div>;
+};
+
 const renderFooter = (props: BasicLayoutProps): React.ReactNode => {
   const { footerRender } = props;
   if (footerRender === false) {
@@ -131,6 +139,12 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     headerHeight: 48,
   });
 
+  const navDom = renderNavTag({
+    ...defaultProps,
+    menuData,
+    theme: 'dark',
+  });
+
   const footerDom = renderFooter({
     ...defaultProps,
     isMobile,
@@ -167,6 +181,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           {siderbarDom}
           <Layout>
             {headerDom}
+            {navDom}
             <AppMain
               {...rest}
               className={contextClassName}
