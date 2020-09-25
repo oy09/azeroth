@@ -13,7 +13,7 @@ export default defineConfig({
     implementation: require('node-sass'),
   },
   favicon: './favicon.png',
-  title: process.env.APP_TITLE,
+  title: false,
   ignoreMomentLocale: true,
   metas: [
     {
