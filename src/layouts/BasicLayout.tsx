@@ -149,6 +149,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     ...defaultProps,
     isMobile,
     collapsed,
+    copyRight: '艾泽拉斯星球',
   });
 
   const basicClassName = `${prefixCls}-basicLayout`;

@@ -24,7 +24,7 @@ export interface FooterProps {
 const defaultLinkList: LinkItem[] = [
   {
     key: 'Ant Design Pro',
-    title: 'Ant Design Pro',
+    title: 'Azeroth',
     href: 'https://www.baidu.com',
     blankTarget: true,
   },
@@ -36,14 +36,14 @@ const defaultLinkList: LinkItem[] = [
   },
   {
     key: 'Ant Design',
-    title: 'Ant Design',
+    title: 'Azeroth',
     href: 'https://www.baidu.com',
     blankTarget: true,
   },
 ];
 
 const Footer: React.FC<FooterProps> = props => {
-  const { style, prefixCls, className, links } = props;
+  const { style, prefixCls, className, links, copyRight } = props;
   const baseClassName = `${prefixCls}-layout-footer`;
   const classNames = classnames(className, baseClassName);
   const globalFooterCls = `${prefixCls}-global-footer`;
@@ -66,7 +66,15 @@ const Footer: React.FC<FooterProps> = props => {
             </a>
           ))}
         </div>
-        <div className={copyrightClassName}></div>
+        <div className={copyrightClassName}>
+          {copyRight && (
+            <React.Fragment>
+              {'Copyright '}
+              <CopyrightOutlined />
+              {' ' + copyRight}
+            </React.Fragment>
+          )}
+        </div>
       </footer>
     </Layout.Footer>
   );
