@@ -19,11 +19,12 @@ export type HeaderProps = Partial<PureSettings> & {
   contentRender?: WithFalse<(props: HeaderProps) => React.ReactNode>;
   rightContentRender?: WithFalse<(props: HeaderProps) => React.ReactNode>;
   // 需要面包屑数据
-  routes?: BreadcrumbProps['routes'];
+  breadcrumb?: BreadcrumbProps['routes'];
 };
 
 class Header extends React.PureComponent<HeaderProps, any> {
   renderContent() {
+    console.log('header props:', this.props);
     const { prefixCls, contentRender, rightContentRender } = this.props;
     const headerCls = `${prefixCls}-global-header`;
     const rightCls = `${prefixCls}-global-header-right`;

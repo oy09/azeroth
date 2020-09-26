@@ -113,9 +113,10 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const pageInfo = renderDeafultTitle(props, menuData);
   useDocumentTitle(pageInfo, '智能管理平台');
 
-  const defaultProps = omit(
+  const defaultProps = omit<BasicLayoutProps>(
     {
       ...props,
+      breadcrumb: [],
     },
     ['className', 'style'],
   );
