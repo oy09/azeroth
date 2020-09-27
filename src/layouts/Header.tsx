@@ -3,9 +3,14 @@ import './Header.scss';
 import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
 import { Layout, Breadcrumb } from 'antd';
-import { BreadcrumbProps } from 'antd/lib/breadcrumb';
 import { PureSettings } from './defaultSettings';
 import { WithFalse } from '@/typing';
+
+export type BreadcrumbItemType = {
+  path: string;
+  name: string;
+  query?: any;
+};
 
 export type HeaderProps = Partial<PureSettings> & {
   isMobile?: boolean;
@@ -19,12 +24,11 @@ export type HeaderProps = Partial<PureSettings> & {
   contentRender?: WithFalse<(props: HeaderProps) => React.ReactNode>;
   rightContentRender?: WithFalse<(props: HeaderProps) => React.ReactNode>;
   // 需要面包屑数据
-  breadcrumb?: BreadcrumbProps['routes'];
+  breadcrumb?: BreadcrumbItemType[];
 };
 
 class Header extends React.PureComponent<HeaderProps, any> {
   renderContent() {
-    console.log('header props:', this.props);
     const { prefixCls, contentRender, rightContentRender } = this.props;
     const headerCls = `${prefixCls}-global-header`;
     const rightCls = `${prefixCls}-global-header-right`;

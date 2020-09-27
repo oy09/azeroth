@@ -10,12 +10,13 @@ import getMenuData from '@/utils/getMenuData';
 import getMatchMenu from '@/utils/getMatchMenu';
 import AppMain from './AppMain';
 import Siderbar, { SiderbarProps } from './Siderbar';
-import Header, { HeaderProps } from './Header';
+import Header, { HeaderProps, BreadcrumbItemType } from './Header';
 import Footer, { FooterProps } from './Footer';
 import defaultSetting from './defaultSettings';
 import useDocumentTitle, {
   Info as TitleInfo,
 } from '@/utils/hooks/useDocumentTitle';
+import { getBreadcrumbProps } from './getBreadcrumbProps';
 
 export type BasicLayoutProps = Partial<RouterTypes<Route>> &
   SiderbarProps &
@@ -105,23 +106,24 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     value: props.collapsed,
     onChange: propsOnCollapse,
   });
-  const [menuInfoData] = useMergedState<{ menuData?: MenuDataItem[] }>(() =>
-    getMenuData(routes),
-  );
+  const [menuInfoData] = useMergedState<{
+    menuData?: MenuDataItem[];
+    breadcrumbMap?: Map<string, MenuDataItem>;
+  }>(() => getMenuData(routes));
 
-  const { menuData } = menuInfoData;
+  const { menuData, breadcrumbMap } = menuInfoData;
   const pageInfo = renderDeafultTitle(props, menuData);
   useDocumentTitle(pageInfo, '智能管理平台');
 
   const defaultProps = omit<BasicLayoutProps>(
     {
       ...props,
-      breadcrumb: [],
+      breadcrumb: getBreadcrumbProps({ location, breadcrumbMap }),
     },
     ['className', 'style'],
   );
 
-  console.log('BasicLayout render props:', menuData);
+  console.log('BasicLayout render props:', breadcrumbMap);
   const siderbarDom = renderSiderbar({
     ...defaultProps,
     menuData,
