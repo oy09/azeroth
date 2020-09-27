@@ -98,7 +98,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     onCollapse: propsOnCollapse,
     ...rest
   } = props;
-  console.log('basicLayout props:', props);
+  // console.log('basicLayout props:', props);
   const { routes = [] } = route;
 
   const [collapsed, onCollapse] = useMergedState<boolean>(false, {
@@ -121,6 +121,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     ['className', 'style'],
   );
 
+  console.log('BasicLayout render props:', menuData);
   const siderbarDom = renderSiderbar({
     ...defaultProps,
     menuData,
@@ -200,7 +201,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
 
 BasicLayout.defaultProps = {
   ...defaultSetting,
-  logo: './favicon.png',
+  logo: '/favicon.png',
   prefixCls: 'az',
   siderWidth: 208,
 };

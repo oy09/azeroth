@@ -44,6 +44,26 @@ const routes: IRoute[] = [
         icon: 'table',
         component: '@/pages/test1',
       },
+      {
+        path: 'menu',
+        title: '菜单',
+        name: 'menu',
+        icon: 'branches',
+        routes: [
+          {
+            path: 'menu1',
+            title: '菜单1',
+            name: 'menu1',
+            component: '@/pages/test1',
+          },
+          {
+            path: 'menu2',
+            title: '菜单2',
+            name: 'menu2',
+            component: '@/pages/test1',
+          },
+        ],
+      },
     ],
   },
   {

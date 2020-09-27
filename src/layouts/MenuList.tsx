@@ -11,6 +11,7 @@ import defaultSetting from './defaultSettings';
 export interface MenuListProps {
   className?: string;
   style?: CSSProperties;
+  prefixCls?: string;
   collapsed?: boolean;
   handleOpenChange?: (openKeys: string[]) => void;
   onCollapse?: (collapsed: boolean) => void;
@@ -87,21 +88,23 @@ class MenuUtil {
   }
 
   getSubNavMenu(data: MenuDataItem, isChildren: boolean) {
-    console.log('getNavMenu input:', data);
     if (Array.isArray(data.children) && this.hasChildren(data)) {
       const name = this.getInitName(data);
-      const defaultTitle = (
-        <span>
-          <i className="menu-icon" />
+      const { prefixCls } = this.props;
+      const defaultTitle = data.icon ? (
+        <span className={`${prefixCls}-menu-item`}>
+          {!isChildren && getIcon(data.icon)}
           <span>{name}</span>
         </span>
+      ) : (
+        <span className={`${prefixCls}-menu-item`}>{name}</span>
       );
 
       const title = defaultTitle;
 
       return (
         <Menu.SubMenu title={title} key={data.key || data.path}>
-          {this.getSubNavMenu(data.children, true)}
+          {this.getNavMenu(data.children, true)}
         </Menu.SubMenu>
       );
     }

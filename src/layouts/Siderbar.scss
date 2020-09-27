@@ -116,7 +116,8 @@ $sidebar-prefix-cls: #{$prefix}-sidebar;
     .ant-menu-inline-collapsed {
       width: 48px;
 
-      .ant-menu-item {
+      .ant-menu-item,
+      .ant-menu-submenu-title {
         width: 48px;
         padding: 0 16px !important;
       }
