@@ -87,6 +87,7 @@ class MenuUtil {
   }
 
   getSubNavMenu(data: MenuDataItem, isChildren: boolean) {
+    console.log('getNavMenu input:', data);
     if (Array.isArray(data.children) && this.hasChildren(data)) {
       const name = this.getInitName(data);
       const defaultTitle = (
@@ -144,7 +145,7 @@ class MenuUtil {
       data &&
       !data.hidden &&
       data?.children &&
-      data?.children.some(child => child && !!child.name && !!child.hidden)
+      data.children.some(child => child && !child.hidden && !!child.name)
     );
   }
 }
