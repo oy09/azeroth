@@ -1,4 +1,5 @@
 import { defineConfig } from 'umi';
+
 import routes from './routes';
 
 export default defineConfig({
@@ -32,6 +33,11 @@ export default defineConfig({
     openAnalyzer: true,
     generateStatsFile: false,
     logLevel: 'info',
+  },
+  devServer: {
+    port: 8888,
+    host: 'oy.azeroth.com',
+    https: true,
   },
   // umi routes: https://umijs.org/docs/routing
   routes: routes,
