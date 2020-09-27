@@ -36,8 +36,8 @@ export default defineConfig({
   },
   devServer: {
     port: 8888,
-    host: 'oy.azeroth.com',
-    https: true,
+    host: '0.0.0.0',
+    https: false,
   },
   // umi routes: https://umijs.org/docs/routing
   routes: routes,
