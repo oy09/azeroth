@@ -11,7 +11,7 @@ const defaultFilterMenuData = (data: MenuDataItem[] = []): MenuDataItem[] => {
       if (
         item.children &&
         Array.isArray(item.children) &&
-        item.children.some((child: MenuDataItem) => child && !child.title)
+        item.children.some((child: MenuDataItem) => child && child.title)
       ) {
         const children = defaultFilterMenuData(item.children);
         if (children.length) {
