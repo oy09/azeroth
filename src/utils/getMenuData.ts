@@ -32,18 +32,22 @@ const defaultFilterMenuData = (data: MenuDataItem[] = []): MenuDataItem[] => {
 const transformToBreadcrumbMap = (
   routes: Route[],
 ): Map<string, MenuDataItem> => {
-  const map = routes.reduce((acc, current) => {
-    if (!current.hidden && current.title) {
-      acc.set(current.path, current);
-    }
-    return acc;
-  }, new Map());
-  return map;
+  const arrayToMap = (routes: Route[], initialValue = new Map()) => {
+    return routes.reduce((acc, current) => {
+      if (!current.hidden && current.title) {
+        acc.set(current.path, current);
+        if (current.routes) {
+          arrayToMap(current.routes, acc);
+        }
+      }
+      return acc;
+    }, initialValue);
+  };
+
+  return arrayToMap(routes, new Map());
 };
 
 const getMenuData = (routes: Route[] = []) => {
-  console.log('getMenuData routes:', routes);
-
   const data = defaultFilterMenuData(routes);
   const breadcrumbMap = transformToBreadcrumbMap(routes);
 

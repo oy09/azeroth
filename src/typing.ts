@@ -16,6 +16,7 @@ export interface MenuDataItem {
   children?: MenuDataItem[];
   roles?: string[] | string;
   target?: string;
+  component?: string;
   [key: string]: any;
 }
 

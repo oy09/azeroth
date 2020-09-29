@@ -9,7 +9,9 @@ import { WithFalse } from '@/typing';
 export type BreadcrumbItemType = {
   path: string;
   name: string;
+  hiddenBreadcrumb?: boolean;
   query?: any;
+  component?: any;
 };
 
 export type HeaderProps = Partial<PureSettings> & {
@@ -29,21 +31,40 @@ export type HeaderProps = Partial<PureSettings> & {
 
 class Header extends React.PureComponent<HeaderProps, any> {
   renderContent() {
-    const { prefixCls, contentRender, rightContentRender } = this.props;
+    const {
+      prefixCls,
+      contentRender,
+      rightContentRender,
+      breadcrumb,
+    } = this.props;
     const headerCls = `${prefixCls}-global-header`;
     const rightCls = `${prefixCls}-global-header-right`;
     const navCls = `${prefixCls}-global-header-nav`;
 
+    console.log('header content props:', this.props);
+
     let defaultDom = (
       <div style={{ background: '#fff' }} className={headerCls}>
-        <div className={navCls}>
-          <Breadcrumb>
-            <Breadcrumb.Item>首页</Breadcrumb.Item>
-            <Breadcrumb.Item>二级页面</Breadcrumb.Item>
-            <Breadcrumb.Item>三级页面</Breadcrumb.Item>
-            <Breadcrumb.Item>四级页面</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
+        {breadcrumb?.length && (
+          <div className={navCls}>
+            <Breadcrumb>
+              {breadcrumb.map((item, index) => {
+                if (item.hiddenBreadcrumb || index === breadcrumb.length - 1) {
+                  return (
+                    <Breadcrumb.Item key={item.path}>
+                      {item.name}
+                    </Breadcrumb.Item>
+                  );
+                }
+                return (
+                  <Breadcrumb.Item href={item.path} key={item.path}>
+                    {item.name}
+                  </Breadcrumb.Item>
+                );
+              })}
+            </Breadcrumb>
+          </div>
+        )}
         <div style={{ flex: '1 1 0%' }}>
           {contentRender && contentRender(this.props)}
         </div>

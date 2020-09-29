@@ -123,7 +123,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     ['className', 'style'],
   );
 
-  console.log('BasicLayout render props:', breadcrumbMap);
   const siderbarDom = renderSiderbar({
     ...defaultProps,
     menuData,

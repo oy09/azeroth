@@ -51,7 +51,7 @@ const routes: IRoute[] = [
         icon: 'branches',
         routes: [
           {
-            path: 'menu1',
+            path: 'menu1/test2/test3/test4',
             title: '菜单1',
             name: 'menu1',
             component: '@/pages/test1',
