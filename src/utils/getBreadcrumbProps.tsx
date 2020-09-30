@@ -71,6 +71,7 @@ const getBreadcrumbList = (props: BreadcrumbProps): BreadcrumbItemType[] => {
     const pathList = routePathToList(location.pathname);
     const items = pathList
       .map(url => {
+        // @ts-ignore
         const { routerBase = '/' } = isBrowser() ? window : {};
         const realPath = routerBase === '/' ? url : path.join(routerBase, url);
         const breadcrumbItem = getBreadcrumb(breadcrumbMap, url);

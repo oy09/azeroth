@@ -1,7 +1,7 @@
 import './AuthorizeLayout.scss';
 import React from 'react';
 import BasicLayout from './BasicLayout';
-import { BreadcrumbItemType } from './getBreadcrumbProps';
+import { BreadcrumbItemType } from '@/utils/getBreadcrumbProps';
 import classnames from 'classnames';
 import { head } from 'lodash';
 

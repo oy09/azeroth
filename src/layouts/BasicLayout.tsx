@@ -16,7 +16,10 @@ import defaultSetting from './defaultSettings';
 import useDocumentTitle, {
   Info as TitleInfo,
 } from '@/utils/hooks/useDocumentTitle';
-import { BreadcrumbItemType, getBreadcrumbProps } from './getBreadcrumbProps';
+import {
+  BreadcrumbItemType,
+  getBreadcrumbProps,
+} from '@/utils/getBreadcrumbProps';
 
 export type BasicLayoutProps = Partial<RouterTypes<Route>> &
   SiderbarProps &

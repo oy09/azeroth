@@ -7,7 +7,7 @@ import { Link } from 'umi';
 import { PureSettings } from './defaultSettings';
 import { WithFalse } from '@/typing';
 import { isUrl } from '@/utils/typeUtils';
-import { BreadcrumbItemType } from './getBreadcrumbProps';
+import { BreadcrumbItemType } from '@/utils/getBreadcrumbProps';
 
 export type HeaderProps = Partial<PureSettings> & {
   isMobile?: boolean;
