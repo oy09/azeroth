@@ -1,6 +1,6 @@
-import { IRoute } from 'umi';
+import { AzRoute } from '@/typing';
 
-const routes: IRoute[] = [
+const routes: AzRoute[] = [
   {
     path: '/user',
     component: '@/layouts/UserLayout',

@@ -3,16 +3,11 @@ import './Header.scss';
 import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
 import { Layout, Breadcrumb } from 'antd';
+import { Link } from 'umi';
 import { PureSettings } from './defaultSettings';
 import { WithFalse } from '@/typing';
-
-export type BreadcrumbItemType = {
-  path: string;
-  name: string;
-  hiddenBreadcrumb?: boolean;
-  query?: any;
-  component?: any;
-};
+import { isUrl } from '@/utils/typeUtils';
+import { BreadcrumbItemType } from './getBreadcrumbProps';
 
 export type HeaderProps = Partial<PureSettings> & {
   isMobile?: boolean;
@@ -27,6 +22,10 @@ export type HeaderProps = Partial<PureSettings> & {
   rightContentRender?: WithFalse<(props: HeaderProps) => React.ReactNode>;
   // 需要面包屑数据
   breadcrumb?: BreadcrumbItemType[];
+  breadcrumbItemRender?: (
+    value: BreadcrumbItemType,
+    index: number,
+  ) => React.ReactNode;
 };
 
 class Header extends React.PureComponent<HeaderProps, any> {
@@ -36,6 +35,7 @@ class Header extends React.PureComponent<HeaderProps, any> {
       contentRender,
       rightContentRender,
       breadcrumb,
+      breadcrumbItemRender,
     } = this.props;
     const headerCls = `${prefixCls}-global-header`;
     const rightCls = `${prefixCls}-global-header-right`;
@@ -45,22 +45,50 @@ class Header extends React.PureComponent<HeaderProps, any> {
 
     let defaultDom = (
       <div style={{ background: '#fff' }} className={headerCls}>
-        {breadcrumb?.length && (
+        {Array.isArray(breadcrumb) && breadcrumb.length > 0 && (
           <div className={navCls}>
             <Breadcrumb>
               {breadcrumb.map((item, index) => {
-                if (item.hiddenBreadcrumb || index === breadcrumb.length - 1) {
+                if (breadcrumbItemRender) {
                   return (
                     <Breadcrumb.Item key={item.path}>
-                      {item.name}
+                      {breadcrumbItemRender(item, index)}
                     </Breadcrumb.Item>
                   );
                 }
-                return (
-                  <Breadcrumb.Item href={item.path} key={item.path}>
-                    {item.name}
-                  </Breadcrumb.Item>
-                );
+                if (!item.hiddenBreadcrumb && item.name) {
+                  if (isUrl(item.path)) {
+                    return (
+                      <Breadcrumb.Item key={item.path}>
+                        <a
+                          href={item.path}
+                          target={item.target || '_blank'}
+                          title={item.name}
+                        >
+                          {item.name}
+                        </a>
+                      </Breadcrumb.Item>
+                    );
+                  } else if (index === breadcrumb.length - 1) {
+                    return (
+                      <Breadcrumb.Item key={item.path}>
+                        {item.name}
+                      </Breadcrumb.Item>
+                    );
+                  } else if (item.needRedirect) {
+                    return (
+                      <Breadcrumb.Item key={item.path}>
+                        <Link to={item.needRedirect}>{item.name}</Link>
+                      </Breadcrumb.Item>
+                    );
+                  } else {
+                    return (
+                      <Breadcrumb.Item key={item.path}>
+                        <Link to={item.path}>{item.name}</Link>
+                      </Breadcrumb.Item>
+                    );
+                  }
+                }
               })}
             </Breadcrumb>
           </div>

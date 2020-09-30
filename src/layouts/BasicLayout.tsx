@@ -10,13 +10,13 @@ import getMenuData from '@/utils/getMenuData';
 import getMatchMenu from '@/utils/getMatchMenu';
 import AppMain from './AppMain';
 import Siderbar, { SiderbarProps } from './Siderbar';
-import Header, { HeaderProps, BreadcrumbItemType } from './Header';
+import Header, { HeaderProps } from './Header';
 import Footer, { FooterProps } from './Footer';
 import defaultSetting from './defaultSettings';
 import useDocumentTitle, {
   Info as TitleInfo,
 } from '@/utils/hooks/useDocumentTitle';
-import { getBreadcrumbProps } from './getBreadcrumbProps';
+import { BreadcrumbItemType, getBreadcrumbProps } from './getBreadcrumbProps';
 
 export type BasicLayoutProps = Partial<RouterTypes<Route>> &
   SiderbarProps &
@@ -37,6 +37,7 @@ export type BasicLayoutProps = Partial<RouterTypes<Route>> &
       (props: any, defautDom: React.ReactNode) => React.ReactNode
     >;
     menuDataRender?: (data: MenuDataItem[]) => MenuDataItem[];
+    breadcrumbRender?: (value: BreadcrumbItemType[]) => BreadcrumbItemType[];
     isMobile?: boolean;
     fixSiderbar?: boolean;
   };
@@ -115,10 +116,15 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const pageInfo = renderDeafultTitle(props, menuData);
   useDocumentTitle(pageInfo, '智能管理平台');
 
+  const breadcrumbProps = getBreadcrumbProps({
+    ...props,
+    breadcrumbMap,
+  });
+
   const defaultProps = omit<BasicLayoutProps>(
     {
       ...props,
-      breadcrumb: getBreadcrumbProps({ location, breadcrumbMap }),
+      breadcrumb: breadcrumbProps.breadcrumb,
     },
     ['className', 'style'],
   );
@@ -172,6 +178,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         collapsed,
         siderWidth,
         menuData,
+        breadcrumb: breadcrumbProps,
       }}
     >
       <div className={className}>

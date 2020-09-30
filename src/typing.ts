@@ -3,6 +3,7 @@ import {
   RouteComponentProps as BasicRouterProps,
   match,
 } from 'react-router-dom';
+import { IRoute } from 'umi';
 
 export type WithFalse<T> = T | false;
 
@@ -29,3 +30,7 @@ export interface RouterTypes<P> extends Omit<BasicRouterProps, 'location'> {
   route?: Route;
   location: BasicRouterProps['location'] | { pathname?: string };
 }
+
+export type AzRoute = IRoute & {
+  needRedirect?: string;
+};
