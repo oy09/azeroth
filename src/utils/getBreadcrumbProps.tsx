@@ -25,6 +25,8 @@ export type BreadcrumbItemType = {
   component?: any;
   // 重定向
   needRedirect?: string;
+  // 是父组件
+  isParent?: boolean;
 };
 
 export interface BreadcrumbReturn {
@@ -86,6 +88,8 @@ const getBreadcrumbList = (props: BreadcrumbProps): BreadcrumbItemType[] => {
           path: realPath,
           name: breadcrumbItem.title,
           component: breadcrumbItem.component,
+          isParent: !!breadcrumbItem.children,
+          needRedirect: breadcrumbItem.needRedirect,
         };
       })
       .filter(item => item && item.path);

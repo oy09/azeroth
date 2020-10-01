@@ -75,10 +75,17 @@ class Header extends React.PureComponent<HeaderProps, any> {
                         {item.name}
                       </Breadcrumb.Item>
                     );
-                  } else if (item.needRedirect) {
+                  } else if (item.isParent) {
+                    if (item.needRedirect) {
+                      return (
+                        <Breadcrumb.Item key={item.path}>
+                          <Link to={item.needRedirect}>{item.name}</Link>
+                        </Breadcrumb.Item>
+                      );
+                    }
                     return (
                       <Breadcrumb.Item key={item.path}>
-                        <Link to={item.needRedirect}>{item.name}</Link>
+                        {item.name}
                       </Breadcrumb.Item>
                     );
                   } else {
