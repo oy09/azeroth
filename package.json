@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.10",
+    "redux-logger": "^3.0.6",
     "unstated-next": "^1.1.0"
   }
 }

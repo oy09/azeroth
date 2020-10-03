@@ -39,6 +39,10 @@ export default defineConfig({
     host: '0.0.0.0',
     https: false,
   },
+  dva: {
+    immer: true,
+    hmr: true,
+  },
   // umi routes: https://umijs.org/docs/routing
   routes: routes,
 });
