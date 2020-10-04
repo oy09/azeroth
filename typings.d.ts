@@ -9,3 +9,7 @@ declare module '*.svg' {
   const url: string;
   export default url;
 }
+
+declare module 'redux-logger' {
+  export function createLogger(): (...args: any) => any;
+}

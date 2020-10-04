@@ -34,14 +34,9 @@ export default defineConfig({
     generateStatsFile: false,
     logLevel: 'info',
   },
-  devServer: {
-    port: 8888,
-    host: '0.0.0.0',
-    https: false,
-  },
   dva: {
     immer: true,
-    hmr: true,
+    hmr: false,
   },
   // umi routes: https://umijs.org/docs/routing
   routes: routes,
