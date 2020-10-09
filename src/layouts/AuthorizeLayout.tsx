@@ -2,6 +2,7 @@ import './AuthorizeLayout.scss';
 import React from 'react';
 import BasicLayout from './BasicLayout';
 import { BreadcrumbItemType } from '@/utils/getBreadcrumbProps';
+import RightContent from '@/components/GlobalHeader/RightContent';
 import classnames from 'classnames';
 import { head } from 'lodash';
 
@@ -10,15 +11,6 @@ export interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = props => {
-  const headerRightMenu = (
-    <React.Fragment>
-      <span className="header-action">使用说明</span>
-      <span className="header-action">通知信息</span>
-      <span className="header-action">用户菜单</span>
-      <span className="header-action">国际化</span>
-    </React.Fragment>
-  );
-
   const breadcrumbDataRender = (
     data: BreadcrumbItemType[],
   ): BreadcrumbItemType[] => {
@@ -44,7 +36,7 @@ const Layout: React.FC<LayoutProps> = props => {
       {...props}
       className={authCls}
       breadcrumbRender={breadcrumbDataRender}
-      rightContentRender={() => headerRightMenu}
+      rightContentRender={() => <RightContent />}
     >
       {props.children}
     </BasicLayout>
