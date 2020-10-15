@@ -38,6 +38,12 @@ export default defineConfig({
     immer: true,
     hmr: false,
   },
+  locale: {
+    default: 'zh-CN',
+    antd: false,
+    title: false,
+    baseNavigator: true,
+  },
   // umi routes: https://umijs.org/docs/routing
   routes: routes,
 });
