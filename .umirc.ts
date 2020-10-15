@@ -40,9 +40,8 @@ export default defineConfig({
   },
   locale: {
     default: 'zh-CN',
-    antd: false,
-    title: false,
-    baseNavigator: true,
+    antd: true,
+    baseSeparator: '-',
   },
   // umi routes: https://umijs.org/docs/routing
   routes: routes,
