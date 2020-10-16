@@ -13,7 +13,7 @@ export default defineConfig({
   sass: {
     implementation: require('node-sass'),
   },
-  favicon: './favicon.png',
+  favicon: '/favicon.png',
   title: false,
   ignoreMomentLocale: true,
   metas: [
