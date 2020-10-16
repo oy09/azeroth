@@ -1,20 +1,24 @@
-import React, { CSSProperties, useState } from 'react';
+import React, { CSSProperties, useState, useEffect } from 'react';
 import { Menu } from 'antd';
 import { Link } from 'umi';
 import Icon, { createFromIconfontCN } from '@ant-design/icons';
 import { MenuProps, MenuMode } from 'antd/es/menu';
 import { MenuTheme } from 'antd/es/menu/MenuContext';
-import { WithFalse, MenuDataItem } from '@/typing';
+import { WithFalse, MenuDataItem, RouterTypes, Route } from '@/typing';
 import { isImg, isUrl } from '@/utils/typeUtils';
+import useMergedState from '@/utils/hooks/useMergedState';
+import { getSelectedMenuKeys } from '@/utils/getMatchMenu';
 import defaultSetting from './defaultSettings';
 
-export interface MenuListProps {
+export interface MenuListProps extends Partial<RouterTypes<Route>> {
   className?: string;
   style?: CSSProperties;
   prefixCls?: string;
   collapsed?: boolean;
   handleOpenChange?: (openKeys: string[]) => void;
   onCollapse?: (collapsed: boolean) => void;
+  onSelect?: (keys: string[]) => void;
+  selectedKeys?: string[];
   openKeys?: WithFalse<string[]> | undefined;
   menuProps?: MenuProps;
   theme?: MenuTheme;
@@ -29,8 +33,47 @@ let IconFont = createFromIconfontCN({
 });
 
 const MenuList: React.FC<MenuListProps> = props => {
-  const { mode, style, theme, className, menuProps, menuData } = props;
+  const {
+    mode,
+    style,
+    theme,
+    className,
+    menuProps,
+    menuData,
+    onSelect,
+    collapsed,
+    location = {
+      pathname: '/',
+    },
+    selectedKeys: propsSelectedKeys,
+  } = props;
   const [menuUtils] = useState(() => new MenuUtil(props));
+
+  const [selectedKeys, setSelectedKeys] = useMergedState<string[] | undefined>(
+    [],
+    {
+      value: propsSelectedKeys,
+      onChange: onSelect
+        ? keys => {
+            if (onSelect && keys) {
+              onSelect(keys);
+            }
+          }
+        : undefined,
+    },
+  );
+
+  useEffect(() => {
+    const keys = getSelectedMenuKeys(location.pathname || '/', menuData || []);
+    const animationId = requestAnimationFrame(() => {
+      if (keys.join('-') !== (selectedKeys || []).join('-')) {
+        setSelectedKeys(keys);
+      }
+    });
+
+    return () =>
+      window.cancelAnimationFrame && window.cancelAnimationFrame(animationId);
+  }, [location.pathname, collapsed]);
 
   return (
     <Menu
@@ -40,7 +83,7 @@ const MenuList: React.FC<MenuListProps> = props => {
       style={style}
       inlineIndent={16}
       className={className}
-      selectedKeys={[]}
+      selectedKeys={selectedKeys}
       defaultOpenKeys={[]}
       {...menuProps}
     >

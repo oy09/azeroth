@@ -3,12 +3,12 @@ import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
-import { WithFalse, MenuDataItem } from '@/typing';
+import { WithFalse, MenuDataItem, RouterTypes, Route } from '@/typing';
 import { MenuTheme } from 'antd/es/menu/MenuContext';
 import { Menu } from 'antd';
 import MenuList from './MenuList';
 
-export interface SiderbarProps {
+export interface SiderbarProps extends Partial<RouterTypes<Route>> {
   className?: string;
   style?: CSSProperties;
   logo?: React.ReactNode;
@@ -32,6 +32,8 @@ export interface SiderbarProps {
   fixSiderbar?: boolean;
   isMobile?: boolean;
   collapsed?: boolean;
+  selectedKeys?: string[];
+  openKeys?: WithFalse<string[]>;
 }
 
 const defaultRenderLogo = (logo: React.ReactNode): React.ReactNode => {
