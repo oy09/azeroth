@@ -29,6 +29,8 @@ const Layout: React.FC<LayoutProps> = props => {
     return data;
   };
 
+  // 本地记录菜单状态
+
   const authCls = classnames('authorize-layout', props.className);
 
   return (
