@@ -1,5 +1,5 @@
 import './AuthorizeLayout.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import BasicLayout from './BasicLayout';
 import { BreadcrumbItemType } from '@/utils/getBreadcrumbProps';
 import RightContent from '@/components/GlobalHeader/RightContent';
@@ -11,6 +11,12 @@ export interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = props => {
+  const [collapsed, setCollapsed] = useState(() =>
+    localStorage.getItem('sidebarState')
+      ? !!+(localStorage.getItem('sidebarState') as string)
+      : false,
+  );
+
   const breadcrumbDataRender = (
     data: BreadcrumbItemType[],
   ): BreadcrumbItemType[] => {
@@ -30,8 +36,14 @@ const Layout: React.FC<LayoutProps> = props => {
   };
 
   // 本地记录菜单状态
-  const handleCollapse = (collapsed: boolean) => {
-    console.log('collapse:', collapsed);
+  const handleCollapse = (value: boolean) => {
+    setCollapsed(value);
+    if (collapsed) {
+      localStorage.setItem('sidebarState', '0');
+    } else {
+      localStorage.setItem('sidebarState', '1');
+    }
+    console.log('collapse:', value);
   };
 
   const classNames = classnames('authorize-layout', props.className);
@@ -40,6 +52,7 @@ const Layout: React.FC<LayoutProps> = props => {
     <BasicLayout
       {...props}
       className={classNames}
+      collapsed={collapsed}
       breadcrumbRender={breadcrumbDataRender}
       rightContentRender={() => <RightContent />}
       onCollapse={handleCollapse}
