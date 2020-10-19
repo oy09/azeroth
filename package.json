@@ -30,6 +30,7 @@
     "antd": "^4.5.2",
     "axios": "^0.20.0",
     "classnames": "^2.2.6",
+    "clipboard": "^2.0.6",
     "cross-env": "^7.0.2",
     "lint-staged": "^10.0.7",
     "lodash": "^4.17.19",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@types/classnames": "^2.2.10",
+    "@types/clipboard": "^2.0.1",
     "redux-logger": "^3.0.6",
     "unstated-next": "^1.1.0"
   }

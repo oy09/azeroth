@@ -13,3 +13,7 @@ declare module '*.svg' {
 declare module 'redux-logger' {
   export function createLogger(): (...args: any) => any;
 }
+
+declare class ClipboardJS {
+  onClick(): void;
+}
