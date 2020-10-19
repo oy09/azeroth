@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { MenuDataItem } from '@/typing';
-import { BreadcrumbReturn } from '@/layouts/getBreadcrumbProps';
+import { BreadcrumbReturn } from '@/utils/getBreadcrumbProps';
 
 export interface RouteContextType {
   menuData?: MenuDataItem[];
@@ -10,6 +10,7 @@ export interface RouteContextType {
   prefixCls?: string;
   title?: string;
   breadcrumb?: BreadcrumbReturn;
+  contentWidth?: 'Fluid' | 'Fixed';
 }
 
 const routeContext: React.Context<RouteContextType> = createContext({});
