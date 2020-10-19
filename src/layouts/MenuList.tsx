@@ -183,7 +183,9 @@ class MenuUtil {
   }
 
   getInitName(data: MenuDataItem) {
-    return data.name;
+    // TODO 未来通过name来查询对应的名称，通过多级配置判断国际化
+    // 多级配置 1.组件 2.数据
+    return data.title;
   }
 
   hasChildren(data: MenuDataItem) {
