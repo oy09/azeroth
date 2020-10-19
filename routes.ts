@@ -13,7 +13,7 @@ const routes: AzRoute[] = [
         path: 'login',
         title: '登录',
         name: 'login',
-        component: '@/pages/test1',
+        component: '@/pages/login',
       },
     ],
   },
