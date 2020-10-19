@@ -30,15 +30,19 @@ const Layout: React.FC<LayoutProps> = props => {
   };
 
   // 本地记录菜单状态
+  const handleCollapse = (collapsed: boolean) => {
+    console.log('collapse:', collapsed);
+  };
 
-  const authCls = classnames('authorize-layout', props.className);
+  const classNames = classnames('authorize-layout', props.className);
 
   return (
     <BasicLayout
       {...props}
-      className={authCls}
+      className={classNames}
       breadcrumbRender={breadcrumbDataRender}
       rightContentRender={() => <RightContent />}
+      onCollapse={handleCollapse}
     >
       {props.children}
     </BasicLayout>
