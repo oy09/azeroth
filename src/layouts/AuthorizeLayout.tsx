@@ -43,7 +43,7 @@ const Layout: React.FC<LayoutProps> = props => {
     } else {
       localStorage.setItem('sidebarState', '1');
     }
-    console.log('collapse:', value);
+    // console.log('collapse:', value);
   };
 
   const classNames = classnames('authorize-layout', props.className);
