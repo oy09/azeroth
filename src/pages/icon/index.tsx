@@ -35,6 +35,7 @@ const IconPage: React.FC<IconPageProps> = props => {
         <Card.Grid
           className={styles.iconItem}
           key={key}
+          // @ts-ignore
           onClick={e => handleClipboard(e, key)}
         >
           <div className={styles.preview}>{React.createElement(value)}</div>
