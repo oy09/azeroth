@@ -1,3 +1,18 @@
 @charset "utf-8";
 
+.iconItem {
+  width: 25%;
+  text-align: center;
 
+  &:hover {
+    cursor: pointer;
+  }
+
+  .preview {
+    font-size: 30px;
+  }
+
+  .name {
+    font-size: 12px;
+  }
+}
