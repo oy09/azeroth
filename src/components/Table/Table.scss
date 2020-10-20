@@ -1,0 +1,37 @@
+@charset "utf-8";
+@import "~@/styles/variable.scss";
+
+.#{$prefix}-toolbar {
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 64px;
+
+  &-default-options {
+    //
+  }
+
+  &-horizontal {
+    display: inline-flex;
+  }
+
+  &-item {
+    margin: 0 8px;
+    cursor: pointer;
+    font-size: 16px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.#{$prefix}-table {
+  .ant-pagination {
+    padding: 0 24px;
+  }
+}

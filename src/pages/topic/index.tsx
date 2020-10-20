@@ -1,5 +1,6 @@
 import React from 'react';
 import GridContent from '@/layouts/GridContent';
+import { AzTable } from '@/components/Table';
 import { Table, Card, Button, Divider } from 'antd';
 import {
   PlusOutlined,
@@ -122,7 +123,16 @@ const TopicPage: React.FC<TopicPageProps> = props => {
 
   return (
     <GridContent>
-      <Card bodyStyle={{ padding: 0 }}>
+      <AzTable
+        columns={columns}
+        dataSource={data}
+        scroll={{ x: '100%' }}
+        rowKey="id"
+        tableLayout="fixed"
+        bordered
+        sticky
+      />
+      {/* <Card bodyStyle={{ padding: 0 }}>
         <div className={styles.tableToolbar}>
           <Button type="primary" icon={<PlusOutlined />}>
             新建
@@ -163,7 +173,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
           sticky
           bordered
         />
-      </Card>
+      </Card> */}
       {/* <div>tool - 新增/编辑/删除/搜索</div> */}
       {/* <div>table - 列、多选、点击编辑、内如预览</div>
       <div>pagination - 分页</div>

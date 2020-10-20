@@ -34,3 +34,7 @@ export interface RouterTypes<P> extends Omit<BasicRouterProps, 'location'> {
 export type AzRoute = IRoute & {
   needRedirect?: string;
 };
+
+export type ParamsType = {
+  [key: string]: React.ReactText | React.ReactText[];
+};
