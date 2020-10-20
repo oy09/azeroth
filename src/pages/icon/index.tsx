@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react';
 import GridContent from '@/layouts/GridContent';
 import * as IconModules from '@ant-design/icons/lib/icons';
-import { Card, message } from 'antd';
+import { Card, message, BackTop } from 'antd';
 import Clipboard from 'clipboard';
 import styles from './icon.scss';
 
@@ -51,9 +51,12 @@ const IconPage: React.FC<IconPageProps> = props => {
   };
 
   return (
-    <GridContent>
-      <Card>{renderAntIcon()}</Card>
-    </GridContent>
+    <React.Fragment>
+      <GridContent>
+        <Card>{renderAntIcon()}</Card>
+      </GridContent>
+      <BackTop />
+    </React.Fragment>
   );
 };
 
