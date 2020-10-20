@@ -1,8 +1,15 @@
 import React from 'react';
 import GridContent from '@/layouts/GridContent';
-import { Table, Card } from 'antd';
+import { Table, Card, Button, Divider } from 'antd';
+import {
+  PlusOutlined,
+  ReloadOutlined,
+  SettingOutlined,
+  FullscreenOutlined,
+  VerticalAlignMiddleOutlined,
+} from '@ant-design/icons';
 import { ColumnType } from 'antd/lib/table';
-import './topic.scss';
+import styles from './topic.scss';
 
 export interface TopicPageProps {
   className?: string;
@@ -109,21 +116,46 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       readCount: 2333,
       likeCount: 4555,
     })
-    .map(item => ({ ...item, id: item.id + 1 }));
+    .map((item, index) => ({ ...item, id: index + 1 }));
+
+  const rowSelection = {};
 
   return (
     <GridContent>
-      <Card style={{ padding: 0 }}>
+      <Card bodyStyle={{ padding: 0 }}>
+        <div className={styles.tableToolbar}>
+          <Button type="primary" icon={<PlusOutlined />}>
+            新建
+          </Button>
+          <div className="toolbar-default-option">
+            <Divider type="vertical" />
+            <div className={styles.toolbarhorizontal}>
+              <div className="toolbar-item">
+                <ReloadOutlined />
+              </div>
+              <div className="toolbar-item">
+                <VerticalAlignMiddleOutlined />
+              </div>
+              <div className="toolbar-item">
+                <SettingOutlined />
+              </div>
+              <div className="toolbar-item">
+                <FullscreenOutlined />
+              </div>
+            </div>
+          </div>
+        </div>
         <Table
+          className={styles.table}
           columns={columns}
           dataSource={data}
           tableLayout="fixed"
           size="middle"
-          rowSelection={{}}
+          rowSelection={rowSelection}
           pagination={{
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: total => `共 ${total}项`,
+            showTotal: total => `总共 ${total} 条`,
             size: 'default',
           }}
           scroll={{ x: '100%' }}

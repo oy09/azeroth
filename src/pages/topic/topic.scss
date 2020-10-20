@@ -1,1 +1,36 @@
 @charset "utf-8";
+
+.tableToolbar {
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 64px;
+}
+
+.toolbarhorizontal {
+  display: inline-flex;
+
+  :global {
+    .toolbar-item {
+      margin: 0 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .toolbar-item:first-child {
+      margin-left: 0;
+    }
+
+    .toolbar-item:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.table {
+  :global {
+    .ant-pagination {
+      padding: 0 24px;
+    }
+  }
+}
