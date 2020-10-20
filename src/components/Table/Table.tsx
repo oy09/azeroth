@@ -28,7 +28,36 @@ export interface TableProps<T, U extends ParamsType>
       table: JSX.Element | undefined;
     },
   ) => React.ReactNode;
-  columns?: any[];
+  onSizeChange?: (size: any) => void; // 需要修改类型
+  onColumnsStateChange?: (map: any) => void; // 需要修改类型
+  onLoad?: (dataSource: T[]) => void;
+  onRequestError?: (e: Error) => void;
+  // 提交表单触发
+  onSubmit?: (params: U) => void;
+  // 重置表单触发
+  onReset?: () => void;
+  // 数据再处理
+  postData?: (data: []) => any[];
+  // 获取dataSouce的方法
+  request?: (
+    params: U & { current?: number; limit?: number },
+    sort: {
+      [key: string]: any;
+    },
+    filter: {
+      [key: string]: React.ReactText[];
+    },
+  ) => Promise<T>;
+  // 是否手动发请求
+  manualRequest?: boolean;
+  // 多选配置对象
+  rowSelection?: AntTableProps<T>['rowSelection'] | false;
+  // 默认操作栏配置
+  options?: any; // 需要修改类型
+  // 操作引用，操作table
+  actionRef?: any; // 需要修改类型
+  defaultData?: T[];
+  columns?: any[]; // 需要修改类型
   params?: U;
 }
 
