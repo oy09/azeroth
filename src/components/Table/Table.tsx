@@ -85,6 +85,7 @@ const AzTable = <T extends {}, U extends ParamsType>(
   const toolbarClassName = classnames(`${prefixCls}-toolbar`);
   const tableClassName = classnames(`${prefixCls}-table`);
   const pagination = propsPagination;
+  const counter = Container.useContainer();
 
   const rowSelection = {};
 
@@ -150,22 +151,32 @@ const AzTable = <T extends {}, U extends ParamsType>(
   };
 
   return (
-    <Container.Provider initialState={props}>
-      <div className={classNames} style={style} ref={rootRef}>
-        <Card
-          bordered={false}
-          style={{
-            height: '100%',
-          }}
-          bodyStyle={{
-            padding: 0,
-          }}
-        >
-          {renderTable()}
-        </Card>
-      </div>
+    <div className={classNames} style={style} ref={rootRef}>
+      <div style={{ display: 'none' }}>search filter</div>
+      <div style={{ display: 'none' }}>extra render</div>
+      <Card
+        bordered={false}
+        style={{
+          height: '100%',
+        }}
+        bodyStyle={{
+          padding: 0,
+        }}
+      >
+        {renderTable()}
+      </Card>
+    </div>
+  );
+};
+
+const ProviderWrap = <T, U extends { [key: string]: any } = {}>(
+  props: TableProps<T, U>,
+) => {
+  return (
+    <Container.Provider>
+      <AzTable {...props} />
     </Container.Provider>
   );
 };
 
-export default AzTable;
+export default ProviderWrap;

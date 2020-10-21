@@ -9,7 +9,7 @@ export interface UseCounterProps {
 }
 
 function useCounter(props: UseCounterProps = {}) {
-  //
+  return {};
 }
 
 const Counter = createContainer<ReturnType<typeof useCounter>, UseCounterProps>(
