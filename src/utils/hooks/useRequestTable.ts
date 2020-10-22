@@ -38,8 +38,8 @@ const useReqeustTable = <T extends ResponseData<any>>(
     defaultCurrent?: number;
     defaultPageSize?: number;
     effects?: any[];
-    onLoad: (dataSource: T['data']) => void;
-    onRequestError: (e: Error) => void;
+    onLoad?: (dataSource: T['data']) => void;
+    onRequestError?: (e: Error) => void;
   },
 ): useReqeustTableAction<T> => {
   const {
