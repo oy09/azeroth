@@ -27,7 +27,7 @@ const useDebounceFn = <T extends any[]>(
   const hooksDeeps = Array.isArray(deeps) ? deeps : [];
   const hookWait = typeof deeps === 'number' ? deeps : wait || 0;
   const timerRef = useRef<any>();
-  const fnRef = useRef<any>();
+  const fnRef = useRef<any>(fn);
 
   fnRef.current = fn;
 
@@ -40,8 +40,8 @@ const useDebounceFn = <T extends any[]>(
   const run = useCallback(
     (...args: any) => {
       cancel();
-      timerRef.current = setTimeout(() => {
-        timerRef.current(...args);
+      timerRef.current = setTimeout(async () => {
+        await fnRef.current(...args);
       }, hookWait);
     },
     [hookWait, cancel],
