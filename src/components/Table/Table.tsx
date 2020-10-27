@@ -2,8 +2,8 @@ import React, { CSSProperties, useRef, useEffect, useState, useCallback } from '
 import classnames from 'classnames';
 import { Card, Button, Divider, Table } from 'antd';
 import { isFunction } from 'lodash';
-import { TableProps as AntTableProps } from 'antd/lib/table';
-import { SortOrder as AntTableSortOrder } from 'antd/lib/table/interface';
+import { TableProps as AntTableProps, TablePaginationConfig as AntTablePaginationConfig } from 'antd/lib/table';
+import { SortOrder as AntTableSortOrder, SorterResult as AntTableSortResult } from 'antd/lib/table/interface';
 import {
   PlusOutlined,
   ReloadOutlined,
@@ -13,12 +13,12 @@ import {
 } from '@ant-design/icons';
 import useRequestTable, { ResponseData } from '@/utils/hooks/useRequestTable';
 import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
-import { ParamsType } from '@/typing';
-import { stringify } from '@/utils/stringUtils';
-import Container from './container';
-import { mergePagination, useAction, dealyPromise } from './utils';
-import './Table.scss';
 import useMergedState from '@/utils/hooks/useMergedState';
+import { ParamsType } from '@/typing';
+import { stringify, omitUndefined, omitUndefinedAndEmptyArray } from '@/utils/stringUtils';
+import { mergePagination, useAction, dealyPromise } from './utils';
+import Container from './container';
+import './Table.scss';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
 
@@ -50,7 +50,7 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   request?: (
     params: U & { current?: number; pageSize?: number },
     sort: {
-      [key: string]: any;
+      [key: string]: AntTableSortOrder;
     },
     filter: {
       [key: string]: React.ReactText[];
@@ -156,7 +156,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
         ...(pageParams || {}),
         ...params,
       };
-      const resposne = await request(actionParams as U, {}, {});
+      const resposne = await request(actionParams as U, azSort, azFilter);
       const responseData = isFunction(postData) ? postData(resposne.data) : resposne.data;
 
       const data = {
@@ -227,8 +227,27 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
   }, [propsPagination && propsPagination.pageSize, propsPagination && propsPagination.current]);
 
   // 表格onChange 处理
-  const handleTableChange = (pagination: any, filters: any, sorter: any, extra: any) => {
-    //
+  const handleTableChange = (
+    pagination: AntTablePaginationConfig,
+    filters: { [key: string]: React.ReactText[] | null },
+    sorter: AntTableSortResult<T> | AntTableSortResult<T>[],
+    extra: any,
+  ) => {
+    if (rest.onChange) {
+      rest.onChange(pagination, filters, sorter, extra);
+    }
+    setAzFilter(omitUndefinedAndEmptyArray(filters));
+    if (Array.isArray(sorter)) {
+      const data = sorter.reduce<{ [key: string]: any }>((pre, value) => {
+        return {
+          ...pre,
+          [`${value.field}`]: value.order,
+        };
+      }, {});
+      setAzSort(omitUndefined(data));
+    } else {
+      setAzSort(omitUndefined({ [`${sorter.field}`]: sorter.order }));
+    }
   };
 
   /**
