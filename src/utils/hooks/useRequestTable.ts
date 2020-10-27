@@ -9,7 +9,7 @@ export interface ResponseData<T> {
   [key: string]: any;
 }
 
-export interface useReqeustTableAction<T extends ResponseData<any>> {
+export interface UseReqeustTableAction<T extends ResponseData<any>> {
   dataSouce: T['data'] | T;
   loading: boolean | undefined;
   hasMore: boolean;
@@ -41,7 +41,7 @@ const useReqeustTable = <T extends ResponseData<any>>(
     onLoad?: (dataSource: T['data']) => void;
     onRequestError?: (e: Error) => void;
   },
-): useReqeustTableAction<T> => {
+): UseReqeustTableAction<T> => {
   const {
     defaultCurrent = 1,
     defaultPageSize = 20,

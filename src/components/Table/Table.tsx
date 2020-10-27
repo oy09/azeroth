@@ -1,6 +1,7 @@
-import React, { CSSProperties, useRef } from 'react';
+import React, { CSSProperties, useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { Card, Button, Divider, Table } from 'antd';
+import { isFunction } from 'lodash';
 import { TableProps as AntTableProps } from 'antd/lib/table';
 import {
   PlusOutlined,
@@ -9,9 +10,15 @@ import {
   SettingOutlined,
   FullscreenOutlined,
 } from '@ant-design/icons';
+import useRequestTable, { ResponseData } from '@/utils/hooks/useRequestTable';
+import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
 import { ParamsType } from '@/typing';
+import { stringify } from '@/utils/stringUtils';
 import Container from './container';
+import { mergePagination, dealyPromise } from './utils';
 import './Table.scss';
+
+type TableRowSelection = AntTableProps<any>['rowSelection'];
 
 export interface TableProps<T, U extends ParamsType>
   extends Omit<AntTableProps<T>, 'columns' | 'rowSelection'> {
@@ -37,17 +44,17 @@ export interface TableProps<T, U extends ParamsType>
   // 重置表单触发
   onReset?: () => void;
   // 数据再处理
-  postData?: (data: []) => any[];
+  postData?: (data: any[]) => any[];
   // 获取dataSouce的方法
   request?: (
-    params: U & { current?: number; limit?: number },
+    params: U & { current?: number; pageSize?: number },
     sort: {
       [key: string]: any;
     },
     filter: {
       [key: string]: React.ReactText[];
     },
-  ) => Promise<T>;
+  ) => Promise<ResponseData<T>>;
   // 是否手动发请求
   manualRequest?: boolean;
   // 多选配置对象
@@ -74,20 +81,133 @@ const AzTable = <T extends {}, U extends ParamsType>(
     className,
     prefixCls = 'az',
     defaultClassName,
+    request,
+    params,
+    manualRequest = false,
+    defaultData = [],
+    onLoad,
+    onRequestError,
+    postData,
     columns: propsColumns,
+    rowSelection: propsRowSelection = false,
     pagination: propsPagination,
-    ...reset
+    ...rest
   } = props;
   const classNames = classnames(defaultClassName, className);
 
-  const rootRef = useRef(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const fullScreen = useRef<() => void>();
+
+  // 发起请求控制
+  const manualRequestRef = useRef<boolean>(manualRequest);
+  // 请求分页参数
+  const fetchPagination =
+    typeof propsPagination === 'object'
+      ? propsPagination
+      : {
+          defaultCurrent: 1,
+          defaultPageSize: 20,
+        };
+
+  // 请求核心
+  const action = useRequestTable(
+    async pageParams => {
+      // 需要手动触发首次请求
+      if (!request || manualRequestRef.current) {
+        manualRequestRef.current = false;
+        return await dealyPromise(
+          {
+            data: props.dataSource || [],
+            total: 999,
+            success: true,
+          },
+          2000,
+        );
+      }
+      const actionParams = {
+        ...(pageParams || {}),
+        ...params,
+      };
+      const resposne = await request(actionParams as U, {}, {});
+      const responseData = isFunction(postData)
+        ? postData(resposne.data)
+        : resposne.data;
+
+      const data = {
+        ...resposne,
+        data: responseData,
+      } as ResponseData<T>;
+
+      return data;
+    },
+    defaultData,
+    {
+      ...fetchPagination,
+      onLoad,
+      onRequestError,
+      effects: [stringify(params)],
+    },
+  );
 
   const toolbarClassName = classnames(`${prefixCls}-toolbar`);
   const tableClassName = classnames(`${prefixCls}-table`);
-  const pagination = propsPagination;
+  // 通过该对象控制 table 翻页，加载，刷新，...等
+  const pagination = mergePagination<T>(propsPagination, action);
+  // 类似redux数据管理
   const counter = Container.useContainer();
 
-  const rowSelection = {};
+  const rowSelection: TableRowSelection = {
+    ...propsRowSelection,
+    onChange: (keys, rows) => {},
+  };
+
+  // 全屏
+  useEffect(() => {
+    fullScreen.current = () => {
+      if (!rootRef.current || !document.fullscreenEnabled) {
+        return;
+      }
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        rootRef.current.requestFullscreen();
+      }
+    };
+  }, [rootRef.current]);
+
+  // 表格尺寸
+  useEffect(() => {
+    counter.setTableSize(rest.size || 'middle');
+  }, [rest.size]);
+
+  // 非受控pagination变化
+  useDeepCompareEffect(() => {
+    if (
+      propsPagination &&
+      (propsPagination.current || propsPagination.pageSize)
+    ) {
+      action.setPageInfo({
+        page: propsPagination.current || action.current,
+        pageSize: propsPagination.pageSize || action.pageSize,
+      });
+    }
+  }, [
+    propsPagination && propsPagination.pageSize,
+    propsPagination && propsPagination.current,
+  ]);
+
+  counter.setAction(action);
+  counter.propsRef.current = props;
+
+  // 表格onChange 处理
+  const handleTableChange = (
+    pagination: any,
+    filters: any,
+    sorter: any,
+    extra: any,
+  ) => {
+    //
+  };
 
   /**
    * 需要把这部分单独封装组件
@@ -121,15 +241,27 @@ const AzTable = <T extends {}, U extends ParamsType>(
     </div>
   );
 
+  // 数据源
+  const dataSource = request
+    ? (action.dataSouce as T[])
+    : props.dataSource || [];
+  // 数据状态
+  const loading = props.loading !== undefined ? props.loading : action.loading;
+
   const tableDom = (
     <Table
-      {...reset}
+      {...rest}
+      size={counter.tableSize}
       style={tableStyle}
-      rowSelection={rowSelection}
+      rowSelection={propsRowSelection === false ? undefined : rowSelection}
       className={tableClassName}
-      columns={propsColumns}
+      columns={counter.columns?.filter(item => {
+        return true;
+      })}
+      loading={loading}
       pagination={pagination}
-      dataSource={props.dataSource}
+      dataSource={dataSource}
+      onChange={handleTableChange}
     />
   );
 
@@ -173,7 +305,7 @@ const ProviderWrap = <T, U extends { [key: string]: any } = {}>(
   props: TableProps<T, U>,
 ) => {
   return (
-    <Container.Provider>
+    <Container.Provider initialState={props}>
       <AzTable {...props} />
     </Container.Provider>
   );
