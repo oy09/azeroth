@@ -1,10 +1,4 @@
-import React, {
-  CSSProperties,
-  useRef,
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+import React, { CSSProperties, useRef, useEffect, useState, useCallback } from 'react';
 import classnames from 'classnames';
 import { Card, Button, Divider, Table } from 'antd';
 import { isFunction } from 'lodash';
@@ -28,8 +22,7 @@ import useMergedState from '@/utils/hooks/useMergedState';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
 
-export interface TableProps<T, U extends ParamsType>
-  extends Omit<AntTableProps<T>, 'columns' | 'rowSelection'> {
+export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<T>, 'columns' | 'rowSelection'> {
   style?: CSSProperties;
   tableStyle?: CSSProperties;
   className?: string;
@@ -80,9 +73,7 @@ export interface TableProps<T, U extends ParamsType>
  * 业务表格组件
  * CRUD基本操作
  */
-const AzTable = <T extends {}, U extends ParamsType>(
-  props: TableProps<T, U>,
-) => {
+const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) => {
   const {
     style,
     tableStyle,
@@ -111,13 +102,9 @@ const AzTable = <T extends {}, U extends ParamsType>(
     [key: string]: React.ReactText[];
   }>({});
   // 排序
-  const [azSort, setAzSort] = useState<{ [key: string]: AntTableSortOrder }>(
-    {},
-  );
+  const [azSort, setAzSort] = useState<{ [key: string]: AntTableSortOrder }>({});
   // 选中行key
-  const [selectedRowKeys, setSelectedRowKeys] = useMergedState<
-    React.ReactText[]
-  >([], {
+  const [selectedRowKeys, setSelectedRowKeys] = useMergedState<React.ReactText[]>([], {
     value: propsRowSelection ? propsRowSelection.selectedRowKeys : undefined,
   });
   // 选中行
@@ -170,9 +157,7 @@ const AzTable = <T extends {}, U extends ParamsType>(
         ...params,
       };
       const resposne = await request(actionParams as U, {}, {});
-      const responseData = isFunction(postData)
-        ? postData(resposne.data)
-        : resposne.data;
+      const responseData = isFunction(postData) ? postData(resposne.data) : resposne.data;
 
       const data = {
         ...resposne,
@@ -233,27 +218,16 @@ const AzTable = <T extends {}, U extends ParamsType>(
 
   // 非受控pagination变化
   useDeepCompareEffect(() => {
-    if (
-      propsPagination &&
-      (propsPagination.current || propsPagination.pageSize)
-    ) {
+    if (propsPagination && (propsPagination.current || propsPagination.pageSize)) {
       action.setPageInfo({
         page: propsPagination.current || action.current,
         pageSize: propsPagination.pageSize || action.pageSize,
       });
     }
-  }, [
-    propsPagination && propsPagination.pageSize,
-    propsPagination && propsPagination.current,
-  ]);
+  }, [propsPagination && propsPagination.pageSize, propsPagination && propsPagination.current]);
 
   // 表格onChange 处理
-  const handleTableChange = (
-    pagination: any,
-    filters: any,
-    sorter: any,
-    extra: any,
-  ) => {
+  const handleTableChange = (pagination: any, filters: any, sorter: any, extra: any) => {
     //
   };
 
@@ -290,9 +264,7 @@ const AzTable = <T extends {}, U extends ParamsType>(
   );
 
   // 数据源
-  const dataSource = request
-    ? (action.dataSouce as T[])
-    : props.dataSource || [];
+  const dataSource = request ? (action.dataSouce as T[]) : props.dataSource || [];
   // 数据状态
   const loading = props.loading !== undefined ? props.loading : action.loading;
 
@@ -349,9 +321,7 @@ const AzTable = <T extends {}, U extends ParamsType>(
   );
 };
 
-const ProviderWrap = <T, U extends { [key: string]: any } = {}>(
-  props: TableProps<T, U>,
-) => {
+const ProviderWrap = <T, U extends { [key: string]: any } = {}>(props: TableProps<T, U>) => {
   return (
     <Container.Provider initialState={props}>
       <AzTable {...props} />
