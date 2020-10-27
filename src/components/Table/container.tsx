@@ -1,6 +1,10 @@
 import { createContainer } from 'unstated-next';
 import { useRef } from 'react';
 import { TableProps } from './Table';
+import {
+  ResponseData,
+  UseReqeustTableAction,
+} from '@/utils/hooks/useRequestTable';
 
 export type ColumnState = {
   //
@@ -17,11 +21,14 @@ export interface UseCounterProps {
 }
 
 function useCounter(props: UseCounterProps = {}) {
+  const actionRef = useRef<UseReqeustTableAction<ResponseData<any>>>();
   const propsRef = useRef<TableProps<any, any>>();
 
   return {
-    action: {},
-    setAction: (action: any) => null,
+    action: actionRef,
+    setAction: (action: UseReqeustTableAction<ResponseData<any>>) => {
+      actionRef.current = action;
+    },
     sortKeyColumns: [],
     setSortKeyColumns: () => null,
     columns: props.columns,

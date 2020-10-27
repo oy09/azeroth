@@ -1,8 +1,15 @@
-import React, { CSSProperties, useRef, useEffect } from 'react';
+import React, {
+  CSSProperties,
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import classnames from 'classnames';
 import { Card, Button, Divider, Table } from 'antd';
 import { isFunction } from 'lodash';
 import { TableProps as AntTableProps } from 'antd/lib/table';
+import { SortOrder as AntTableSortOrder } from 'antd/lib/table/interface';
 import {
   PlusOutlined,
   ReloadOutlined,
@@ -15,8 +22,9 @@ import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
 import { ParamsType } from '@/typing';
 import { stringify } from '@/utils/stringUtils';
 import Container from './container';
-import { mergePagination, dealyPromise } from './utils';
+import { mergePagination, useAction, dealyPromise } from './utils';
 import './Table.scss';
+import useMergedState from '@/utils/hooks/useMergedState';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
 
@@ -88,6 +96,7 @@ const AzTable = <T extends {}, U extends ParamsType>(
     onLoad,
     onRequestError,
     postData,
+    actionRef,
     columns: propsColumns,
     rowSelection: propsRowSelection = false,
     pagination: propsPagination,
@@ -97,6 +106,38 @@ const AzTable = <T extends {}, U extends ParamsType>(
 
   const rootRef = useRef<HTMLDivElement>(null);
   const fullScreen = useRef<() => void>();
+  // 过滤
+  const [azFilter, setAzFilter] = useState<{
+    [key: string]: React.ReactText[];
+  }>({});
+  // 排序
+  const [azSort, setAzSort] = useState<{ [key: string]: AntTableSortOrder }>(
+    {},
+  );
+  // 选中行key
+  const [selectedRowKeys, setSelectedRowKeys] = useMergedState<
+    React.ReactText[]
+  >([], {
+    value: propsRowSelection ? propsRowSelection.selectedRowKeys : undefined,
+  });
+  // 选中行
+  const [selectedRows, setSelectedRows] = useMergedState<T[]>([]);
+  // 类似redux数据管理
+  const counter = Container.useContainer();
+
+  // 保存选中行和选中key
+  const setSelectedRowsAndKeys = (keys: React.ReactText[], rows: T[]) => {
+    setSelectedRowKeys(keys);
+    setSelectedRows(rows);
+  };
+
+  // 清楚选中key和选中行
+  const onCleanSelected = useCallback(() => {
+    if (propsRowSelection && propsRowSelection.onChange) {
+      propsRowSelection.onChange([], []);
+    }
+    setSelectedRowsAndKeys([], []);
+  }, [selectedRowKeys]);
 
   // 发起请求控制
   const manualRequestRef = useRef<boolean>(manualRequest);
@@ -149,12 +190,22 @@ const AzTable = <T extends {}, U extends ParamsType>(
     },
   );
 
+  // 将counter部分api绑定到actionRef中
+  useAction(actionRef, counter, () => {
+    // 清空选中行
+    onCleanSelected();
+    // 清空筛选
+    setAzFilter({});
+    // 清空排序
+    setAzSort({});
+  });
+  counter.setAction(action);
+  counter.propsRef.current = props;
+
   const toolbarClassName = classnames(`${prefixCls}-toolbar`);
   const tableClassName = classnames(`${prefixCls}-table`);
   // 通过该对象控制 table 翻页，加载，刷新，...等
   const pagination = mergePagination<T>(propsPagination, action);
-  // 类似redux数据管理
-  const counter = Container.useContainer();
 
   const rowSelection: TableRowSelection = {
     ...propsRowSelection,
@@ -195,9 +246,6 @@ const AzTable = <T extends {}, U extends ParamsType>(
     propsPagination && propsPagination.pageSize,
     propsPagination && propsPagination.current,
   ]);
-
-  counter.setAction(action);
-  counter.propsRef.current = props;
 
   // 表格onChange 处理
   const handleTableChange = (

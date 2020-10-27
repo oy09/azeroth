@@ -38,3 +38,13 @@ export type AzRoute = IRoute & {
 export type ParamsType = {
   [key: string]: React.ReactText | React.ReactText[];
 };
+
+/**
+ * 业务Table组件Ref操作接口描述
+ */
+export interface CoreTableActionType {
+  reload: (resetPage?: boolean) => void;
+  reloadAndRest?: () => void;
+  rest?: () => void;
+  cleanSelected?: () => void;
+}

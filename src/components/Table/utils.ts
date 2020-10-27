@@ -1,8 +1,60 @@
+import { useEffect } from 'react';
 import { TablePaginationConfig } from 'antd/lib/table';
 import {
   UseReqeustTableAction,
   ResponseData,
 } from '@/utils/hooks/useRequestTable';
+import { CoreTableActionType } from '@/typing';
+import { CounterType } from './container';
+import { TableProps } from './Table';
+
+/**
+ * 将counter和ref进行绑定，暴露几个业务方法
+ * @param ref
+ * @param counter
+ * @param onCleanSelected
+ */
+export const useAction = <T, U = any>(
+  ref: TableProps<T, any>['actionRef'],
+  counter: ReturnType<CounterType>,
+  onCleanSelected: () => void,
+) => {
+  useEffect(() => {
+    const userAction: CoreTableActionType = {
+      reload: async resetPage => {
+        const {
+          action: { current },
+        } = counter;
+        if (resetPage) {
+          await current?.resetPage();
+        }
+        await current?.reload();
+      },
+      reloadAndRest: async () => {
+        const {
+          action: { current },
+        } = counter;
+        onCleanSelected();
+        await current?.resetPage();
+        await current?.reload();
+      },
+      rest: async () => {
+        const {
+          action: { current },
+        } = counter;
+        await current?.reset();
+        await current?.reload();
+      },
+      cleanSelected: () => onCleanSelected(),
+    };
+    if (ref && typeof ref === 'function') {
+      ref(userAction);
+    }
+    if (ref && typeof ref !== 'function') {
+      ref.current = userAction;
+    }
+  }, []);
+};
 
 /**
  * @param pagination 默认分页设置
