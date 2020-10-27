@@ -38,7 +38,7 @@ const Counter = createContainer<ReturnType<typeof useCounter>, UseCounterProps>(
   useCounter,
 );
 
-export type CountType = typeof useCounter;
+export type CounterType = typeof useCounter;
 
 export { useCounter };
 
