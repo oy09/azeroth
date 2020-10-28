@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  RouteComponentProps as BasicRouterProps,
-  match,
-} from 'react-router-dom';
+import { RouteComponentProps as BasicRouterProps, match } from 'react-router-dom';
 import { IRoute } from 'umi';
 
 export type WithFalse<T> = T | false;
@@ -48,3 +45,26 @@ export interface CoreTableActionType {
   rest?: () => void;
   cleanSelected?: () => void;
 }
+
+/**
+ * 公共组件模型
+ */
+export type AzSchema<T = unknown, U = string, Extra = unknown> = {
+  key?: React.ReactText;
+  dataIndex?: string | number | (string | number)[];
+  // 渲染模式
+  valueType?: ((entity: T) => U) | U;
+  // 标题组件
+  title?: any;
+  // 展示提示信息
+  tooltip?: string;
+  render?: (...args: any[]) => React.ReactNode;
+  renderFormItem?: (...args: any[]) => React.ReactNode;
+  renderText?: (...args: any[]) => any;
+  valueEnum?: any;
+  request?: any;
+  params?: {
+    [key: string]: any;
+  };
+  hideInDescription?: boolean;
+} & Extra;
