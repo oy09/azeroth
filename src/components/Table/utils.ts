@@ -1,9 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, ReactText } from 'react';
 import { TablePaginationConfig } from 'antd/lib/table';
-import {
-  UseReqeustTableAction,
-  ResponseData,
-} from '@/utils/hooks/useRequestTable';
+import { UseReqeustTableAction, ResponseData } from '@/utils/hooks/useRequestTable';
 import { CoreTableActionType } from '@/typing';
 import { CounterType } from './container';
 import { TableProps } from './Table';
@@ -69,8 +66,7 @@ export const mergePagination = <T>(
   if (pagination === false) {
     return false;
   }
-  const defaultPagination: TablePaginationConfig | {} =
-    typeof pagination === 'object' ? pagination : {};
+  const defaultPagination: TablePaginationConfig | {} = typeof pagination === 'object' ? pagination : {};
   const { current, pageSize } = action;
 
   return {
@@ -93,6 +89,13 @@ export const mergePagination = <T>(
       }
     },
   };
+};
+
+export const getColumnKey = (key?: ReactText, index?: number): string => {
+  if (key) {
+    return `${key}`;
+  }
+  return `${index}`;
 };
 
 /**
