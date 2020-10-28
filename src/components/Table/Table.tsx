@@ -88,7 +88,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     onRequestError,
     postData,
     actionRef,
-    columns: propsColumns,
+    columns: propsColumns = [],
     rowSelection: propsRowSelection = false,
     pagination: propsPagination,
     ...rest
@@ -211,12 +211,19 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     };
   }, [rootRef.current]);
 
-  // 表格尺寸
+  // 表格尺寸/间距/大小
   useEffect(() => {
     counter.setTableSize(rest.size || 'middle');
   }, [rest.size]);
 
-  // 非受控pagination变化
+  // 保存columns配置（其它组件需要用到），同步到缓存中
+  useDeepCompareEffect(() => {
+    counter.setCoumns(propsColumns);
+  }, [propsColumns]);
+
+  /**
+   * 同步paginatio，非受控pagination变化
+   */
   useDeepCompareEffect(() => {
     if (propsPagination && (propsPagination.current || propsPagination.pageSize)) {
       action.setPageInfo({

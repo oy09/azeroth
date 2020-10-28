@@ -1,10 +1,8 @@
 import { createContainer } from 'unstated-next';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { ColumnType } from 'antd/lib/table';
 import { TableProps } from './Table';
-import {
-  ResponseData,
-  UseReqeustTableAction,
-} from '@/utils/hooks/useRequestTable';
+import { ResponseData, UseReqeustTableAction } from '@/utils/hooks/useRequestTable';
 
 export type ColumnState = {
   //
@@ -21,6 +19,7 @@ export interface UseCounterProps {
 }
 
 function useCounter(props: UseCounterProps = {}) {
+  const [columns, setColumns] = useState<ColumnType<any>[]>([]);
   const actionRef = useRef<UseReqeustTableAction<ResponseData<any>>>();
   const propsRef = useRef<TableProps<any, any>>();
 
@@ -31,8 +30,8 @@ function useCounter(props: UseCounterProps = {}) {
     },
     sortKeyColumns: [],
     setSortKeyColumns: () => null,
-    columns: props.columns,
-    setCoumns: () => null,
+    columns: columns,
+    setCoumns: setColumns,
     tableSize: 'middle' as DensityType,
     setTableSize: (size: DensityType) => null,
     columnsMap: {},
@@ -41,9 +40,7 @@ function useCounter(props: UseCounterProps = {}) {
   };
 }
 
-const Counter = createContainer<ReturnType<typeof useCounter>, UseCounterProps>(
-  useCounter,
-);
+const Counter = createContainer<ReturnType<typeof useCounter>, UseCounterProps>(useCounter);
 
 export type CounterType = typeof useCounter;
 
