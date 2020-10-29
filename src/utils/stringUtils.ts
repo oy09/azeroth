@@ -9,14 +9,14 @@ export const stringify = (value: any): string => JSON.stringify(value);
 export const omitUndefinedAndEmptyArray = (value: any) => {
   return omitBy(value, p => {
     if (Array.isArray(p) && p.length === 0) {
-      return false;
+      return true;
     }
 
     if (p === undefined) {
-      return false;
+      return true;
     }
 
-    return true;
+    return false;
   });
 };
 
