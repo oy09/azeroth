@@ -1,7 +1,9 @@
 import React from 'react';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
+import { AzColumnType } from '@/components/Table/Table';
 import { Table, Card, Button, Divider } from 'antd';
+import { ColumnType } from 'antd/lib/table';
 import {
   PlusOutlined,
   ReloadOutlined,
@@ -9,7 +11,6 @@ import {
   FullscreenOutlined,
   VerticalAlignMiddleOutlined,
 } from '@ant-design/icons';
-import { ColumnType } from 'antd/lib/table';
 import styles from './topic.scss';
 
 export interface TopicPageProps {
@@ -17,7 +18,7 @@ export interface TopicPageProps {
 }
 
 const TopicPage: React.FC<TopicPageProps> = props => {
-  const columns: ColumnType<any>[] = [
+  const columns: AzColumnType<any>[] = [
     {
       title: '序号',
       key: 'no',

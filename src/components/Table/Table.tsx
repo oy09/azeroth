@@ -1,9 +1,20 @@
-import React, { CSSProperties, useRef, useEffect, useState, useCallback } from 'react';
+import React, { CSSProperties, useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import classnames from 'classnames';
 import { Card, Button, Divider, Table } from 'antd';
-import { isFunction } from 'lodash';
-import { TableProps as AntTableProps, TablePaginationConfig as AntTablePaginationConfig } from 'antd/lib/table';
-import { SortOrder as AntTableSortOrder, SorterResult as AntTableSortResult } from 'antd/lib/table/interface';
+import { isFunction, get } from 'lodash';
+import {
+  TableProps as AntTableProps,
+  TablePaginationConfig as AntTablePaginationConfig,
+  ColumnType as AntTableColumnType,
+  ColumnsType as AntTableColumnsType,
+  ColumnGroupType as AntTableColumnGroupType,
+} from 'antd/lib/table';
+import { FormItemProps as AntFormItemProps } from 'antd/lib/form';
+import {
+  SortOrder as AntTableSortOrder,
+  SorterResult as AntTableSortResult,
+  ColumnFilterItem as AntTableColumnFilterItem,
+} from 'antd/lib/table/interface';
 import {
   PlusOutlined,
   ReloadOutlined,
@@ -14,13 +25,49 @@ import {
 import useRequestTable, { ResponseData } from '@/utils/hooks/useRequestTable';
 import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
 import useMergedState from '@/utils/hooks/useMergedState';
-import { ParamsType } from '@/typing';
+import { ParamsType, AzSchema } from '@/typing';
 import { stringify, omitUndefined, omitUndefinedAndEmptyArray } from '@/utils/stringUtils';
-import { mergePagination, useAction, dealyPromise } from './utils';
-import Container from './container';
+import { mergePagination, useAction, getColumnKey, dealyPromise } from './utils';
+import Container, { useCounter, ColumnState } from './container';
 import './Table.scss';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
+
+// 移除 render/children/title/filters 属性
+export type ExtraAzColumnType<T> = Omit<AntTableColumnType<T>, 'render' | 'children' | 'title' | 'filters'>;
+
+// 公共控制属性，其它组件会用到Table Column，部分的Column属性会被应用在其它组件中
+interface AzColumnControl {
+  index?: number;
+  // 初始化值
+  initialValue?: any;
+  // 是否缩略
+  ellipsis?: boolean;
+  // 是否拷贝
+  copyable?: boolean;
+  // 在查询表单中隐藏
+  hideSearch?: boolean;
+  // 在表格中隐藏
+  hideTable?: boolean;
+  // 在表单中隐藏
+  hideForm?: boolean;
+  // 表头筛选菜单项
+  filters?: boolean | AntTableColumnFilterItem[];
+  // 表单顺序
+  order?: number;
+  // 传递给表达项的props
+  formItemProps?: Partial<Omit<AntFormItemProps, 'children'>>;
+}
+
+// Table Column 主要属性类型
+export type AzColumnType<T = unknown> = AzSchema<T, any, ExtraAzColumnType<T> & AzColumnControl>;
+
+export interface AzcColumnGroupType<T> extends AzColumnType<T> {
+  children: AzColumns<T>[];
+}
+
+// Table Column 主要属性组合
+export type AzColumns<T = any> = AzcColumnGroupType<T> | AzColumnType<T>;
 
 export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<T>, 'columns' | 'rowSelection'> {
   style?: CSSProperties;
@@ -65,9 +112,94 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   // 操作引用，操作table
   actionRef?: any; // 需要修改类型
   defaultData?: T[];
-  columns?: any[]; // 需要修改类型
+  columns?: AzColumns<T>[]; // 需要修改类型
   params?: U;
 }
+
+interface RenderColumnOption<T> {
+  item: AzColumns<T>;
+  text: any;
+  row: T;
+  index: number;
+  columnEmptyText: string | false;
+  counter: ReturnType<typeof useCounter>;
+}
+
+// 创建列标题
+const renderColumnsTitle = (item: AzColumns<any>) => {
+  const { title } = item;
+  if (title && typeof title === 'function') {
+    return title(item, 'table', <div>111</div>);
+  }
+  return title;
+};
+
+// 列单元格具体渲染
+const renderColumn = <T, U = any>(option: RenderColumnOption<T>): any => {
+  const { text } = option;
+  return text;
+};
+
+// 默认的table column OnFilter实现
+const defaultOnFilter = (value: string, record: any, dataIndex: string | string[]) => {
+  let recordElement = Array.isArray(dataIndex) ? get(record, dataIndex) : record[dataIndex];
+  if (typeof recordElement === 'number') {
+    recordElement = recordElement.toString();
+  }
+  const itemValue = String(recordElement);
+  return String(itemValue) === String(value);
+};
+
+/**
+ * 转换格式，将业务配置ant column转换为业务 column
+ */
+const generatorCoumnList = <T, U = {}>(
+  columns: AzColumns<T>[],
+  map: { [key: string]: ColumnState },
+  counter: ReturnType<typeof useCounter>,
+  columnEmptyText?: string | false,
+): Array<AntTableColumnType<T>> => {
+  const newColumns = columns
+    .map((item, index) => {
+      const { key, dataIndex, valueEnum, valueType, filters = [] } = item;
+      const noNeedAz = !dataIndex && !valueEnum && !valueType;
+      if (noNeedAz) {
+        return item;
+      }
+      const columnkey = getColumnKey(key, index);
+      const config = columnkey ? map[columnkey] || { fixed: item.fixed } : { fixed: item.fixed };
+      const { propsRef } = counter;
+      const templateColumn = {
+        onFilter: propsRef.current?.request
+          ? undefined
+          : (value: string, row: T) => defaultOnFilter(value, row, dataIndex as string[]),
+        index: index,
+        ...item,
+        filters: false,
+        title: renderColumnsTitle(item),
+        valueEnum: valueEnum,
+        ellipsis: false,
+        width: item.width || (item.fixed ? 200 : undefined),
+        children: (item as AntTableColumnGroupType<T>).children
+          ? generatorCoumnList(
+              (item as AntTableColumnGroupType<T>).children as AzColumns<T>[],
+              map,
+              counter,
+              columnEmptyText,
+            )
+          : undefined,
+        render: (text: any, row: T, index: number) =>
+          renderColumn({ item, text, row, index, columnEmptyText: '-', counter }),
+      };
+
+      return omitUndefinedAndEmptyArray(templateColumn);
+    })
+    .filter(item => {
+      return !item.hideInTable;
+    });
+  // console.log('columns:', newColumns)
+  return newColumns as Array<AntTableColumnType<T>>;
+};
 
 /**
  * 业务表格组件
@@ -218,7 +350,8 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
 
   // 保存columns配置（其它组件需要用到），同步到缓存中
   useDeepCompareEffect(() => {
-    counter.setCoumns(propsColumns);
+    counter.setAzColumns(propsColumns);
+    // counter.setColumns(propsColumns)
   }, [propsColumns]);
 
   /**
@@ -232,6 +365,21 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       });
     }
   }, [propsPagination && propsPagination.pageSize, propsPagination && propsPagination.current]);
+
+  // 创建表格列配置
+  const tableColumn = useMemo(() => generatorCoumnList(propsColumns, {}, counter, '-'), [propsColumns]);
+
+  /**
+   * Table Column 变化的时候更新
+   */
+  useDeepCompareEffect(() => {
+    if (tableColumn && tableColumn.length > 0) {
+      counter.setColumns(tableColumn);
+      // 重新创建key用于排序
+      const columnKeys = tableColumn.map((item, index) => getColumnKey(item.key, index));
+      counter.setSortKeyColumns(columnKeys);
+    }
+  }, [tableColumn]);
 
   // 表格onChange 处理
   const handleTableChange = (
