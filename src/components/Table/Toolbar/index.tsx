@@ -1,8 +1,9 @@
 import React, { CSSProperties } from 'react';
 import classnames from 'classnames';
-import { Space, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import { ReloadOutlined, VerticalAlignMiddleOutlined, SettingOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 import { UseReqeustTableAction, ResponseData } from '@/utils/hooks/useRequestTable';
+import FullscreenIcon from './FullScreenIcon';
 import './Toolbar.scss';
 
 /**
@@ -60,7 +61,7 @@ const getOptionMap = (): { [key: string]: DefaultOptionItem } => {
     },
     fullScreen: {
       text: '全屏',
-      icon: <FullscreenExitOutlined />,
+      icon: <FullscreenIcon />,
     },
     setting: {
       text: '列设置',
@@ -93,7 +94,9 @@ const renderDefaultOption = (options: any, className: string) => {
                 }
               }}
             >
-              <Tooltip title={optionItem.text}>{optionItem.icon}</Tooltip>
+              <Tooltip title={optionItem.text}>
+                <span>{optionItem.icon}</span>
+              </Tooltip>
             </span>
           );
         }
