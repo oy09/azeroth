@@ -42,13 +42,7 @@ const useReqeustTable = <T extends ResponseData<any>>(
     onRequestError?: (e: Error) => void;
   },
 ): UseReqeustTableAction<T> => {
-  const {
-    defaultCurrent = 1,
-    defaultPageSize = 20,
-    onLoad = () => null,
-    onRequestError,
-    effects = [],
-  } = options || {};
+  const { defaultCurrent = 1, defaultPageSize = 20, onLoad = () => null, onRequestError, effects = [] } = options || {};
   let isMount = true;
 
   const [list, setList] = useState<T['data']>(defaultData as T['data']);
@@ -120,15 +114,12 @@ const useReqeustTable = <T extends ResponseData<any>>(
     });
   };
 
-  const fetchDebounceList = useDebounceFn(fetchList, [], 300);
+  const fetchDebounceList = useDebounceFn(fetchList, [], 100);
 
   // page变化，自动刷新数据
   useEffect(() => {
     const { page, pageSize } = pageInfo;
-    if (
-      (!prePage || prePage === page) &&
-      (!prePageSize || prePageSize === pageSize)
-    ) {
+    if ((!prePage || prePage === page) && (!prePageSize || prePageSize === pageSize)) {
       return () => undefined;
     }
 
