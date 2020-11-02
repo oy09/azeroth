@@ -8,17 +8,8 @@
   justify-content: space-between;
   height: 64px;
 
-  &-default-options {
-    //
-  }
-
-  &-horizontal {
-    display: inline-flex;
-  }
-
-  &-item {
+  &-item-icon {
     margin: 0 8px;
-    cursor: pointer;
     font-size: 16px;
 
     &:first-child {
@@ -28,11 +19,17 @@
     &:last-child {
       margin-right: 0;
     }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
-.#{$prefix}-table {
-  .ant-pagination {
-    padding: 0 24px;
-  }
+.#{$prefix}-custom-toolbar {
+  //
+}
+
+.#{$prefix}-default-option {
+  //
 }

@@ -1,6 +1,7 @@
 import React, { CSSProperties, useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { Card, Button, Divider, Table } from 'antd';
+import { Card, Button, Table } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { isFunction, get } from 'lodash';
 import {
   TableProps as AntTableProps,
@@ -15,13 +16,6 @@ import {
   SorterResult as AntTableSortResult,
   ColumnFilterItem as AntTableColumnFilterItem,
 } from 'antd/lib/table/interface';
-import {
-  PlusOutlined,
-  ReloadOutlined,
-  VerticalAlignMiddleOutlined,
-  SettingOutlined,
-  FullscreenOutlined,
-} from '@ant-design/icons';
 import useRequestTable, { ResponseData } from '@/utils/hooks/useRequestTable';
 import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
 import useMergedState from '@/utils/hooks/useMergedState';
@@ -29,6 +23,7 @@ import { ParamsType, AzSchema } from '@/typing';
 import { stringify, omitUndefined, omitUndefinedAndEmptyArray } from '@/utils/stringUtils';
 import { mergePagination, useAction, getColumnKey, dealyPromise } from './utils';
 import Container, { useCounter, ColumnState } from './container';
+import AzToolbar, { OptionConfig } from './Toolbar';
 import './Table.scss';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
@@ -108,7 +103,7 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   // 多选配置对象
   rowSelection?: AntTableProps<T>['rowSelection'] | false;
   // 默认操作栏配置
-  options?: any; // 需要修改类型
+  options?: OptionConfig<T>; // 需要修改类型
   // 操作引用，操作table
   actionRef?: any; // 需要修改类型
   defaultData?: T[];
@@ -181,15 +176,9 @@ const generatorCoumnList = <T, U = {}>(
         ellipsis: false,
         width: item.width || (item.fixed ? 200 : undefined),
         children: (item as AntTableColumnGroupType<T>).children
-          ? generatorCoumnList(
-              (item as AntTableColumnGroupType<T>).children as AzColumns<T>[],
-              map,
-              counter,
-              columnEmptyText,
-            )
+          ? generatorCoumnList((item as AntTableColumnGroupType<T>).children as AzColumns<T>[], map, counter, columnEmptyText)
           : undefined,
-        render: (text: any, row: T, index: number) =>
-          renderColumn({ item, text, row, index, columnEmptyText: '-', counter }),
+        render: (text: any, row: T, index: number) => renderColumn({ item, text, row, index, columnEmptyText: '-', counter }),
       };
 
       return omitUndefinedAndEmptyArray(templateColumn);
@@ -220,6 +209,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     onRequestError,
     postData,
     actionRef,
+    options,
     columns: propsColumns = [],
     rowSelection: propsRowSelection = false,
     pagination: propsPagination,
@@ -413,28 +403,20 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
    * 页面全屏
    */
   const toolbarDom = (
-    <div className={toolbarClassName}>
-      <Button type="primary" icon={<PlusOutlined />}>
-        新建
-      </Button>
-      <div className={`${toolbarClassName}-default-options`}>
-        <Divider type="vertical" />
-        <div className={`${toolbarClassName}-horizontal`}>
-          <div className={`${toolbarClassName}-item`}>
-            <ReloadOutlined />
-          </div>
-          <div className={`${toolbarClassName}-item`}>
-            <VerticalAlignMiddleOutlined />
-          </div>
-          <div className={`${toolbarClassName}-item`}>
-            <SettingOutlined />
-          </div>
-          <div className={`${toolbarClassName}-item`}>
-            <FullscreenOutlined />
-          </div>
-        </div>
-      </div>
-    </div>
+    <AzToolbar
+      options={options}
+      action={action}
+      selectRows={selectedRows}
+      selectRowkeys={selectedRowKeys}
+      onFullScreen={fullScreen.current}
+      leftbarRender={() => (
+        <>
+          <Button type="primary" icon={<PlusOutlined />}>
+            新建
+          </Button>
+        </>
+      )}
+    />
   );
 
   // 数据源
