@@ -2,6 +2,7 @@ import { createContainer } from 'unstated-next';
 import { useRef, useState } from 'react';
 import { ColumnType } from 'antd/lib/table';
 import { TableProps, AzColumns } from './Table';
+import { DensityType } from './Toolbar/DesintyIcon';
 import { ResponseData, UseReqeustTableAction } from '@/utils/hooks/useRequestTable';
 import useMergeState from '@/utils/hooks/useMergedState';
 
@@ -11,8 +12,6 @@ export type ColumnState = {
   fixed?: 'right' | 'left';
   order?: number;
 };
-
-export type DensityType = 'middle' | 'small' | 'large' | undefined;
 
 export interface UseCounterProps {
   columns?: any[];
@@ -25,6 +24,10 @@ export interface UseCounterProps {
 function useCounter(props: UseCounterProps = {}) {
   const [columns, setColumns] = useState<ColumnType<any>[]>([]);
   const [azColumns, setAzColumns] = useState<AzColumns<any>[]>([]);
+  const [tableSize, setTableSize] = useMergeState(props.size || 'middle', {
+    value: props.size,
+    onChange: props.onSizeChange,
+  });
   const [columnsMap, setColumnsMap] = useMergeState(props.columnStateMap || {}, {
     value: props.columnStateMap,
     onChange: props.onColumnStateChange,
@@ -46,8 +49,8 @@ function useCounter(props: UseCounterProps = {}) {
     setColumns: setColumns,
     azColumns: azColumns,
     setAzColumns: setAzColumns,
-    tableSize: 'middle' as DensityType,
-    setTableSize: (size: DensityType) => null,
+    tableSize: tableSize,
+    setTableSize: setTableSize,
     columnsMap: columnsMap,
     setCoumnsMap: setColumnsMap,
     propsRef,

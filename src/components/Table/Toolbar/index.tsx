@@ -4,6 +4,7 @@ import { Tooltip } from 'antd';
 import { ReloadOutlined, VerticalAlignMiddleOutlined, SettingOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 import { UseReqeustTableAction, ResponseData } from '@/utils/hooks/useRequestTable';
 import FullscreenIcon from './FullScreenIcon';
+import DesintyIcon from './DesintyIcon';
 import './Toolbar.scss';
 
 /**
@@ -57,7 +58,7 @@ const getOptionMap = (): { [key: string]: DefaultOptionItem } => {
     },
     desinty: {
       text: '尺寸',
-      icon: <VerticalAlignMiddleOutlined />,
+      icon: <DesintyIcon />,
     },
     fullScreen: {
       text: '全屏',

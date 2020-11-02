@@ -68,3 +68,8 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
   };
   hideInDescription?: boolean;
 } & Extra;
+
+export interface IntlType {
+  locale?: string;
+  getMessage: (id: string, defaultMessage: string) => string;
+}
