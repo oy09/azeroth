@@ -1,10 +1,11 @@
-import React, { CSSProperties, useRef, useEffect } from 'react';
+import React, { CSSProperties, useRef } from 'react';
 import classnames from 'classnames';
 import { Popover, Checkbox } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
+import Icon, { SettingOutlined } from '@ant-design/icons';
 import { AzColumns } from '@/components/Table/Table';
 import { getColumnKey } from '@/components/Table/utils';
 import Container, { ColumnState } from '@/components/Table/container';
+import { ReactComponent as DragSvg } from '@/assets/svg/drag.svg';
 import './ColumnSetting.scss';
 
 /**
@@ -32,7 +33,7 @@ const CheckboxListItem: React.FC<CheckboxListItemProps> = props => {
 
   return (
     <span className={`${className}-list-item`} key={columnKey}>
-      {/* drag icon */}
+      <Icon component={DragSvg} style={{ paddingRight: 6, cursor: 'move', color: 'rgba(0, 0, 0, 0.45)' }} />
       <Checkbox
         onChange={e => {
           if (columnKey) {
