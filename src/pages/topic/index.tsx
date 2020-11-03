@@ -127,6 +127,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       <AzTable
         columns={columns}
         dataSource={data}
+        rowSelection={rowSelection}
         scroll={{ x: '100%' }}
         rowKey="id"
         tableLayout="fixed"
