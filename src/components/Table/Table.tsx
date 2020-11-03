@@ -432,6 +432,11 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       rowSelection={propsRowSelection === false ? undefined : rowSelection}
       className={tableClassName}
       columns={counter.columns?.filter(item => {
+        const columnKey = getColumnKey(item.key, item.index);
+        const config = counter.columnsMap[columnKey];
+        if (config && config.show === false) {
+          return false;
+        }
         return true;
       })}
       loading={loading}

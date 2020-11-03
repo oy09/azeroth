@@ -5,6 +5,7 @@ import { ReloadOutlined, VerticalAlignMiddleOutlined, SettingOutlined, Fullscree
 import { UseReqeustTableAction, ResponseData } from '@/utils/hooks/useRequestTable';
 import FullscreenIcon from './FullScreenIcon';
 import DesintyIcon from './DesintyIcon';
+import ColumnSetting from '../ColumnSetting';
 import './Toolbar.scss';
 
 /**
@@ -66,7 +67,7 @@ const getOptionMap = (): { [key: string]: DefaultOptionItem } => {
     },
     setting: {
       text: '列设置',
-      icon: <SettingOutlined />,
+      icon: <ColumnSetting />,
     },
   };
 };

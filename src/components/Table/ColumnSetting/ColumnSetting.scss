@@ -1,0 +1,11 @@
+@charset "utf-8";
+@import "~@/styles/variable.scss";
+
+.#{$prefix}-column-setting {
+  &-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 32px;
+  }
+}

@@ -22,13 +22,13 @@ export interface UseCounterProps {
 }
 
 function useCounter(props: UseCounterProps = {}) {
-  const [columns, setColumns] = useState<ColumnType<any>[]>([]);
+  const [columns, setColumns] = useState<(ColumnType<any> & { index?: number })[]>([]);
   const [azColumns, setAzColumns] = useState<AzColumns<any>[]>([]);
   const [tableSize, setTableSize] = useMergeState(props.size || 'middle', {
     value: props.size,
     onChange: props.onSizeChange,
   });
-  const [columnsMap, setColumnsMap] = useMergeState(props.columnStateMap || {}, {
+  const [columnsMap, setColumnsMap] = useMergeState<{ [key: string]: ColumnState }>(props.columnStateMap || {}, {
     value: props.columnStateMap,
     onChange: props.onColumnStateChange,
   });
@@ -52,7 +52,7 @@ function useCounter(props: UseCounterProps = {}) {
     tableSize: tableSize,
     setTableSize: setTableSize,
     columnsMap: columnsMap,
-    setCoumnsMap: setColumnsMap,
+    setColumnsMap: setColumnsMap,
     propsRef,
   };
 }
