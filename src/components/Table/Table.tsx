@@ -1,6 +1,6 @@
 import React, { CSSProperties, useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { Card, Button, Table } from 'antd';
+import { Card, Button, Table, Empty } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { isFunction, get } from 'lodash';
 import {
@@ -394,6 +394,14 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       setAzSort(omitUndefined({ [`${sorter.field}`]: sorter.order }));
     }
   };
+
+  if (props.columns && props.columns.length < 1) {
+    return (
+      <Card bordered={false} bodyStyle={{ padding: 30 }}>
+        <Empty />
+      </Card>
+    );
+  }
 
   /**
    * 需要把这部分单独封装组件
