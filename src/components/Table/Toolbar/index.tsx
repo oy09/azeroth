@@ -33,9 +33,9 @@ export type OptionType<T = unknown> =
 
 export interface ToolbarProps<T = any> {
   // 左边
-  leftbarRender?: (props: ToolbarProps<T>) => any;
+  leftbarRender?: (props: ToolbarProps<T>) => React.ReactNode;
   // 右边
-  rightbarRender?: (props: ToolbarProps<T>, dom: React.ReactNode[]) => any;
+  rightbarRender?: (props: ToolbarProps<T>, dom: React.ReactNode) => React.ReactNode;
   action?: UseReqeustTableAction<ResponseData<T>>;
   options?: OptionConfig<T> | false;
   selectRowkeys?: (string | number)[];
@@ -73,7 +73,7 @@ const getOptionMap = (): { [key: string]: DefaultOptionItem } => {
 };
 
 // 渲染默认的选项
-const renderDefaultOption = (options: any, className: string) => {
+const renderDefaultOption = (options: any, className: string): React.ReactNode => {
   const dom =
     options &&
     Object.keys(options)

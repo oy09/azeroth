@@ -128,6 +128,13 @@ const TopicPage: React.FC<TopicPageProps> = props => {
         columns={columns}
         dataSource={data}
         rowSelection={rowSelection}
+        toolbarLeftRender={props => (
+          <React.Fragment>
+            <Button type="primary" icon={<PlusOutlined />}>
+              新建
+            </Button>
+          </React.Fragment>
+        )}
         scroll={{ x: '100%' }}
         rowKey="id"
         tableLayout="fixed"

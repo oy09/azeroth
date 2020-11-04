@@ -23,7 +23,7 @@ import { ParamsType, AzSchema } from '@/typing';
 import { stringify, omitUndefined, omitUndefinedAndEmptyArray } from '@/utils/stringUtils';
 import { mergePagination, useAction, getColumnKey, dealyPromise } from './utils';
 import Container, { useCounter, ColumnState } from './container';
-import AzToolbar, { OptionConfig } from './Toolbar';
+import AzToolbar, { OptionConfig, ToolbarProps } from './Toolbar';
 import './Table.scss';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
@@ -70,6 +70,8 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   className?: string;
   defaultClassName?: string;
   prefixCls?: string;
+  toolbarLeftRender?: ToolbarProps<T>['leftbarRender'];
+  toolbarRightRender?: ToolbarProps<T>['rightbarRender'];
   tableRender?: (
     props: TableProps<T, U>,
     defaultDom: JSX.Element,
@@ -210,6 +212,8 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     postData,
     actionRef,
     options,
+    toolbarLeftRender,
+    toolbarRightRender,
     columns: propsColumns = [],
     rowSelection: propsRowSelection = false,
     pagination: propsPagination,
@@ -417,13 +421,8 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       selectRows={selectedRows}
       selectRowkeys={selectedRowKeys}
       onFullScreen={fullScreen.current}
-      leftbarRender={() => (
-        <>
-          <Button type="primary" icon={<PlusOutlined />}>
-            新建
-          </Button>
-        </>
-      )}
+      leftbarRender={toolbarLeftRender}
+      rightbarRender={toolbarRightRender}
     />
   );
 
