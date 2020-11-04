@@ -1,7 +1,6 @@
 import React, { CSSProperties, useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { Card, Button, Table, Empty } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Card, Table, Empty } from 'antd';
 import { isFunction, get } from 'lodash';
 import {
   TableProps as AntTableProps,
@@ -24,6 +23,7 @@ import { stringify, omitUndefined, omitUndefinedAndEmptyArray } from '@/utils/st
 import { mergePagination, useAction, getColumnKey, dealyPromise } from './utils';
 import Container, { useCounter, ColumnState } from './container';
 import AzToolbar, { OptionConfig, ToolbarProps } from './Toolbar';
+import LabelIconTip from '@/components/LabelIconTip';
 import './Table.scss';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
@@ -129,9 +129,9 @@ interface RenderColumnOption<T> {
 const renderColumnsTitle = (item: AzColumns<any>) => {
   const { title } = item;
   if (title && typeof title === 'function') {
-    return title(item, 'table', <div>111</div>);
+    return title(item, 'table', <LabelIconTip label={title} tooltip={item.tooltip} />);
   }
-  return title;
+  return <LabelIconTip label={title} tooltip={item.tooltip} />;
 };
 
 // 列单元格具体渲染
