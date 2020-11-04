@@ -1,11 +1,14 @@
 import React, { CSSProperties, useRef } from 'react';
 import classnames from 'classnames';
 import { Popover, Checkbox } from 'antd';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import Icon, { SettingOutlined } from '@ant-design/icons';
 import { AzColumns } from '@/components/Table/Table';
 import { getColumnKey } from '@/components/Table/utils';
 import Container, { ColumnState } from '@/components/Table/container';
 import { ReactComponent as DragSvg } from '@/assets/svg/drag.svg';
+import DndItem from './DndItem';
 import './ColumnSetting.scss';
 
 /**
@@ -76,15 +79,41 @@ const CheckboxList: React.FC<CheckboxListProps> = props => {
     return null;
   }
 
-  const move = () => {
-    //
+  const move = (id: string, index: number) => {
+    const newMap = { ...columnsMap };
+    const newColumnKeys = [...sortKeyColumns];
+    const findIndex = newColumnKeys.findIndex(key => key === id);
+    if (findIndex < 0) {
+      return;
+    }
+    const key = newColumnKeys[findIndex];
+    newColumnKeys.splice(findIndex, 1);
+    if (index === 0) {
+      newColumnKeys.unshift(key);
+    } else {
+      newColumnKeys.splice(index, 0, key);
+    }
+    newColumnKeys.forEach((key, order) => {
+      newMap[key] = { ...(newMap[key] || {}), order };
+    });
+    setColumnsMap(newMap);
+    setSortKeyColumns(newColumnKeys);
+    // console.log('newMap:', newMap)
+    // console.log('newColumnKeys:', newColumnKeys)
   };
 
   const listDom = data?.map((item, index) => {
     const columnkey = getColumnKey(item.key, item.index);
 
     return (
-      <div className="drag-wrap" key={columnkey}>
+      <DndItem
+        key={columnkey}
+        index={index}
+        id={`${columnkey}`}
+        end={(id, index) => {
+          move(id, index);
+        }}
+      >
         <CheckboxListItem
           columnsMap={columnsMap}
           setColumnsMap={setColumnsMap}
@@ -92,11 +121,11 @@ const CheckboxList: React.FC<CheckboxListProps> = props => {
           columnKey={columnkey}
           className={className}
         />
-      </div>
+      </DndItem>
     );
   });
 
-  return <div className="drag-list">{listDom}</div>;
+  return <DndProvider backend={HTML5Backend}>{listDom}</DndProvider>;
 };
 
 export interface GroupCheckboxListProps {
@@ -177,7 +206,7 @@ const ColumnSetting = <T,>(props: ColumnSettingProps<T>) => {
           >
             列展示
           </Checkbox>
-          <a>重置</a>
+          <a onClick={() => setColumnsMap(columnRef.current)}>重置</a>
         </div>
       }
       overlayClassName={`${defaultName}-overlay`}

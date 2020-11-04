@@ -155,7 +155,7 @@ const generatorCoumnList = <T, U = {}>(
   map: { [key: string]: ColumnState },
   counter: ReturnType<typeof useCounter>,
   columnEmptyText?: string | false,
-): Array<AntTableColumnType<T>> => {
+): Array<AntTableColumnType<T> & { index?: number }> => {
   const newColumns = columns
     .map((item, index) => {
       const { key, dataIndex, valueEnum, valueType, filters = [] } = item;
@@ -374,6 +374,31 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       counter.setSortKeyColumns(columnKeys);
     }
   }, [tableColumn]);
+
+  /**
+   * Talbe Column 排序
+   * 每次顺序变动，重新创建一个columns配置
+   */
+  useDeepCompareEffect(() => {
+    const { columnsMap } = counter;
+    const sortTableColumn = generatorCoumnList<T>(propsColumns, columnsMap, counter, '-').sort((a, b) => {
+      const { fixed: aFixed, index: aIndex } = a;
+      const { fixed: bFixed, index: bIndex } = b;
+
+      if ((aFixed === 'left' && bFixed !== 'left') || (bFixed === 'right' && aFixed !== 'right')) {
+        return -2;
+      }
+      if ((bFixed === 'left' && aFixed !== 'left') || (aFixed === 'right' && bFixed !== 'right')) {
+        return 2;
+      }
+      const aKey = a.key || `${aIndex}`;
+      const bKey = b.key || `${bIndex}`;
+      return (columnsMap[aKey]?.order || 0) - (columnsMap[bKey]?.order || 0);
+    });
+    if (sortTableColumn && sortTableColumn.length > 0) {
+      counter.setColumns(sortTableColumn);
+    }
+  }, [counter.columnsMap]);
 
   // 表格onChange 处理
   const handleTableChange = (
