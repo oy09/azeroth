@@ -1,5 +1,6 @@
-import { useEffect, ReactText } from 'react';
+import { useEffect, ReactText, ReactNode } from 'react';
 import { TablePaginationConfig } from 'antd/lib/table';
+import { isMap } from 'lodash';
 import { UseReqeustTableAction, ResponseData } from '@/utils/hooks/useRequestTable';
 import { CoreTableActionType } from '@/typing';
 import { CounterType } from './container';
@@ -91,6 +92,11 @@ export const mergePagination = <T>(
   };
 };
 
+/**
+ * 取列的唯一值
+ * @param key
+ * @param index
+ */
 export const getColumnKey = (key?: ReactText, index?: number): string => {
   if (key) {
     return `${key}`;
@@ -109,4 +115,63 @@ export const dealyPromise = (value: any, time: number = 3000): Promise<any> => {
       resolve(value);
     }, time);
   });
+};
+
+/**
+ * 对象转Map类型
+ * @param value object类型
+ */
+const ObjToMap = (value: any): Map<ReactText, ReactNode> => {
+  if (!value) {
+    return value;
+  }
+  if (isMap(value)) {
+    return value;
+  }
+  return new Map(Object.entries(value));
+};
+
+type ValueEnumItem = {
+  value: string | number;
+  text: string;
+  disabled?: boolean;
+};
+
+/**
+ * 枚举类型值转换为数组
+ * @param value
+ */
+export const parsingValueEnumToArray = (value: any = new Map()): ValueEnumItem[] => {
+  const enumArray: ValueEnumItem[] = [];
+  const valueEnum = ObjToMap(value);
+
+  if (!valueEnum) {
+    return [];
+  }
+
+  valueEnum.forEach((_, key) => {
+    if (!valueEnum.has(key) && !valueEnum.has(`${key}`)) {
+      return;
+    }
+
+    const value = (valueEnum.get(key) || valueEnum.get(`${key}`)) as ValueEnumItem | string | number;
+    if (!value) {
+      return;
+    }
+
+    if (typeof value === 'object' && value.text) {
+      enumArray.push({
+        text: value.text,
+        value: key,
+        disabled: value.disabled,
+      });
+      return;
+    }
+    enumArray.push({
+      text: value as string,
+      value: key,
+    });
+  });
+
+  return enumArray;
 };

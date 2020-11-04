@@ -20,7 +20,7 @@ import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
 import useMergedState from '@/utils/hooks/useMergedState';
 import { ParamsType, AzSchema } from '@/typing';
 import { stringify, omitUndefined, omitUndefinedAndEmptyArray } from '@/utils/stringUtils';
-import { mergePagination, useAction, getColumnKey, dealyPromise } from './utils';
+import { mergePagination, useAction, getColumnKey, dealyPromise, parsingValueEnumToArray } from './utils';
 import Container, { useCounter, ColumnState } from './container';
 import AzToolbar, { OptionConfig, ToolbarProps } from './Toolbar';
 import LabelIconTip from '@/components/LabelIconTip';
@@ -202,7 +202,7 @@ const generatorCoumnList = <T, U = {}>(
           : (value: string, row: T) => defaultOnFilter(value, row, dataIndex as string[]),
         index: index,
         ...item,
-        filters: false,
+        filters: filters === true ? parsingValueEnumToArray(valueEnum).filter(item => item && item.value !== 'all') : filters,
         title: renderColumnsTitle(item),
         valueEnum: valueEnum,
         ellipsis: false,
