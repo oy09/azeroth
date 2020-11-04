@@ -136,10 +136,10 @@ const renderColumnsTitle = (item: AzColumns<any>) => {
 
 // 列单元格具体渲染
 const renderColumn = <T, U = any>(option: RenderColumnOption<T>): any => {
-  const { text, item, index } = option;
+  const { text, item, index, row } = option;
 
   if (item.render) {
-    const renderDom = item.render(text, item, index);
+    const renderDom = item.render(text, row, index);
 
     return renderDom;
   }
