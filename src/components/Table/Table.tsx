@@ -122,7 +122,10 @@ interface RenderColumnOption<T> {
   counter: ReturnType<typeof useCounter>;
 }
 
-// 创建列标题
+/**
+ * 创建默认列标题
+ * @param item 列配置
+ */
 const renderColumnsTitle = (item: AzColumns<any>) => {
   const { title } = item;
   if (title && typeof title === 'function') {
