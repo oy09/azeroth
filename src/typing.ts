@@ -54,6 +54,8 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
   dataIndex?: string | number | (string | number)[];
   // 渲染模式
   valueType?: ((entity: T) => U) | U;
+  // 值枚举
+  valueEnum?: any;
   // 标题组件
   title?: any;
   // 展示提示信息
@@ -61,7 +63,6 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
   render?: (...args: any[]) => React.ReactNode;
   renderFormItem?: (...args: any[]) => React.ReactNode;
   renderText?: (...args: any[]) => any;
-  valueEnum?: any;
   request?: any;
   params?: {
     [key: string]: any;
