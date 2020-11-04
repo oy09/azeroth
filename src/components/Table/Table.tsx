@@ -1,7 +1,7 @@
 import React, { CSSProperties, useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { Card, Table, Empty } from 'antd';
-import { isFunction, get } from 'lodash';
+import { Card, Table, Empty, Space } from 'antd';
+import { isFunction, get, isNil } from 'lodash';
 import {
   TableProps as AntTableProps,
   TablePaginationConfig as AntTablePaginationConfig,
@@ -15,7 +15,7 @@ import {
   SorterResult as AntTableSortResult,
   ColumnFilterItem as AntTableColumnFilterItem,
 } from 'antd/lib/table/interface';
-import useRequestTable, { ResponseData } from '@/utils/hooks/useRequestTable';
+import useRequestTable, { ResponseData, UseReqeustTableAction } from '@/utils/hooks/useRequestTable';
 import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
 import useMergedState from '@/utils/hooks/useMergedState';
 import { ParamsType, AzSchema } from '@/typing';
@@ -135,16 +135,36 @@ const renderColumnsTitle = (item: AzColumns<any>) => {
 };
 
 // 列单元格具体渲染
-const renderColumn = <T, U = any>(option: RenderColumnOption<T>): any => {
-  const { text, item, index, row } = option;
+const renderColumn = <T,>(option: RenderColumnOption<T>): any => {
+  const { text, item, index, row, counter } = option;
+  const { action } = counter;
+  const { renderText = (val: any) => val } = item;
+  const renderTextStr = renderText(text, row, index, action.current as UseReqeustTableAction<ResponseData<any>>);
+  // TODO 未来这里需要根据 valueType 属性创建不同类型的业务租客
+  const textDom = renderTextStr;
+  // TODO 未来这里创建省略过长内容，过长内容由tooltip提示，支持可复制功能
+  const dom = textDom;
 
   if (item.render) {
-    const renderDom = item.render(text, row, index);
+    const renderDom = item.render(dom, row, index, action.current as UseReqeustTableAction<ResponseData<any>>, item);
 
-    return renderDom;
+    if (
+      renderDom &&
+      typeof renderDom === 'object' &&
+      (renderDom as { props: any }).props &&
+      (renderDom as { props: { colSpan: number } }).props.colSpan
+    ) {
+      return renderDom;
+    }
+
+    if (renderDom && item.valueType === 'option' && Array.isArray(renderDom)) {
+      return <Space>{renderDom}</Space>;
+    }
+
+    return renderDom as React.ReactNode;
   }
 
-  return text;
+  return !isNil(dom) ? dom : null;
 };
 
 // 默认的table column OnFilter实现
