@@ -60,7 +60,7 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
   title?: any;
   // 展示提示信息
   tooltip?: string;
-  render?: (...args: any[]) => React.ReactNode;
+  render?: (text: string, record: T, index: number) => React.ReactNode;
   renderFormItem?: (...args: any[]) => React.ReactNode;
   renderText?: (...args: any[]) => any;
   request?: any;
