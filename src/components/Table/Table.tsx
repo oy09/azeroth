@@ -136,7 +136,14 @@ const renderColumnsTitle = (item: AzColumns<any>) => {
 
 // 列单元格具体渲染
 const renderColumn = <T, U = any>(option: RenderColumnOption<T>): any => {
-  const { text } = option;
+  const { text, item, index } = option;
+
+  if (item.render) {
+    const renderDom = item.render(text, item, index);
+
+    return renderDom;
+  }
+
   return text;
 };
 
@@ -162,7 +169,7 @@ const generatorCoumnList = <T, U = {}>(
   const newColumns = columns
     .map((item, index) => {
       const { key, dataIndex, valueEnum, valueType, filters = [] } = item;
-      const noNeedAz = !dataIndex && !valueEnum && !valueType;
+      const noNeedAz = !key && !dataIndex && !valueEnum && !valueType;
       if (noNeedAz) {
         return item;
       }
