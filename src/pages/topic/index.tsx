@@ -2,16 +2,9 @@ import React from 'react';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
-import { Table, Card, Button, Divider } from 'antd';
-import { ColumnType } from 'antd/lib/table';
-import {
-  PlusOutlined,
-  ReloadOutlined,
-  SettingOutlined,
-  FullscreenOutlined,
-  VerticalAlignMiddleOutlined,
-} from '@ant-design/icons';
-import styles from './topic.scss';
+import { Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import './topic.scss';
 
 export interface TopicPageProps {
   className?: string;
@@ -141,52 +134,6 @@ const TopicPage: React.FC<TopicPageProps> = props => {
         bordered
         sticky
       />
-      {/* <Card bodyStyle={{ padding: 0 }}>
-        <div className={styles.tableToolbar}>
-          <Button type="primary" icon={<PlusOutlined />}>
-            新建
-          </Button>
-          <div className="toolbar-default-option">
-            <Divider type="vertical" />
-            <div className={styles.toolbarhorizontal}>
-              <div className="toolbar-item">
-                <ReloadOutlined />
-              </div>
-              <div className="toolbar-item">
-                <VerticalAlignMiddleOutlined />
-              </div>
-              <div className="toolbar-item">
-                <SettingOutlined />
-              </div>
-              <div className="toolbar-item">
-                <FullscreenOutlined />
-              </div>
-            </div>
-          </div>
-        </div>
-        <Table
-          className={styles.table}
-          columns={columns}
-          dataSource={data}
-          tableLayout="fixed"
-          size="middle"
-          rowSelection={rowSelection}
-          pagination={{
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: total => `总共 ${total} 条`,
-            size: 'default',
-          }}
-          scroll={{ x: '100%' }}
-          rowKey="id"
-          sticky
-          bordered
-        />
-      </Card> */}
-      {/* <div>tool - 新增/编辑/删除/搜索</div> */}
-      {/* <div>table - 列、多选、点击编辑、内如预览</div>
-      <div>pagination - 分页</div>
-      <div>add/update form - 添加/编辑表单</div> */}
     </GridContent>
   );
 };
