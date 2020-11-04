@@ -1,0 +1,16 @@
+@charset "utf-8";
+@import "~@/styles/variable.scss";
+
+.#{$prefix}-label-tip {
+  &-icon {
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  &-subtitle {
+    font-size: 14px;
+    font-weight: normal;
+    color: #666;
+    white-space: nowrap;
+  }
+}
