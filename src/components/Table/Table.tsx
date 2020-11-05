@@ -41,9 +41,9 @@ interface AzColumnControl {
   // 是否拷贝
   copyable?: boolean;
   // 在查询表单中隐藏
-  hideSearch?: boolean;
+  hideInSearch?: boolean;
   // 在表格中隐藏
-  hideTable?: boolean;
+  hideInTable?: boolean;
   // 在表单中隐藏
   hideForm?: boolean;
   // 表头筛选菜单项
