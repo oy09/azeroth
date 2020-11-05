@@ -57,7 +57,7 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
   // 值枚举
   valueEnum?: any;
   // 标题组件
-  title?: any;
+  title?: ((schema: AzSchema<T, U, Extra>, type: string, dom: React.ReactNode) => React.ReactNode) | React.ReactNode;
   // 展示提示信息
   tooltip?: string;
   render?: (
