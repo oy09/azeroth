@@ -34,7 +34,7 @@ export type ExtraAzColumnType<T> = Omit<AntTableColumnType<T>, 'render' | 'child
 // 公共控制属性，其它组件会用到Table Column，部分的Column属性会被应用在其它组件中
 interface AzColumnControl {
   index?: number;
-  // 初始化值
+  // 查询表单初始化值
   initialValue?: any;
   // 是否缩略
   ellipsis?: boolean;
@@ -140,7 +140,7 @@ const renderColumn = <T,>(option: RenderColumnOption<T>): any => {
   const { action } = counter;
   const { renderText = (val: any) => val } = item;
   const renderTextStr = renderText(text, row, index, action.current as UseReqeustTableAction<ResponseData<any>>);
-  // TODO 未来这里需要根据 valueType 属性创建不同类型的业务租客
+  // TODO 未来这里需要根据 valueType 属性创建不同类型的业务组件
   const textDom = renderTextStr;
   // TODO 未来这里创建省略过长内容，过长内容由tooltip提示，支持可复制功能
   const dom = textDom;

@@ -69,6 +69,8 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
   ) => React.ReactNode;
   renderFormItem?: (...args: any[]) => React.ReactNode;
   renderText?: (text: string, record: T, index: number, action: CoreTableActionType) => any;
+  // 表单属性
+  fieldProps?: any;
   request?: any;
   params?: {
     [key: string]: any;
