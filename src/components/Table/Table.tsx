@@ -24,6 +24,7 @@ import { mergePagination, useAction, getColumnKey, dealyPromise, parsingValueEnu
 import Container, { useCounter, ColumnState } from './container';
 import AzToolbar, { OptionConfig, ToolbarProps } from './Toolbar';
 import LabelIconTip from '@/components/LabelIconTip';
+import { FieldValueType } from '@/components/Field';
 import './Table.scss';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
@@ -55,7 +56,7 @@ interface AzColumnControl {
 }
 
 // Table Column 主要属性类型
-export type AzColumnType<T = unknown> = AzSchema<T, any, ExtraAzColumnType<T> & AzColumnControl>;
+export type AzColumnType<T = unknown> = AzSchema<T, FieldValueType, ExtraAzColumnType<T> & AzColumnControl>;
 
 export interface AzcColumnGroupType<T> extends AzColumnType<T> {
   children: AzColumns<T>[];
