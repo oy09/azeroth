@@ -111,8 +111,10 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   // 操作引用，操作table
   actionRef?: any; // 需要修改类型
   defaultData?: T[];
-  columns?: AzColumns<T>[]; // 需要修改类型
+  columns?: AzColumns<T>[];
+  // request 请求参数
   params?: U;
+  // form表单实例
   formRef?: SearchProps<T>['formRef'];
 }
 
@@ -534,6 +536,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       <div style={{ display: 'none' }}>search filter</div>
       <div style={{ display: 'none' }}>extra render</div>
       <Query
+        {...rest}
         formRef={formRef}
         onReset={value => {
           // 重置搜索条件

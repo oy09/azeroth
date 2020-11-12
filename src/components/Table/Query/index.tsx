@@ -1,13 +1,16 @@
-import React, { CSSProperties, useRef, useEffect, MutableRefObject, useState } from 'react';
+import React, { CSSProperties, useRef, useEffect, useCallback, useState, MutableRefObject } from 'react';
 import classnames from 'classnames';
 import { Form, Row, Col } from 'antd';
 import { FormInstance, FormItemProps, FormProps } from 'antd/lib/form';
+import ResizeObserver from 'rc-resize-observer';
 import Container from '@/components/Table/container';
 import Field from '@/components/Field';
 import LabelIconTip from '@/components/LabelIconTip';
-import ResizeObserver from 'rc-resize-observer';
+import Actions from '@/components/Table/Actions';
+import useMergedState from '@/utils/hooks/useMergedState';
 import { IntlType } from '@/typing';
 import { AzColumns } from '../Table';
+
 import './Query.scss';
 
 /**
@@ -63,6 +66,7 @@ interface FormFieldRenderProps {
   value?: any;
   form?: FormInstance;
   intl?: IntlType;
+  hidden?: boolean;
   onChange?: (value: any) => void;
   onSelect?: (value: any) => void;
   labelFlexStyle?: string;
@@ -71,7 +75,7 @@ interface FormFieldRenderProps {
 
 // 表单输入项萱蕚
 export const formFieldRender: React.FC<FormFieldRenderProps> = props => {
-  const { item, form, formItemProps, label, labelFlexStyle, ...rest } = props;
+  const { item, form, formItemProps, label, labelFlexStyle, hidden, ...rest } = props;
   const { valueType: itemValueType = 'text', valueEnum, tooltip, initialValue } = item;
 
   const valueType = typeof itemValueType === 'function' ? itemValueType({}) : itemValueType || 'text';
@@ -88,6 +92,7 @@ export const formFieldRender: React.FC<FormFieldRenderProps> = props => {
       labelCol={{
         flex: labelFlexStyle,
       }}
+      hidden={hidden}
       name={item.key || item.dataIndex}
       initialValue={initialValue}
       key={`${item.dataIndex || ''}-${item.key || ''}-${item.index}`}
@@ -169,7 +174,14 @@ export interface SearchProps<T> extends Omit<FormItemProps, 'children' | 'onRese
   formRef?: MutableRefObject<FormInstance | undefined> | ((actionRef: FormInstance) => void);
   prefix?: string;
   submitter?: any | false;
+  resetText?: string;
+  submitText?: string;
   labelWidth?: number | 'auto';
+  collapsed?: boolean;
+  defaultCollapsed?: boolean;
+  // 暂时没用到
+  defaultColsNumber?: number;
+  onCollapse?: (collapsed: boolean) => void;
 }
 
 const Query = <T,>(props: SearchProps<T>) => {
@@ -184,6 +196,11 @@ const Query = <T,>(props: SearchProps<T>) => {
     submitter,
     labelWidth = '80',
     prefix = 'az',
+    collapsed: controlCollapsed,
+    defaultCollapsed = false,
+    onCollapse,
+    submitText: propsSubmitText,
+    resetText: propsResetText,
     form: formConfig = {},
   } = props;
 
@@ -195,8 +212,19 @@ const Query = <T,>(props: SearchProps<T>) => {
     span: number;
     layout: FormProps['layout'];
   }>(() => getSpanConfig(layout, defaultWidth + 16, span));
+  const [collapsed, setCollapsed] = useMergedState<boolean>(() => !defaultCollapsed, {
+    value: controlCollapsed,
+    onChange: onCollapse,
+  });
   const counter = Container.useContainer();
   const valueTypeRef = useRef<any>({});
+  // 这么做是为了在用户修改了输入的时候触发一下子节点的render
+  const [, updateState] = useState<undefined>();
+  const forceUpdate = useCallback(() => updateState(undefined), []);
+
+  // 表单显示数量限制
+  const showLength = Math.max(1, 24 / spanSize.span - 1);
+  console.log('showLength:', showLength);
 
   let labelFlexStyle: string = '';
   if (labelWidth && spanSize.layout !== 'vertical' && labelWidth !== 'auto') {
@@ -282,11 +310,14 @@ const Query = <T,>(props: SearchProps<T>) => {
     const colSize = React.isValidElement<any>(item) ? item?.props.colSize || 1 : 1;
     // 12
     const colSpan = Math.min(spanSize.span * colSize, 24);
-
-    if (24 - (totalSpan % 24) < colSpan) {
-      totalSpan += 24 - (totalSpan % 24);
+    if ((collapsed && index >= showLength) || hidden) {
+      hidden = true;
+    } else {
+      if (24 - (totalSpan % 24) < colSpan) {
+        totalSpan += 24 - (totalSpan % 24);
+      }
+      totalSpan += colSpan;
     }
-    totalSpan += colSpan;
 
     itemWithInfo.push({
       span: colSpan,
@@ -296,8 +327,8 @@ const Query = <T,>(props: SearchProps<T>) => {
     });
   });
 
-  // 直接传参
-  const submitterDom = submitter === false ? undefined : <div>111</div>;
+  const resetText = propsSubmitText || '重置';
+  const submitText = propsResetText || '搜索';
 
   // console.log('itemWithInfo:', itemList)
   // console.log('itemWithInfo:', spanSize)
@@ -308,8 +339,12 @@ const Query = <T,>(props: SearchProps<T>) => {
         {...formConfig}
         layout={spanSize.layout}
         form={form}
-        onValuesChange={change => {
-          console.log('form change:', change);
+        onValuesChange={(change, all) => {
+          forceUpdate();
+          if (formConfig.onValuesChange) {
+            formConfig.onValuesChange(change, all);
+          }
+          // console.log('form change:', change);
         }}
         onReset={() => {
           if (onReset) {
@@ -330,15 +365,27 @@ const Query = <T,>(props: SearchProps<T>) => {
         >
           <Row gutter={16} justify="start">
             {itemWithInfo.map((item, index) => {
+              if (React.isValidElement(item.element) && item.hidden) {
+                return React.cloneElement(item.element, {
+                  hidden: true,
+                  key: item.key || index,
+                });
+              }
               return (
                 <Col key={item.key} span={item.span}>
                   {item.element}
                 </Col>
               );
             })}
-            {submitterDom && (
+            {submitter !== false && (
               <Col span={spanSize.span} offset={24 - spanSize.span - (totalSpan % 24)} style={{ textAlign: 'right' }}>
-                <div>action-提交-重置-展开/收起</div>
+                <Actions
+                  form={form}
+                  collapsed={collapsed}
+                  onCollapsed={setCollapsed}
+                  resetText={resetText}
+                  submitText={submitText}
+                />
               </Col>
             )}
           </Row>
