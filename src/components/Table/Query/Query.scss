@@ -1,0 +1,8 @@
+@charset "utf-8";
+@import "~@/styles/variable.scss";
+
+.#{$prefix}-query {
+  margin-bottom: 16px;
+  background: #fff;
+  padding: 24px 24px 0;
+}

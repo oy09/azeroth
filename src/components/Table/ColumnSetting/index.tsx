@@ -183,7 +183,7 @@ const ColumnSetting = <T,>(props: ColumnSettingProps<T>) => {
     setColumnsMap(columnKeyMap);
   };
 
-  console.log('columnsMap:', columnsMap);
+  // console.log('columnsMap:', columnsMap);
 
   return (
     <Popover

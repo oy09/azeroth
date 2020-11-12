@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
+import { SearchProps } from '@/components/Table/Query';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import './topic.scss';
@@ -11,11 +12,13 @@ export interface TopicPageProps {
 }
 
 const TopicPage: React.FC<TopicPageProps> = props => {
+  const formRef: SearchProps<any>['formRef'] = useRef();
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
       key: 'no',
       tooltip: '查看数据数量和位置',
+      hideInSearch: true,
       width: 100,
       align: 'center',
       render: (text, record, index) => index + 1,
@@ -37,6 +40,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       dataIndex: 'pictures',
       align: 'center',
       width: 300,
+      hideInSearch: true,
     },
     {
       title: '联系电话',
@@ -79,12 +83,14 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       dataIndex: 'readCount',
       align: 'center',
       width: 120,
+      hideInSearch: true,
     },
     {
       title: '点赞数量',
       dataIndex: 'likeCount',
       align: 'center',
       width: 120,
+      hideInSearch: true,
     },
   ];
   const data = new Array(20)
@@ -105,15 +111,21 @@ const TopicPage: React.FC<TopicPageProps> = props => {
 
   const rowSelection = {};
 
+  const handleNew = () => {
+    const values = formRef.current?.getFieldsValue();
+    console.log('values:', values);
+  };
+
   return (
     <GridContent>
       <AzTable
         columns={columns}
         dataSource={data}
         rowSelection={rowSelection}
+        formRef={formRef}
         toolbarLeftRender={props => (
           <React.Fragment>
-            <Button type="primary" icon={<PlusOutlined />}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={handleNew}>
               新建
             </Button>
           </React.Fragment>

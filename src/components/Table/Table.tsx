@@ -25,6 +25,7 @@ import Container, { useCounter, ColumnState } from './container';
 import AzToolbar, { OptionConfig, ToolbarProps } from './Toolbar';
 import LabelIconTip from '@/components/LabelIconTip';
 import { FieldValueType } from '@/components/Field';
+import Query, { SearchProps } from './Query';
 import './Table.scss';
 
 type TableRowSelection = AntTableProps<any>['rowSelection'];
@@ -112,6 +113,7 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   defaultData?: T[];
   columns?: AzColumns<T>[]; // 需要修改类型
   params?: U;
+  formRef?: SearchProps<T>['formRef'];
 }
 
 interface RenderColumnOption<T> {
@@ -245,6 +247,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     options,
     toolbarLeftRender,
     toolbarRightRender,
+    formRef,
     columns: propsColumns = [],
     rowSelection: propsRowSelection = false,
     pagination: propsPagination,
@@ -530,6 +533,19 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     <div className={classNames} style={style} ref={rootRef}>
       <div style={{ display: 'none' }}>search filter</div>
       <div style={{ display: 'none' }}>extra render</div>
+      <Query
+        formRef={formRef}
+        onReset={value => {
+          // 重置搜索条件
+          // 重置页码
+          // 调用外面reset
+        }}
+        onSubmit={value => {
+          // 重置页码
+          // 刷新table
+          // 调用外部submit
+        }}
+      />
       <Card
         bordered={false}
         style={{
