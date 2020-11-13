@@ -224,7 +224,6 @@ const Query = <T,>(props: SearchProps<T>) => {
 
   // 表单显示数量限制
   const showLength = Math.max(1, 24 / spanSize.span - 1);
-  console.log('showLength:', showLength);
 
   let labelFlexStyle: string = '';
   if (labelWidth && spanSize.layout !== 'vertical' && labelWidth !== 'auto') {
@@ -344,13 +343,6 @@ const Query = <T,>(props: SearchProps<T>) => {
           if (formConfig.onValuesChange) {
             formConfig.onValuesChange(change, all);
           }
-          // console.log('form change:', change);
-        }}
-        onReset={() => {
-          if (onReset) {
-            const value = form.getFieldsValue() as T;
-            onReset(value);
-          }
         }}
         onFinish={() => {
           console.log('form finish');
@@ -359,7 +351,6 @@ const Query = <T,>(props: SearchProps<T>) => {
       >
         <ResizeObserver
           onResize={({ width }) => {
-            console.log('width:', width);
             setSpanSize(getSpanConfig(layout, width, span));
           }}
         >
@@ -385,6 +376,12 @@ const Query = <T,>(props: SearchProps<T>) => {
                   onCollapsed={setCollapsed}
                   resetText={resetText}
                   submitText={submitText}
+                  onReset={() => {
+                    if (onReset) {
+                      const value = form.getFieldsValue();
+                      onReset(value);
+                    }
+                  }}
                 />
               </Col>
             )}
