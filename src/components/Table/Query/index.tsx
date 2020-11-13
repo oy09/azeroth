@@ -2,6 +2,7 @@ import React, { CSSProperties, useRef, useEffect, useCallback, useState, Mutable
 import classnames from 'classnames';
 import { Form, Row, Col } from 'antd';
 import { FormInstance, FormItemProps, FormProps } from 'antd/lib/form';
+import { ButtonProps } from 'antd/lib/button';
 import ResizeObserver from 'rc-resize-observer';
 import Container from '@/components/Table/container';
 import Field from '@/components/Field';
@@ -212,15 +213,19 @@ const Query = <T,>(props: SearchProps<T>) => {
     span: number;
     layout: FormProps['layout'];
   }>(() => getSpanConfig(layout, defaultWidth + 16, span));
+  // 展开/收起 条件表单
   const [collapsed, setCollapsed] = useMergedState<boolean>(() => !defaultCollapsed, {
     value: controlCollapsed,
     onChange: onCollapse,
   });
+  // table 全局状态缓存
   const counter = Container.useContainer();
   const valueTypeRef = useRef<any>({});
   // 这么做是为了在用户修改了输入的时候触发一下子节点的render
   const [, updateState] = useState<undefined>();
   const forceUpdate = useCallback(() => updateState(undefined), []);
+  // 过滤条件搜索按钮状态
+  const [loading, setLoading] = useState<ButtonProps['loading']>(false);
 
   // 表单显示数量限制
   const showLength = Math.max(1, 24 / spanSize.span - 1);
@@ -233,7 +238,13 @@ const Query = <T,>(props: SearchProps<T>) => {
   // 提交表单
   const submit = async () => {
     const value = form.getFieldsValue();
-    onSubmit && onSubmit(value);
+    if (onSubmit) {
+      /**
+       * 未来在这里对最终值的转换
+       */
+      const finalValue = value;
+      onSubmit && onSubmit(finalValue);
+    }
   };
 
   // 初始化 将组件内form ref 传递给外部props
@@ -337,6 +348,11 @@ const Query = <T,>(props: SearchProps<T>) => {
       <Form
         {...formConfig}
         layout={spanSize.layout}
+        onKeyPress={event => {
+          if (event.key === 'Enter') {
+            form.submit();
+          }
+        }}
         form={form}
         onValuesChange={(change, all) => {
           forceUpdate();
@@ -344,9 +360,12 @@ const Query = <T,>(props: SearchProps<T>) => {
             formConfig.onValuesChange(change, all);
           }
         }}
-        onFinish={() => {
-          console.log('form finish');
-          submit();
+        onFinish={async () => {
+          setLoading({
+            delay: 140,
+          });
+          await submit();
+          setLoading(false);
         }}
       >
         <ResizeObserver
@@ -381,6 +400,9 @@ const Query = <T,>(props: SearchProps<T>) => {
                       const value = form.getFieldsValue();
                       onReset(value);
                     }
+                  }}
+                  submitButtonProps={{
+                    loading,
                   }}
                 />
               </Col>
