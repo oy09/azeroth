@@ -50,6 +50,8 @@
   "devDependencies": {
     "@types/classnames": "^2.2.10",
     "@types/clipboard": "^2.0.1",
+    "@types/mockjs": "^1.0.3",
+    "mockjs": "^1.1.0",
     "redux-logger": "^3.0.6",
     "unstated-next": "^1.1.0"
   }
