@@ -22,13 +22,13 @@ export interface RequestAction<T> {
 }
 
 const deafultOptions: RequestOptions = {
-  baseURL: '',
   method: 'GET',
   timeout: 0,
   manualRequest: false,
   withCredentials: true,
   validateStatus: status => status >= 200 && status < 300,
   dataSerializer: data => qs.stringify(data),
+  paramsSerializer: params => qs.stringify(params),
   requestInterceptors: [
     {
       onFulfiled: config => config,
@@ -53,15 +53,8 @@ const deafultOptions: RequestOptions = {
  * 屏幕聚焦自动请求
  * @param service
  */
-const useRequest = <T, P extends any>(
-  url: string,
-  options: RequestOptions = {},
-): RequestAction<T> => {
-  const {
-    onRequestError,
-    windowsFocus = false,
-    focusTimespan = 5000,
-  } = options;
+const useRequest = <T, P extends any>(url: string, options: RequestOptions = {}): RequestAction<T> => {
+  const { onRequestError, windowsFocus = false, focusTimespan = 5000 } = options;
   const globalOptions = useContext(RequestConfigContext);
   const finalOptions = {
     ...deafultOptions,
@@ -74,12 +67,8 @@ const useRequest = <T, P extends any>(
   const [instance] = useState<AxiosInstance>(() => {
     const { requestInterceptors, responseInterceptors } = options;
     const httpInstance = axios.create(finalOptions);
-    requestInterceptors?.forEach(item =>
-      httpInstance.interceptors.request.use(item.onFulfiled, item.onRejected),
-    );
-    responseInterceptors?.forEach(item =>
-      httpInstance.interceptors.response.use(item.onFulfiled, item.onRejected),
-    );
+    requestInterceptors?.forEach(item => httpInstance.interceptors.request.use(item.onFulfiled, item.onRejected));
+    responseInterceptors?.forEach(item => httpInstance.interceptors.response.use(item.onFulfiled, item.onRejected));
 
     return httpInstance;
   });
