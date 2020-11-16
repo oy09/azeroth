@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
+import { Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
-import { Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 import './topic.scss';
 
 export interface TopicPageProps {
@@ -13,6 +13,7 @@ export interface TopicPageProps {
 
 const TopicPage: React.FC<TopicPageProps> = props => {
   const formRef: SearchProps<any>['formRef'] = useRef();
+  // const { dataSource } = useRequest('/api/topic', { params: { page: 1, pageSize: 20 } })
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
