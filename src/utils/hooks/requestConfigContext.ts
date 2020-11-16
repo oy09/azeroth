@@ -1,7 +1,7 @@
 import React from 'react';
 import { RequestOptions } from './type';
 
-type Config = RequestOptions;
+export type Config = RequestOptions;
 
 const RequestConfigContext = React.createContext<Partial<Config>>({});
 
