@@ -116,6 +116,8 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   params?: U;
   // form表单实例
   formRef?: SearchProps<T>['formRef'];
+  // 格式化搜索表单数据
+  beforeSearchSubmit?: (params: Partial<U>) => any;
 }
 
 interface RenderColumnOption<T> {
@@ -250,6 +252,8 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     toolbarLeftRender,
     toolbarRightRender,
     formRef,
+    beforeSearchSubmit = (searchParams: Partial<U>) => searchParams,
+    onSubmit,
     columns: propsColumns = [],
     rowSelection: propsRowSelection = false,
     pagination: propsPagination,
@@ -271,6 +275,8 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
   });
   // 选中行
   const [selectedRows, setSelectedRows] = useMergedState<T[]>([]);
+  // 表单搜索条件
+  const [formQuery, setFormQuery] = useState<{} | undefined>(undefined);
   // 类似redux数据管理
   const counter = Container.useContainer();
 
@@ -316,6 +322,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       }
       const actionParams = {
         ...(pageParams || {}),
+        ...formQuery,
         ...params,
       };
       const resposne = await request(actionParams as U, azSort, azFilter);
@@ -333,7 +340,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       ...fetchPagination,
       onLoad,
       onRequestError,
-      effects: [stringify(params)],
+      effects: [stringify(params), stringify(formQuery)],
     },
   );
 
@@ -535,7 +542,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     <div className={classNames} style={style} ref={rootRef}>
       <div style={{ display: 'none' }}>search filter</div>
       <div style={{ display: 'none' }}>extra render</div>
-      <Query
+      <Query<U>
         {...rest}
         formRef={formRef}
         onReset={value => {
@@ -547,6 +554,15 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
           // 重置页码
           // 刷新table
           // 调用外部submit
+          const submitParams = {
+            ...value,
+            _timestamp: Date.now(),
+          };
+          setFormQuery(beforeSearchSubmit(submitParams));
+          action.resetPage();
+          if (onSubmit) {
+            onSubmit(value);
+          }
         }}
       />
       <Card
