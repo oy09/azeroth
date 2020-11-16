@@ -1,25 +1,35 @@
+import { Random, mock } from 'mockjs';
+import { Request, Response } from 'umi';
+import './default';
+
 export default {
-  '/api/topic': {
-    data: new Array(20)
-      .fill({
-        id: 1,
-        userId: '2333',
-        content: '2233',
-        contentType: 1,
-        pictureList: [],
-        concatMobile: '13410825221',
-        concatName: 'ouyang',
-        position: '0,0,0',
-        positionName: '深圳市',
-        publishTime: '2020-04-01',
-        readCount: 1234,
-        likeCount: 2333,
-      })
-      .map(item => ({ ...item, id: item.id + 1 })),
-    page: 1,
-    limit: 20,
-    total: 30,
-    message: '',
+  '/api/topic': (request: Request, response: Response) => {
+    const { page = 1, pageSize = 20 } = request.query;
+    console.log('params:', request.query);
+    const data = mock({
+      [`data|${pageSize}`]: [
+        {
+          id: Random.id(),
+          userId: Random.guid(),
+          content: mock('@cparagraph(20, 200)'),
+          contentType: 1,
+          'pictureList|1-4': [Random.image()],
+          concatMobile: mock('@phone'),
+          concatName: mock('@cname'),
+          position: mock('@zip'),
+          positionName: mock('@city'),
+          publishTime: Random.date(),
+          readCount: Random.integer(10, 2333),
+          likeCount: Random.integer(10, 2333),
+        },
+      ],
+      page: page,
+      pageSize: pageSize,
+      total: 9999,
+      message: '成功',
+    });
+    response.send(data);
+    response.end();
   },
   'POST /api/postTopic': {
     message: 'success',
