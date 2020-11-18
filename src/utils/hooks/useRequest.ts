@@ -7,7 +7,7 @@ import { RequestOptions } from './type';
 import windowsFocusSubscribe from './windowFocus';
 
 export interface ResponseData<T> {
-  code: string;
+  code: string | number;
   data: T;
   message?: string;
   [key: string]: any;
