@@ -17,7 +17,7 @@
 
 import axios, { AxiosRequestConfig, AxiosResponse, Canceler } from 'axios';
 import qs from 'qs';
-import { isNil, pick } from 'lodash';
+import { isNil, pick, omit } from 'lodash';
 import { ResponseData } from '@/utils/hooks/useRequest';
 
 export interface RequestConfig extends AxiosRequestConfig {
@@ -116,9 +116,9 @@ const defaultResposneInterceptpr = {
     // 移除成功后的请求
     removeRequest(response);
     const responseData = response.data || {};
-    const { code, data } = responseData;
+    const { code } = responseData;
     if (code === 0) {
-      return data;
+      return responseData as any;
     } else {
       // TODO 这里可能有非常多的情况需要处理 登录失效，无权限，请求失败，...
       return Promise.reject(responseData);
