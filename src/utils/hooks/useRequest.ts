@@ -10,6 +10,9 @@ export interface ResponseData<T> {
   code: string | number;
   data: T;
   message?: string;
+  total?: number;
+  page?: number;
+  pageSize?: number;
   [key: string]: any;
 }
 
