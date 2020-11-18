@@ -36,6 +36,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       dataIndex: 'content',
       align: 'center',
       width: 300,
+      ellipsis: true,
     },
     {
       title: '图片',
