@@ -9,30 +9,31 @@ export default {
     const nextPageSize = parseInt(pageSize as string);
     const offset = 500;
     console.log('params:', request.query);
-    const data = mock({
+    const data = new Array(nextPageSize).fill({}).map(() => {
+      return {
+        id: mock('@id(10)'),
+        userId: mock('@guid()'),
+        content: mock('@cparagraph(4)'),
+        contentType: 1,
+        pictureList: [Random.image()],
+        concatMobile: mock('@phone'),
+        concatName: '欧阳',
+        position: mock('@zip'),
+        positionName: mock('@city'),
+        publishTime: Random.date(),
+        readCount: Random.integer(10, 2333),
+        likeCount: Random.integer(10, 2333),
+      };
+    });
+
+    response.send({
       code: 0,
-      [`data|${pageSize}`]: [
-        {
-          id: Random.id(),
-          userId: Random.guid(),
-          content: mock('@cparagraph(20, 200)'),
-          contentType: 1,
-          'pictureList|1-4': [Random.image()],
-          concatMobile: mock('@phone'),
-          concatName: mock('@cname'),
-          position: mock('@zip'),
-          positionName: mock('@city'),
-          publishTime: Random.date(),
-          readCount: Random.integer(10, 2333),
-          likeCount: Random.integer(10, 2333),
-        },
-      ],
+      data: data,
       page: nextPage,
       pageSize: nextPageSize,
       total: offset,
       message: '成功',
     });
-    response.send(data);
     response.end();
   },
   'POST /api/postTopic': {

@@ -5,6 +5,7 @@ import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
+import { getTopicList } from '@/api/topic';
 import './topic.scss';
 
 export interface TopicPageProps {
@@ -38,26 +39,26 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     },
     {
       title: '图片',
-      dataIndex: 'pictures',
+      dataIndex: 'pictureList',
       align: 'center',
       width: 300,
       hideInSearch: true,
     },
     {
       title: '联系电话',
-      dataIndex: 'concantMobile',
+      dataIndex: 'concatMobile',
       align: 'center',
       width: 140,
     },
     {
       title: '联系人',
-      dataIndex: 'concatUser',
+      dataIndex: 'concatName',
       align: 'center',
       width: 120,
     },
     {
       title: '发布位置',
-      dataIndex: 'positon',
+      dataIndex: 'positionName',
       align: 'center',
       width: 340,
     },
@@ -69,7 +70,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     },
     {
       title: '发布用户',
-      dataIndex: 'publishUserId',
+      dataIndex: 'userId',
       align: 'center',
       width: 140,
     },
@@ -94,21 +95,6 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       hideInSearch: true,
     },
   ];
-  const data = new Array(20)
-    .fill({
-      id: 1,
-      content: '123123123',
-      pictures: '111',
-      concantMobile: '13410825228',
-      concatUser: 'ouyang',
-      positon: '深圳市南山区龙珠大道245号宝珠花园',
-      isTop: 0,
-      publishUserId: '2333',
-      publishTime: '2020-02-01 00:00:00',
-      readCount: 2333,
-      likeCount: 4555,
-    })
-    .map((item, index) => ({ ...item, id: index + 1 }));
 
   const rowSelection = {};
 
@@ -121,7 +107,6 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     <GridContent>
       <AzTable
         columns={columns}
-        dataSource={data}
         rowSelection={rowSelection}
         formRef={formRef}
         toolbarLeftRender={props => (
@@ -131,6 +116,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
             </Button>
           </React.Fragment>
         )}
+        request={async (params, sort, filter) => getTopicList(params)}
         scroll={{ x: '100%' }}
         rowKey="id"
         tableLayout="fixed"
