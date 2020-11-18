@@ -1,7 +1,7 @@
 import React, { CSSProperties, useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import classnames from 'classnames';
 import { Card, Table, Empty, Space } from 'antd';
-import { isFunction, get, isNil } from 'lodash';
+import { isFunction, get, isNil, omitBy } from 'lodash';
 import {
   TableProps as AntTableProps,
   TablePaginationConfig as AntTablePaginationConfig,
@@ -252,7 +252,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     toolbarLeftRender,
     toolbarRightRender,
     formRef,
-    beforeSearchSubmit = (searchParams: Partial<U>) => searchParams,
+    beforeSearchSubmit = (searchParams: Partial<U>) => omitBy(searchParams, isNil),
     onSubmit,
     columns: propsColumns = [],
     rowSelection: propsRowSelection = false,
