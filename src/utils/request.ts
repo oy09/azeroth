@@ -118,7 +118,10 @@ const defaultResposneInterceptpr = {
     const responseData = response.data || {};
     const { code } = responseData;
     if (code === 0) {
-      return responseData as any;
+      return {
+        ...responseData,
+        success: true,
+      } as any;
     } else {
       // TODO 这里可能有非常多的情况需要处理 登录失效，无权限，请求失败，...
       return Promise.reject(responseData);
