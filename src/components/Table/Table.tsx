@@ -20,7 +20,7 @@ import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
 import useMergedState from '@/utils/hooks/useMergedState';
 import { ParamsType, AzSchema } from '@/typing';
 import { stringify, omitUndefined, omitUndefinedAndEmptyArray } from '@/utils/stringUtils';
-import { mergePagination, useAction, getColumnKey, dealyPromise, parsingValueEnumToArray } from './utils';
+import { mergePagination, useAction, getColumnKey, parsingValueEnumToArray } from './utils';
 import Container, { useCounter, ColumnState } from './container';
 import AzToolbar, { OptionConfig, ToolbarProps } from './Toolbar';
 import LabelIconTip from '@/components/LabelIconTip';
@@ -311,14 +311,10 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       // 需要手动触发首次请求
       if (!request || manualRequestRef.current) {
         manualRequestRef.current = false;
-        return await dealyPromise(
-          {
-            data: props.dataSource || [],
-            total: 999,
-            success: true,
-          },
-          2000,
-        );
+        return {
+          data: props.dataSource || [],
+          success: true,
+        };
       }
       const actionParams = {
         ...(pageParams || {}),
