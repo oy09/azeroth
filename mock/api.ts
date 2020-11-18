@@ -5,8 +5,12 @@ import './default';
 export default {
   '/api/topic': (request: Request, response: Response) => {
     const { page = 1, pageSize = 20 } = request.query;
+    const nextPage = parseInt(page as string);
+    const nextPageSize = parseInt(pageSize as string);
+    const offset = 500;
     console.log('params:', request.query);
     const data = mock({
+      code: 0,
       [`data|${pageSize}`]: [
         {
           id: Random.id(),
@@ -23,9 +27,9 @@ export default {
           likeCount: Random.integer(10, 2333),
         },
       ],
-      page: page,
-      pageSize: pageSize,
-      total: 9999,
+      page: nextPage,
+      pageSize: nextPageSize,
+      total: offset,
       message: '成功',
     });
     response.send(data);
