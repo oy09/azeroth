@@ -9,10 +9,10 @@ export default {
     const nextPageSize = parseInt(pageSize as string);
     const offset = 500;
     console.log('params:', request.query);
-    const data = new Array(nextPageSize).fill({}).map(() => {
+    const data = new Array(nextPageSize).fill({ userId: 1000 }).map(item => {
       return {
         id: mock('@id(10)'),
-        userId: mock('@guid()'),
+        userId: item.userId + 1,
         content: mock('@cparagraph(4)'),
         contentType: 1,
         pictureList: [Random.image()],

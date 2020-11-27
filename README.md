@@ -51,3 +51,7 @@ export default defineConfig({
 ```
 注意本地是没有`umirc.local.ts`文件的，以上代码是基本配置，请根据需求自行变更
 
+## TODO
+- [] TableQuery search 类型申明需要改进
+- [] TableQuery 多种宽度适配改进
+- [] TableQuery 根据表单动态创建多种类似控件
