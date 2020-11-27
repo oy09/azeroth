@@ -1,7 +1,7 @@
 import React, { CSSProperties, useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import classnames from 'classnames';
 import { Card, Table, Empty, Space } from 'antd';
-import { isFunction, get, isNil, omitBy } from 'lodash';
+import { isFunction, get, isNil, omitBy, omit } from 'lodash';
 import {
   TableProps as AntTableProps,
   TablePaginationConfig as AntTablePaginationConfig,
@@ -66,6 +66,16 @@ export interface AzcColumnGroupType<T> extends AzColumnType<T> {
 // Table Column 主要属性组合
 export type AzColumns<T = any> = AzcColumnGroupType<T> | AzColumnType<T>;
 
+export type SearchConfig = any;
+
+const getFromProps = (searchConfig: any) => {
+  return omit({
+    labelWidth: searchConfig ? searchConfig?.labelWidth : undefined,
+    defaultCollapsed: false,
+    ...searchConfig,
+  });
+};
+
 export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<T>, 'columns' | 'rowSelection'> {
   style?: CSSProperties;
   tableStyle?: CSSProperties;
@@ -102,6 +112,7 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
       [key: string]: React.ReactText[];
     },
   ) => Promise<ResponseData<T>>;
+  search?: false | SearchConfig;
   // 是否手动发请求
   manualRequest?: boolean;
   // 多选配置对象
@@ -254,6 +265,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
     formRef,
     beforeSearchSubmit = (searchParams: Partial<U>) => omitBy(searchParams, isNil),
     onSubmit,
+    search: searchConfig,
     columns: propsColumns = [],
     rowSelection: propsRowSelection = false,
     pagination: propsPagination,
@@ -508,7 +520,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
         if (config && config.show === false) {
           return false;
         }
-        console.log('item:', item);
+        // console.log('item:', item);
         return true;
       })}
       loading={loading}
@@ -541,6 +553,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
       <div style={{ display: 'none' }}>extra render</div>
       <Query<U>
         {...rest}
+        {...getFromProps(searchConfig)}
         formRef={formRef}
         onReset={value => {
           // 重置搜索条件

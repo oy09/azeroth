@@ -117,6 +117,9 @@ const TopicPage: React.FC<TopicPageProps> = props => {
             </Button>
           </React.Fragment>
         )}
+        search={{
+          labelWidth: 120,
+        }}
         request={async (params, sort, filter) => getTopicList(params)}
         scroll={{ x: '100%' }}
         rowKey="id"
