@@ -58,6 +58,8 @@ const BREAKPOINTS: { [key: string]: Array<any> } = {
     [701, 2, 'vertical'],
     [1062, 3, 'horizontal'],
     [1352, 3, 'horizontal'],
+    [1700, 4, 'horizontal'],
+    [2500, 6, 'horizontal'],
     [Infinity, 4, 'horizontal'],
   ],
 };
@@ -157,7 +159,8 @@ const getSpanConfig = (
     ? Object.keys(span).map(key => [CONFIG_SPAN_BREAKPOINTS[key], 24 / (span as any)[key], 'horizontal'])
     : BREAKPOINTS[layout || 'default'];
   const breakPoint = (spanConfig || BREAKPOINTS.default).find(item => width < item[0] + 16);
-
+  console.log('breakPoint:', breakPoint);
+  console.log('width:', width);
   return {
     span: 24 / breakPoint[1],
     layout: breakPoint[2],
@@ -206,7 +209,6 @@ const Query = <T,>(props: SearchProps<T>) => {
   } = props;
 
   const defaultWidth = (typeof style?.width === 'number' ? style.width : 1024) as number;
-
   const [form] = Form.useForm();
   const formInstnace = useRef<FormInstance | undefined>(form);
   const [spanSize, setSpanSize] = useState<{
