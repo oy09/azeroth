@@ -21,7 +21,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       key: 'no',
       tooltip: '查看数据数量和位置',
       hideInSearch: true,
-      width: 100,
+      // width: 100,
       align: 'center',
       render: (text, record, index) => index + 1,
     },
