@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
+import Dialog from '@/components/Dialog';
 import { getTopicList } from '@/api/topic';
 import './topic.scss';
 
@@ -14,6 +15,7 @@ export interface TopicPageProps {
 
 const TopicPage: React.FC<TopicPageProps> = props => {
   const formRef: SearchProps<any>['formRef'] = useRef();
+  const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
   // const { dataSource } = useRequest('/api/topic', { params: { page: 1, pageSize: 20 } })
   const columns: AzColumnType<any>[] = [
     {
@@ -102,6 +104,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
   const handleNew = () => {
     const values = formRef.current?.getFieldsValue();
     console.log('values:', values);
+    handleCreateDialogVisible(true);
   };
 
   return (
@@ -121,12 +124,16 @@ const TopicPage: React.FC<TopicPageProps> = props => {
           labelWidth: 120,
         }}
         request={async (params, sort, filter) => getTopicList(params)}
+        onRequestError={e => console.log('topic table reqeust reason:', e)}
         scroll={{ x: '100%' }}
         rowKey="id"
         tableLayout="fixed"
         bordered
         sticky
       />
+      <Dialog visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
+        AzForm
+      </Dialog>
     </GridContent>
   );
 };
