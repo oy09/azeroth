@@ -8,9 +8,9 @@ declare module '*.svg' {
   export default url;
 }
 
-declare module 'redux-logger' {
-  export function createLogger(): (...args: any) => any;
-}
+// declare module 'redux-logger' {
+//   export function createLogger(...args: any): (...args: any) => any;
+// }
 
 declare class ClipboardJS {
   onClick(): void;
