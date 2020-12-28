@@ -35,7 +35,7 @@ export default defineConfig({
     logLevel: 'info',
   },
   dva: {
-    immer: true,
+    immer: false,
     hmr: false,
   },
   locale: {
