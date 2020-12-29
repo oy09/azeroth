@@ -82,3 +82,13 @@ export interface IntlType {
   locale?: string;
   getMessage: (id: string, defaultMessage: string) => string;
 }
+
+export interface ResponseData<T> {
+  code: string | number;
+  data: T;
+  message?: string;
+  total?: number;
+  page?: number;
+  pageSize?: number;
+  [key: string]: any;
+}
