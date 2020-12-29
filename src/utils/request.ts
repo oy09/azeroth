@@ -17,8 +17,8 @@
 
 import axios, { AxiosRequestConfig, AxiosResponse, Canceler } from 'axios';
 import qs from 'qs';
-import { isNil, pick, omit } from 'lodash';
-import { ResponseData } from '@/utils/hooks/useRequest';
+import { isNil, pick, isString } from 'lodash';
+import { ResponseData } from '@/typing';
 
 export interface RequestConfig extends AxiosRequestConfig {
   // 取消重复的未响应请求
@@ -37,7 +37,14 @@ const waitingConfig = new Map<string, RequestConfig>();
  * @param config
  */
 const createRequestId = (config: RequestConfig) => {
-  return [config.method, config.url, qs.stringify(config.params), qs.stringify(config.data)].filter(item => item).join('&');
+  const list = [config.method, config.url];
+  if (isString(config.data)) {
+    list.push(config.data);
+  } else {
+    list.push(JSON.stringify(config.data));
+  }
+
+  return list.filter(item => item).join('&');
 };
 
 // 等待表添加请求记录
@@ -72,7 +79,7 @@ const removeWaitRequest = (config: RequestConfig) => {
   }
 };
 
-const removeRequest = (resposne: AxiosResponse) => {
+const removeRequest = (resposne: RequestConfig) => {
   const id = createRequestId(resposne);
   if (waiting.has(id)) {
     waiting.delete(id);
@@ -114,7 +121,7 @@ const defaultRequestInterceptor = {
 const defaultResposneInterceptpr = {
   onFulfilled: (response: AxiosResponse<ResponseData<any>>) => {
     // 移除成功后的请求
-    removeRequest(response);
+    removeRequest(response.config);
     const responseData = response.data || {};
     const { code } = responseData;
     if (code === 0) {

@@ -5,16 +5,7 @@ import { debounce } from 'lodash';
 import RequestConfigContext from './requestConfigContext';
 import { RequestOptions } from './type';
 import windowsFocusSubscribe from './windowFocus';
-
-export interface ResponseData<T> {
-  code: string | number;
-  data: T;
-  message?: string;
-  total?: number;
-  page?: number;
-  pageSize?: number;
-  [key: string]: any;
-}
+import { ResponseData } from '@/typing';
 
 export interface RequestAction<T> {
   dataSource?: ResponseData<T>;
