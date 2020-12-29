@@ -6,7 +6,7 @@ export interface LoginPageProps {
 }
 
 const LoginPage: React.FC<LoginPageProps> = props => {
-  return <div>1</div>;
+  return <div>表单组件</div>;
 };
 
 export default LoginPage;
