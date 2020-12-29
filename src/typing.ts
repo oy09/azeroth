@@ -1,6 +1,7 @@
 import React from 'react';
 import { RouteComponentProps as BasicRouterProps, match } from 'react-router-dom';
-import { IRoute } from 'umi';
+import { IRoute, Loading as DvaLoading } from 'umi';
+import { UserModelState } from '@/models/user';
 
 export type WithFalse<T> = T | false;
 
@@ -92,3 +93,8 @@ export interface ResponseData<T> {
   pageSize?: number;
   [key: string]: any;
 }
+
+// 全局状态类型
+export type GlobalStoreType = UserModelState & {
+  loading: DvaLoading;
+};

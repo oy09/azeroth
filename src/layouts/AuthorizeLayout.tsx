@@ -2,12 +2,13 @@ import './AuthorizeLayout.scss';
 import React, { useState, useEffect } from 'react';
 import { PageLoading } from '@ant-design/pro-layout';
 import { useStore, Redirect } from 'umi';
-import BasicLayout from './BasicLayout';
-import { BreadcrumbItemType } from '@/utils/getBreadcrumbProps';
-import RightContent from '@/components/GlobalHeader/RightContent';
 import classnames from 'classnames';
 import { head, isEmpty } from 'lodash';
 import { stringify } from 'qs';
+import BasicLayout from './BasicLayout';
+import { BreadcrumbItemType } from '@/utils/getBreadcrumbProps';
+import RightContent from '@/components/GlobalHeader/RightContent';
+import { GlobalStoreType } from '@/typing';
 
 export interface LayoutProps {
   className?: string;
@@ -19,7 +20,7 @@ const Layout: React.FC<LayoutProps> = props => {
   );
   const [ready, setReady] = useState<boolean>(false);
 
-  const { getState, dispatch } = useStore();
+  const { getState, dispatch } = useStore<GlobalStoreType>();
 
   // 判断是否登录
   useEffect(() => {
@@ -67,6 +68,9 @@ const Layout: React.FC<LayoutProps> = props => {
   } = getState();
 
   const isLogin = !isEmpty(user);
+
+  console.log('isLogin:', isLogin);
+  console.log('loading:', loading);
 
   // 页面加载
   if ((!isLogin && loading) || !ready) {

@@ -1,6 +1,9 @@
 import { omitBy } from 'lodash';
+import { parse as qsParse } from 'qs';
 
 export const stringify = (value: any): string => JSON.stringify(value);
+
+export const parse = (value: string): any => JSON.parse(value);
 
 /**
  * 清除指定类型 undefined、[]
@@ -28,3 +31,8 @@ export const omitUndefined = (value: any) => {
     return true;
   });
 };
+
+/**
+ * 获取当前页面路径的查询参数
+ */
+export const getPageQuery = () => qsParse(window.location.href.split('?')[1]);

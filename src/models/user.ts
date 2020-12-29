@@ -1,7 +1,10 @@
 import { Effect, Reducer, history } from 'umi';
+import { message } from 'antd';
 import { login, LoginParamsType } from '@/api/login';
+import { getUser, getMenu } from '@/api/user';
 import { encryptRSA } from '@/utils/secretUtils';
-import { ResponseData } from '@/utils/hooks/useRequest';
+import { ResponseData as Response } from '@/typing';
+import { getPageQuery } from '@/utils/stringUtils';
 
 export interface UserModelState {
   user: any;
@@ -30,21 +33,45 @@ const Usermodel: UserModelType = {
     menus: [],
   },
   effects: {
-    *getUser(action, effects) {
-      console.log('请求用户接口');
+    *getUser(action, { put, call }) {
+      try {
+        const response: Response<any> = yield call(getUser);
+        yield put({ type: 'updateUser', payload: response.data });
+        console.log('请求用户接口 -> response:', response);
+      } catch (reason) {
+        console.warn('请求用户接口失败:', reason);
+      }
     },
     *getMenu() {
       console.log('请求菜单接口');
     },
-    *login(action, { put, call }) {
+    *login(action, { call }) {
       const payload = { ...action.payload } as LoginParamsType;
       payload.account = encryptRSA(payload.account);
       payload.password = encryptRSA(payload.password);
       try {
-        const response: ResponseData<any> = yield call(login, payload);
-        yield put({ type: 'updateUser', payload: {} });
-        console.log('login response:', response);
+        yield call(login, payload);
+        const urlParams = new URL(window.location.href);
+        const params = getPageQuery();
+        let { redirect } = params as { redirect: string };
+        if (redirect) {
+          const redirectUrlParams = new URL(redirect);
+          if (urlParams.origin === redirectUrlParams.origin) {
+            // 当前url和重定向url同源
+            redirect = redirect.substr(urlParams.origin.length);
+            if (redirect.match(/^\/.*#/)) {
+              redirect = redirect.substr(redirect.indexOf('#') + 1);
+            }
+          } else {
+            // 不同源，跳转到重定向url
+            window.location.href = redirect;
+            return;
+          }
+        }
+        history.push(redirect || '/');
+        console.log('redirect:', redirect);
       } catch (reason) {
+        message.error(reason.message);
         console.log('reason:', reason);
       }
     },
@@ -53,8 +80,11 @@ const Usermodel: UserModelType = {
     },
   },
   reducers: {
-    updateUser(state, action) {
-      return state as UserModelState;
+    updateUser(state, { payload }) {
+      return {
+        ...state,
+        user: payload,
+      } as UserModelState;
     },
     updateMenu(state, action) {
       return state as UserModelState;
