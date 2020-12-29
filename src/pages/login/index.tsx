@@ -22,14 +22,13 @@ const LoginPage: React.FC<LoginPageProps> = props => {
 
   const handleSumit = (values: LoginParamsType) => {
     autoLogin && saveDataToDisk(values);
-    const nextValues = { ...values };
-    dispatch({ type: 'user/login', payload: nextValues });
+    dispatch({ type: 'user/login', payload: values });
   };
 
   return (
     <div className={styles.loginPage}>
       <Form onFinish={handleSumit} className="login-form">
-        <Form.Item name="username" rules={[{ required: true, message: '请输入用户名' }]}>
+        <Form.Item name="account" rules={[{ required: true, message: '请输入用户名' }]}>
           <Input allowClear size="large" prefix={<UserOutlined style={{ color: '#889aa4' }} />} placeholder="用户名" />
         </Form.Item>
         <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]}>

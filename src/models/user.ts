@@ -1,5 +1,7 @@
-import { Effect, Reducer } from 'umi';
+import { Effect, Reducer, history } from 'umi';
 import { login, LoginParamsType } from '@/api/login';
+import { encryptRSA } from '@/utils/secretUtils';
+import { ResponseData } from '@/utils/hooks/useRequest';
 
 export interface UserModelState {
   user: any;
@@ -34,9 +36,17 @@ const Usermodel: UserModelType = {
     *getMenu() {
       console.log('请求菜单接口');
     },
-    async login({ payload }, { put, call }) {
-      await call(login, payload);
-      console.log('登录接口:', payload);
+    *login(action, { put, call }) {
+      const payload = { ...action.payload } as LoginParamsType;
+      payload.account = encryptRSA(payload.account);
+      payload.password = encryptRSA(payload.password);
+      try {
+        const response: ResponseData<any> = yield call(login, payload);
+        yield put({ type: 'updateUser', payload: {} });
+        console.log('login response:', response);
+      } catch (reason) {
+        console.log('reason:', reason);
+      }
     },
     *logout() {
       //
