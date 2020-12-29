@@ -13,18 +13,15 @@ export interface SiderbarProps extends Partial<RouterTypes<Route>> {
   style?: CSSProperties;
   logo?: React.ReactNode;
   siderWidth?: number;
-  menuHeaderRender?: WithFalse<
-    (props: SiderbarProps, defaultDom: React.ReactNode) => React.ReactNode
-  >;
-  menuContentRender?: WithFalse<
-    (props: any, defaultDom: React.ReactNode) => React.ReactNode
-  >;
+  menuHeaderRender?: WithFalse<(props: SiderbarProps, defaultDom: React.ReactNode) => React.ReactNode>;
+  menuContentRender?: WithFalse<(props: any, defaultDom: React.ReactNode) => React.ReactNode>;
   menuExtraRender?: WithFalse<(props: SiderbarProps) => React.ReactNode>;
   collapsedButtonRender?: WithFalse<(collapsed?: boolean) => React.ReactNode>;
   links?: React.ReactNode[];
   onMenuHeaderClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onOpenChange?: (openKeys?: WithFalse<string[]>) => void;
   onCollapse?: (collapsed: boolean) => void;
+  postMenuData?: (menuData?: MenuDataItem[]) => MenuDataItem[];
   menuData?: MenuDataItem[];
   theme?: MenuTheme;
   prefixCls?: string;
@@ -136,22 +133,11 @@ const Siderbar: React.FC<SiderbarProps> = props => {
         className={sidebarClassName}
       >
         {headerDom && (
-          <div
-            className={`${baseClassName}-logo`}
-            id="logo"
-            onClick={onMenuHeaderClick}
-          >
+          <div className={`${baseClassName}-logo`} id="logo" onClick={onMenuHeaderClick}>
             {headerDom}
           </div>
         )}
-        {extraDom && (
-          <div
-            className={`${baseClassName}-extra ${!headerDom &&
-              `${baseClassName}-extra-no-logo`}`}
-          >
-            {extraDom}
-          </div>
-        )}
+        {extraDom && <div className={`${baseClassName}-extra ${!headerDom && `${baseClassName}-extra-no-logo`}`}>{extraDom}</div>}
         <div
           style={{
             flex: 1,
