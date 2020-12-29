@@ -21,14 +21,16 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
   return (
     <div className={className}>
       <div className="content">
-        <div className="header">
-          <Link to="/">
-            <img src="/favicon.png" className="logo" alt="logo" title="logo" />
-            <span className="title">后台管理系统</span>
-          </Link>
+        <div className="top">
+          <div className="header">
+            <Link to="/">
+              {/* <img src="/favicon.png" className="logo" alt="logo" title="logo" /> */}
+              <span className="title">后台管理系统</span>
+            </Link>
+          </div>
+          <div className="desc">南沙部落运营</div>
         </div>
-        <div className="desc">南沙部落运营</div>
-        {children}
+        <div className="main">{children}</div>
       </div>
       <DefaultFooter />
     </div>

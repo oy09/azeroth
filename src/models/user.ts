@@ -1,4 +1,5 @@
 import { Effect, Reducer } from 'umi';
+import { login, LoginParamsType } from '@/api/login';
 
 export interface UserModelState {
   user: any;
@@ -33,8 +34,9 @@ const Usermodel: UserModelType = {
     *getMenu() {
       console.log('请求菜单接口');
     },
-    *login() {
-      //
+    async login({ payload }, { put, call }) {
+      await call(login, payload);
+      console.log('登录接口:', payload);
     },
     *logout() {
       //

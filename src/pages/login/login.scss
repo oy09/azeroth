@@ -1,1 +1,37 @@
 @charset "utf-8";
+
+.loginPage {
+  width: 368px;
+  margin: 0 auto;
+
+  :global {
+    .forget {
+      float: right;
+      display: none;
+    }
+
+    .icon {
+      margin-left: 16px;
+      font-size: 24px;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+      }
+    }
+
+    .help {
+      display: none;
+
+      .ant-checkbox-wrapper {
+        color: rgba(#1890ff, 0.85);
+      }
+    }
+
+    .login {
+      width: 100%;
+      margin-top: 24px;
+    }
+  }
+}
