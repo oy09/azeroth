@@ -1,23 +1,41 @@
 import React from 'react';
 import classnames from 'classnames';
-import {
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Dropdown, Avatar, Menu } from 'antd';
+import { useDispatch } from 'umi';
+import { AntdMenuEvent } from '@/typing';
 import './UserDropdown.scss';
+
+interface MenuHandler {
+  [key: string]: (event: AntdMenuEvent) => void;
+}
 
 export interface UserDropdownProsp {
   className?: string;
 }
 
 const UserDropdown: React.FC<UserDropdownProsp> = props => {
+  const dispatch = useDispatch();
+
   const { className } = props;
   const classNames = classnames('user-dropdown', className);
 
-  const handleMenuClick = (event?: any) => {
-    //
+  const menuHandler: MenuHandler = {
+    center: event => {},
+    settings: event => {
+      //
+    },
+    logout: event => {
+      dispatch({ type: 'user/logout' });
+    },
+  };
+
+  const handleMenuClick = (event: AntdMenuEvent) => {
+    if (menuHandler[event.key]) {
+      menuHandler[event.key](event);
+    } else {
+      console.warn('用户下拉菜单未设置监听事件');
+    }
   };
 
   const menu = (

@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = props => {
   );
   const [ready, setReady] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const currentUser = useSelector<GlobalStoreType, CurrentUser>(state => state.user.current);
+  const currentUser = useSelector<GlobalStoreType, CurrentUser>(state => state.user.current as CurrentUser);
   const loading = useSelector<GlobalStoreType, boolean>(state => state.loading.models.user);
 
   // 判断是否登录

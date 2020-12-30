@@ -99,3 +99,10 @@ export interface GlobalStoreType {
   user: UserModelState;
   loading: DvaLoading;
 }
+
+export interface AntdMenuEvent {
+  key: React.Key;
+  keyPath: React.Key[];
+  item: React.ReactInstance;
+  domEvent: React.MouseEvent<HTMLElement>;
+}

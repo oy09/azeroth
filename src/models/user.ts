@@ -7,12 +7,26 @@ import { ResponseData as Response } from '@/typing';
 import { getPageQuery } from '@/utils/stringUtils';
 
 export interface UserModelState {
-  current: CurrentUser;
+  current: Partial<CurrentUser>;
   menus: any;
 }
 
 export interface CurrentUser {
-  //
+  // 用户id
+  id: string;
+  // 昵称
+  nick: string;
+  // 头像icon
+  icon: string;
+  // 电话
+  mobile: string;
+  // 性别
+  gender: string;
+  // 角色
+  roles: {
+    code: string;
+    name: string;
+  }[];
 }
 
 export interface UserModelType {
@@ -78,8 +92,8 @@ const Usermodel: UserModelType = {
         console.log('reason:', reason);
       }
     },
-    *logout() {
-      //
+    *logout(action, { put }) {
+      yield put({ type: 'updateUser', payload: {} });
     },
   },
   reducers: {
