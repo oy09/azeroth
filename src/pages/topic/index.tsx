@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
 import { getTopicList } from '@/api/topic';
+import { format } from '@/utils/dateUtils';
 import './topic.scss';
 
 export interface TopicPageProps {
@@ -37,7 +37,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       title: '内容',
       dataIndex: 'content',
       align: 'center',
-      width: 300,
+      width: 400,
       ellipsis: true,
     },
     {
@@ -82,7 +82,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       dataIndex: 'publishTime',
       align: 'center',
       width: 200,
-      renderText: value => dayjs(value).format('YYYY-MM-DD YY:mm:ss'),
+      renderText: value => format(value),
     },
     {
       title: '浏览数量',

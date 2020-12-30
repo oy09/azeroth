@@ -225,7 +225,7 @@ const generatorCoumnList = <T, U = {}>(
         valueEnum: valueEnum,
         fixed: config.fixed,
         // 这里不能缩放，失去了table组件原有功能
-        ellipsis: false,
+        // ellipsis: false,
         width: item.width || (item.fixed ? 200 : undefined),
         children: (item as AntTableColumnGroupType<T>).children
           ? generatorCoumnList((item as AntTableColumnGroupType<T>).children as AzColumns<T>[], map, counter, columnEmptyText)
