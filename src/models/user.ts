@@ -7,8 +7,12 @@ import { ResponseData as Response } from '@/typing';
 import { getPageQuery } from '@/utils/stringUtils';
 
 export interface UserModelState {
-  user: any;
+  current: CurrentUser;
   menus: any;
+}
+
+export interface CurrentUser {
+  //
 }
 
 export interface UserModelType {
@@ -29,7 +33,7 @@ export interface UserModelType {
 const Usermodel: UserModelType = {
   namespace: 'user',
   state: {
-    user: {},
+    current: {},
     menus: [],
   },
   effects: {
@@ -37,7 +41,6 @@ const Usermodel: UserModelType = {
       try {
         const response: Response<any> = yield call(getUser);
         yield put({ type: 'updateUser', payload: response.data });
-        console.log('请求用户接口 -> response:', response);
       } catch (reason) {
         console.warn('请求用户接口失败:', reason);
       }
@@ -83,7 +86,7 @@ const Usermodel: UserModelType = {
     updateUser(state, { payload }) {
       return {
         ...state,
-        user: payload,
+        current: payload,
       } as UserModelState;
     },
     updateMenu(state, action) {

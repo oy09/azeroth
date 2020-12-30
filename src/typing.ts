@@ -95,6 +95,7 @@ export interface ResponseData<T> {
 }
 
 // 全局状态类型
-export type GlobalStoreType = UserModelState & {
+export interface GlobalStoreType {
+  user: UserModelState;
   loading: DvaLoading;
-};
+}

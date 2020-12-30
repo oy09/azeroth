@@ -1,9 +1,9 @@
 import './AuthorizeLayout.scss';
 import React, { useState, useEffect } from 'react';
 import { PageLoading } from '@ant-design/pro-layout';
-import { useStore, Redirect } from 'umi';
+import { useDispatch, useSelector, Redirect, CurrentUser } from 'umi';
 import classnames from 'classnames';
-import { head, isEmpty } from 'lodash';
+import { head } from 'lodash';
 import { stringify } from 'qs';
 import BasicLayout from './BasicLayout';
 import { BreadcrumbItemType } from '@/utils/getBreadcrumbProps';
@@ -19,8 +19,9 @@ const Layout: React.FC<LayoutProps> = props => {
     localStorage.getItem('sidebarState') ? !!+(localStorage.getItem('sidebarState') as string) : false,
   );
   const [ready, setReady] = useState<boolean>(false);
-
-  const { getState, dispatch } = useStore<GlobalStoreType>();
+  const dispatch = useDispatch();
+  const currentUser = useSelector<GlobalStoreType, CurrentUser>(state => state.user.current);
+  const loading = useSelector<GlobalStoreType, boolean>(state => state.loading.models.user);
 
   // 判断是否登录
   useEffect(() => {
@@ -55,22 +56,11 @@ const Layout: React.FC<LayoutProps> = props => {
     } else {
       localStorage.setItem('sidebarState', '1');
     }
-    // console.log('collapse:', value);
   };
 
   const classNames = classnames('authorize-layout', props.className);
 
-  const {
-    user: { user },
-    loading: {
-      models: { user: loading },
-    },
-  } = getState();
-
-  const isLogin = !isEmpty(user);
-
-  console.log('isLogin:', isLogin);
-  console.log('loading:', loading);
+  const isLogin = currentUser && currentUser.id;
 
   // 页面加载
   if ((!isLogin && loading) || !ready) {
