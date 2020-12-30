@@ -223,7 +223,9 @@ const generatorCoumnList = <T, U = {}>(
         filters: filters === true ? parsingValueEnumToArray(valueEnum).filter(item => item && item.value !== 'all') : filters,
         title: renderColumnsTitle(item),
         valueEnum: valueEnum,
-        // ellipsis: false, 这里不能缩放，失去了table组件原有功能
+        fixed: config.fixed,
+        // 这里不能缩放，失去了table组件原有功能
+        ellipsis: false,
         width: item.width || (item.fixed ? 200 : undefined),
         children: (item as AntTableColumnGroupType<T>).children
           ? generatorCoumnList((item as AntTableColumnGroupType<T>).children as AzColumns<T>[], map, counter, columnEmptyText)

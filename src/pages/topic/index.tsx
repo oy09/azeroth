@@ -20,10 +20,9 @@ const TopicPage: React.FC<TopicPageProps> = props => {
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
-      key: 'no',
       tooltip: '查看数据数量和位置',
       hideInSearch: true,
-      // width: 100,
+      width: 50,
       align: 'center',
       render: (text, record, index) => index + 1,
     },
@@ -31,7 +30,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       title: 'id',
       dataIndex: 'id',
       align: 'center',
-      width: 140,
+      width: 210,
     },
     {
       title: '内容',
