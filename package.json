@@ -35,6 +35,7 @@
     "classnames": "^2.2.6",
     "clipboard": "^2.0.6",
     "cross-env": "^7.0.2",
+    "dayjs": "^1.9.8",
     "lint-staged": "^10.0.7",
     "lodash": "^4.17.19",
     "node-sass": "^4.14.1",

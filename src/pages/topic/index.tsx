@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
@@ -81,6 +82,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       dataIndex: 'publishTime',
       align: 'center',
       width: 200,
+      renderText: value => dayjs(value).format('YYYY-MM-DD YY:mm:ss'),
     },
     {
       title: '浏览数量',
