@@ -5,10 +5,10 @@ import { ModalProps } from 'antd/lib/modal/Modal';
 export interface DialogProps extends ModalProps {}
 
 const Dialog: React.FC<DialogProps> = props => {
-  const { title, visible, onCancel } = props;
+  const { title, visible, onCancel, width } = props;
 
   return (
-    <Modal title={title} visible={visible} onCancel={onCancel} footer={null} {...props}>
+    <Modal title={title} width={width || '70%'} visible={visible} onCancel={onCancel} footer={null} {...props}>
       {props.children}
     </Modal>
   );

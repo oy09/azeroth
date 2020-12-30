@@ -8,6 +8,7 @@ import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
 import { getTopicList } from '@/api/topic';
 import { format } from '@/utils/dateUtils';
+import TopicFrom from './components/TopicForm';
 import './topic.scss';
 
 export interface TopicPageProps {
@@ -103,9 +104,11 @@ const TopicPage: React.FC<TopicPageProps> = props => {
   const rowSelection = {};
 
   const handleNew = () => {
-    const values = formRef.current?.getFieldsValue();
-    console.log('values:', values);
     handleCreateDialogVisible(true);
+  };
+
+  const handleSubmit = (values: any) => {
+    console.log('publish topic:', values);
   };
 
   return (
@@ -132,8 +135,8 @@ const TopicPage: React.FC<TopicPageProps> = props => {
         bordered
         sticky
       />
-      <Dialog visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
-        AzForm
+      <Dialog title="发布话题" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
+        <TopicFrom onCancel={() => handleCreateDialogVisible(false)} onSubmit={values => handleSubmit(values)} />
       </Dialog>
     </GridContent>
   );
