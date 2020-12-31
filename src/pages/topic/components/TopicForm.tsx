@@ -22,7 +22,7 @@ const TopicForm: React.FC<FormProps> = props => {
         size="large"
         initialValues={initialValues}
         labelCol={{
-          span: 3,
+          span: 4,
         }}
         onFinish={values => props?.onSubmit && props.onSubmit(values)}
       >
@@ -50,7 +50,7 @@ const TopicForm: React.FC<FormProps> = props => {
         <Row gutter={15}>
           <Col span={12}>
             <Form.Item
-              labelCol={{ span: 6 }}
+              labelCol={{ xl: 6 }}
               rules={[{ required: true, message: '请输入联系人电话' }]}
               name="concatMobile"
               label="联系人电话"
@@ -60,7 +60,7 @@ const TopicForm: React.FC<FormProps> = props => {
           </Col>
           <Col span={12}>
             <Form.Item
-              labelCol={{ span: 6 }}
+              labelCol={{ xl: 6 }}
               rules={[{ required: true, message: '请输入联系人姓名' }]}
               name="concatName"
               label="联系人姓名"

@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
-import { getTopicList } from '@/api/topic';
+import { getTopicList, createTopic } from '@/api/topic';
 import { format } from '@/utils/dateUtils';
 import TopicFrom from './components/TopicForm';
 import './topic.scss';
@@ -107,8 +107,14 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     handleCreateDialogVisible(true);
   };
 
-  const handleSubmit = (values: any) => {
-    console.log('publish topic:', values);
+  const handleSubmit = async (values: any) => {
+    try {
+      await createTopic(values);
+      handleCreateDialogVisible(false);
+      message.success('提交成功');
+    } catch (reason) {
+      message.warn(`提交失败: ${reason.message || ''}`);
+    }
   };
 
   return (
