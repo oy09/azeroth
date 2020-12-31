@@ -32,7 +32,7 @@ interface PageInfo {
 }
 
 const useRequestTable = <T extends ResponseData<any>>(
-  getData: (params: { current: number; pageSize: number }) => Promise<T>,
+  getData: (params: { page: number; pageSize: number }) => Promise<T>,
   defaultData?: Partial<T['data']>,
   options?: {
     defaultCurrent?: number;
@@ -67,7 +67,7 @@ const useRequestTable = <T extends ResponseData<any>>(
 
     try {
       const { data, success, total: dataTotal = 0 } = await getData({
-        current: page,
+        page,
         pageSize,
       });
       if (success !== false) {

@@ -18,7 +18,7 @@ import {
 import useRequestTable, { ResponseData, UseReqeustTableAction } from '@/utils/hooks/useRequestTable';
 import useDeepCompareEffect from '@/utils/hooks/useDeepCompareEffect';
 import useMergedState from '@/utils/hooks/useMergedState';
-import { ParamsType, AzSchema } from '@/typing';
+import { ParamsType, AzSchema, CoreTableActionType } from '@/typing';
 import { stringify, omitUndefined, omitUndefinedAndEmptyArray } from '@/utils/stringUtils';
 import { mergePagination, useAction, getColumnKey, parsingValueEnumToArray } from './utils';
 import Container, { useCounter, ColumnState } from './container';
@@ -104,7 +104,7 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   postData?: (data: any[]) => any[];
   // 获取dataSouce的方法
   request?: (
-    params: U & { current?: number; pageSize?: number },
+    params: U & { page?: number; pageSize?: number },
     sort: {
       [key: string]: AntTableSortOrder;
     },
@@ -120,7 +120,7 @@ export interface TableProps<T, U extends ParamsType> extends Omit<AntTableProps<
   // 默认操作栏配置
   options?: OptionConfig<T>; // 需要修改类型
   // 操作引用，操作table
-  actionRef?: any; // 需要修改类型
+  actionRef?: React.MutableRefObject<CoreTableActionType | undefined> | ((actionRef: CoreTableActionType) => void); // 需要修改类型
   defaultData?: T[];
   columns?: AzColumns<T>[];
   // request 请求参数
