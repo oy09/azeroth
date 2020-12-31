@@ -157,14 +157,15 @@ const renderColumn = <T,>(option: RenderColumnOption<T>): any => {
   const { text, item, index, row, counter } = option;
   const { action } = counter;
   const { renderText = (val: any) => val } = item;
-  const renderTextStr = renderText(text, row, index, action.current as UseReqeustTableAction<ResponseData<any>>);
+  const actionCurrent = action.current as UseReqeustTableAction<any>;
+  const renderTextStr = renderText(text, row, index, actionCurrent);
   // TODO 未来这里需要根据 valueType 属性创建不同类型的业务组件
   const textDom = renderTextStr;
   // TODO 未来这里创建省略过长内容，过长内容由tooltip提示，支持可复制功能
   const dom = textDom;
 
   if (item.render) {
-    const renderDom = item.render(dom, row, index, action.current as UseReqeustTableAction<ResponseData<any>>, item);
+    const renderDom = item.render(dom, row, index, actionCurrent, item);
 
     if (
       renderDom &&

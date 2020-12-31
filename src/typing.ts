@@ -2,6 +2,7 @@ import React from 'react';
 import { RouteComponentProps as BasicRouterProps, match } from 'react-router-dom';
 import { IRoute, Loading as DvaLoading } from 'umi';
 import { UserModelState } from '@/models/user';
+import { UseReqeustTableAction } from '@/utils/hooks/useRequestTable';
 
 export type WithFalse<T> = T | false;
 
@@ -42,9 +43,9 @@ export type ParamsType = {
  */
 export interface CoreTableActionType {
   reload: (resetPage?: boolean) => void;
-  reloadAndRest?: () => void;
-  rest?: () => void;
-  cleanSelected?: () => void;
+  reloadAndRest: () => void;
+  rest: () => void;
+  cleanSelected: () => void;
 }
 
 /**
@@ -65,11 +66,11 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
     text: string,
     record: T,
     index: number,
-    action: CoreTableActionType,
+    action: UseReqeustTableAction<ResponseData<any>>,
     schema: AzSchema<T, U, Extra>,
   ) => React.ReactNode;
   renderFormItem?: (...args: any[]) => React.ReactNode;
-  renderText?: (text: string, record: T, index: number, action: CoreTableActionType) => any;
+  renderText?: (text: string, record: T, index: number, action: UseReqeustTableAction<ResponseData<any>>) => any;
   // 表单属性
   fieldProps?: any;
   request?: any;
