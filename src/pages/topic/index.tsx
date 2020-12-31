@@ -8,6 +8,7 @@ import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
 import { getTopicList, createTopic } from '@/api/topic';
 import { format } from '@/utils/dateUtils';
+import { CoreTableActionType } from '@/typing';
 import TopicFrom from './components/TopicForm';
 import './topic.scss';
 
@@ -17,6 +18,7 @@ export interface TopicPageProps {
 
 const TopicPage: React.FC<TopicPageProps> = props => {
   const formRef: SearchProps<any>['formRef'] = useRef();
+  const actionRef = useRef<CoreTableActionType>();
   const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
   // const { dataSource } = useRequest('/api/topic', { params: { page: 1, pageSize: 20 } })
   const columns: AzColumnType<any>[] = [
@@ -111,6 +113,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     try {
       await createTopic(values);
       handleCreateDialogVisible(false);
+      actionRef.current?.reload();
       message.success('提交成功');
     } catch (reason) {
       message.warn(`提交失败: ${reason.message || ''}`);
@@ -121,6 +124,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     <GridContent>
       <AzTable
         columns={columns}
+        actionRef={actionRef}
         rowSelection={rowSelection}
         formRef={formRef}
         toolbarLeftRender={props => (

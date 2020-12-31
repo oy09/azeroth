@@ -1,19 +1,30 @@
 import styles from './TopicForm.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Select, Switch, Input, Row, Col } from 'antd';
 import { STATUS, TOPIC_TYPE } from '@/utils/constant';
 
 export interface FormProps {
   onCancel?: () => void;
-  onSubmit?: (values: any) => void;
+  onSubmit?: (values: any) => Promise<void>;
   initialValues?: any;
 }
 
 const TopicForm: React.FC<FormProps> = props => {
+  const { onCancel, onSubmit } = props;
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+
   // 默认表单
   const initialValues = {
     status: 0,
     contentType: 1,
+  };
+
+  const handleFinish = (values: any) => {
+    setSubmitLoading(true);
+    onSubmit &&
+      onSubmit(values).then(() => {
+        setSubmitLoading(false);
+      });
   };
 
   return (
@@ -26,7 +37,7 @@ const TopicForm: React.FC<FormProps> = props => {
           lg: 4,
           xl: 3,
         }}
-        onFinish={values => props?.onSubmit && props.onSubmit(values)}
+        onFinish={handleFinish}
       >
         <Form.Item rules={[{ required: true, message: '请选择一个状态' }]} name="status" label="状态">
           <Select allowClear placeholder="请选择状态">
@@ -78,10 +89,10 @@ const TopicForm: React.FC<FormProps> = props => {
           <Switch checkedChildren="置顶" unCheckedChildren="否" />
         </Form.Item>
         <div className="tool">
-          <Button htmlType="reset" onClick={() => props?.onCancel && props.onCancel()}>
+          <Button htmlType="reset" onClick={() => onCancel && onCancel()}>
             取消
           </Button>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={submitLoading}>
             确定
           </Button>
         </div>
