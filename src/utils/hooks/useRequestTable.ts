@@ -31,7 +31,7 @@ interface PageInfo {
   hasMore: boolean;
 }
 
-const useReqeustTable = <T extends ResponseData<any>>(
+const useRequestTable = <T extends ResponseData<any>>(
   getData: (params: { current: number; pageSize: number }) => Promise<T>,
   defaultData?: Partial<T['data']>,
   options?: {
@@ -179,4 +179,4 @@ const useReqeustTable = <T extends ResponseData<any>>(
   };
 };
 
-export default useReqeustTable;
+export default useRequestTable;
