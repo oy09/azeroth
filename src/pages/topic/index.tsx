@@ -6,11 +6,12 @@ import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
-import { getTopicList, createTopic } from '@/api/topic';
+import { getTopicList, createTopic, updateTopic } from '@/api/topic';
 import { format } from '@/utils/dateUtils';
 import { CoreTableActionType } from '@/typing';
 import TopicFrom from './components/TopicForm';
 import './topic.scss';
+import { valuesIn } from 'lodash';
 
 export interface TopicPageProps {
   className?: string;
@@ -19,7 +20,9 @@ export interface TopicPageProps {
 const TopicPage: React.FC<TopicPageProps> = props => {
   const formRef: SearchProps<any>['formRef'] = useRef();
   const actionRef = useRef<CoreTableActionType>();
+  const [row, setRow] = useState<any | null>();
   const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
+  const [updateDialogVisible, handleUpdateDialogVisible] = useState<boolean>(false);
   // const { dataSource } = useRequest('/api/topic', { params: { page: 1, pageSize: 20 } })
   const columns: AzColumnType<any>[] = [
     {
@@ -69,10 +72,11 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       width: 340,
     },
     {
-      title: '置顶状态',
-      dataIndex: 'isTop',
+      title: '置顶时间',
+      dataIndex: 'topExpiresTime',
       align: 'center',
       width: 240,
+      renderText: value => (value ? format(value) : '-'),
     },
     {
       title: '发布用户',
@@ -85,7 +89,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       dataIndex: 'publishTime',
       align: 'center',
       width: 200,
-      renderText: value => format(value),
+      renderText: value => (value ? format(value) : '-'),
     },
     {
       title: '浏览数量',
@@ -93,12 +97,25 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       align: 'center',
       width: 120,
       hideInSearch: true,
+      renderText: value => (value ? value : '-'),
     },
     {
       title: '点赞数量',
       dataIndex: 'likeCount',
       align: 'center',
       width: 120,
+      hideInSearch: true,
+      renderText: value => (value ? value : '-'),
+    },
+    {
+      title: '操作',
+      dataIndex: '_op',
+      align: 'center',
+      width: 80,
+      fixed: 'right',
+      render: (value, row, index) => {
+        return <a onClick={() => handleUpdate(row)}>编辑</a>;
+      },
       hideInSearch: true,
     },
   ];
@@ -109,6 +126,15 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     handleCreateDialogVisible(true);
   };
 
+  const handleUpdate = (record: any) => {
+    setRow(record);
+    handleUpdateDialogVisible(true);
+  };
+
+  const handleUpdateClose = () => {
+    handleUpdateDialogVisible(false);
+  };
+
   const handleSubmit = async (values: any) => {
     try {
       await createTopic(values);
@@ -117,6 +143,17 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       message.success('提交成功');
     } catch (reason) {
       message.warn(`提交失败: ${reason.message || ''}`);
+    }
+  };
+
+  const handleUpateSubmit = async (values: any) => {
+    try {
+      await updateTopic(values.id, values);
+      handleUpdateDialogVisible(false);
+      actionRef.current?.reload();
+      message.success('修改成功');
+    } catch (reason) {
+      message.warn(`修改失败: ${reason.message || ''}`);
     }
   };
 
@@ -146,7 +183,17 @@ const TopicPage: React.FC<TopicPageProps> = props => {
         sticky
       />
       <Dialog title="发布话题" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
-        <TopicFrom onCancel={() => handleCreateDialogVisible(false)} onSubmit={values => handleSubmit(values)} />
+        <TopicFrom onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleSubmit} />
+      </Dialog>
+      <Dialog title="修改话题" destroyOnClose visible={updateDialogVisible} onCancel={() => handleUpdateDialogVisible(false)}>
+        <TopicFrom
+          initialValues={row}
+          itemVisibleMap={{
+            isTop: false,
+          }}
+          onCancel={handleUpdateClose}
+          onSubmit={handleUpateSubmit}
+        />
       </Dialog>
     </GridContent>
   );
