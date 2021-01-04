@@ -27,7 +27,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
     {
       title: '编码',
       dataIndex: 'code',
-      width: 120,
+      width: 160,
       align: 'center',
     },
     {
@@ -64,6 +64,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
       align: 'center',
       hideInSearch: true,
       ellipsis: true,
+      renderText: value => value || '-',
     },
     {
       title: '操作',
@@ -93,6 +94,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
         search={{
           labelWidth: 120,
         }}
+        scroll={{ x: '100%' }}
         rowKey="id"
         bordered
         sticky
