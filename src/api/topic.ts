@@ -12,6 +12,6 @@ export const updateTopic = (id: string, data: any) => {
   return request.put(`/admin-api/topic/updateTopic/${id}`, data);
 };
 
-export const deleteTopic = (params: any) => {
-  return request.delete('/admin-api/topic/deleteList', { params });
+export const deleteTopic = (data: any) => {
+  return request.post('/admin-api/topic/deleteList', data);
 };

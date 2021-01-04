@@ -6,12 +6,11 @@ import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
-import { getTopicList, createTopic, updateTopic } from '@/api/topic';
+import { getTopicList, createTopic, updateTopic, deleteTopic } from '@/api/topic';
 import { format } from '@/utils/dateUtils';
 import { CoreTableActionType } from '@/typing';
 import TopicFrom from './components/TopicForm';
 import './topic.scss';
-import { valuesIn } from 'lodash';
 
 export interface TopicPageProps {
   className?: string;
@@ -23,6 +22,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
   const [row, setRow] = useState<any | null>();
   const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
   const [updateDialogVisible, handleUpdateDialogVisible] = useState<boolean>(false);
+  const [selectRows, setSelectRows] = useState<any[]>([]);
   // const { dataSource } = useRequest('/api/topic', { params: { page: 1, pageSize: 20 } })
   const columns: AzColumnType<any>[] = [
     {
@@ -120,8 +120,6 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     },
   ];
 
-  const rowSelection = {};
-
   const handleNew = () => {
     handleCreateDialogVisible(true);
   };
@@ -129,6 +127,19 @@ const TopicPage: React.FC<TopicPageProps> = props => {
   const handleUpdate = (record: any) => {
     setRow(record);
     handleUpdateDialogVisible(true);
+  };
+
+  const handleRemove = async (rows: any[]) => {
+    const hide = message.loading('正在删除中···');
+    try {
+      const ids = rows.map(item => item.id);
+      await deleteTopic({ ids });
+      hide();
+      message.success('删除成功');
+    } catch (reason) {
+      hide();
+      message.warn(`删除失败: ${reason.message}`);
+    }
   };
 
   const handleUpdateClose = () => {
@@ -162,13 +173,31 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       <AzTable
         columns={columns}
         actionRef={actionRef}
-        rowSelection={rowSelection}
+        rowSelection={{
+          onSelect: (record, selected, list) => {
+            setSelectRows(list);
+          },
+        }}
         formRef={formRef}
         toolbarLeftRender={props => (
           <React.Fragment>
             <Button type="primary" icon={<PlusOutlined />} onClick={handleNew}>
               新建
             </Button>
+            {selectRows?.length > 0 && (
+              <div className="extra-tool">
+                <Button
+                  danger
+                  onClick={async () => {
+                    await handleRemove(selectRows);
+                    setSelectRows([]);
+                    actionRef.current?.reloadAndRest();
+                  }}
+                >
+                  批量删除({selectRows.length})
+                </Button>
+              </div>
+            )}
           </React.Fragment>
         )}
         search={{
