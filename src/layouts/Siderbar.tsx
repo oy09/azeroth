@@ -7,6 +7,7 @@ import { WithFalse, MenuDataItem, RouterTypes, Route } from '@/typing';
 import { MenuTheme } from 'antd/es/menu/MenuContext';
 import { Menu } from 'antd';
 import MenuList from './MenuList';
+import { CollapseddWidth } from './constant';
 
 export interface SiderbarProps extends Partial<RouterTypes<Route>> {
   className?: string;
@@ -124,7 +125,7 @@ const Siderbar: React.FC<SiderbarProps> = props => {
             }
           }
         }}
-        collapsedWidth={48}
+        collapsedWidth={CollapseddWidth}
         width={siderWidth}
         style={{
           overflow: 'hidden',

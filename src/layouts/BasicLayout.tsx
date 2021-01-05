@@ -13,13 +13,9 @@ import Siderbar, { SiderbarProps } from './Siderbar';
 import Header, { HeaderProps } from './Header';
 import Footer, { FooterProps } from './Footer';
 import defaultSetting from './defaultSettings';
-import useDocumentTitle, {
-  Info as TitleInfo,
-} from '@/utils/hooks/useDocumentTitle';
-import {
-  BreadcrumbItemType,
-  getBreadcrumbProps,
-} from '@/utils/getBreadcrumbProps';
+import useDocumentTitle, { Info as TitleInfo } from '@/utils/hooks/useDocumentTitle';
+import { BreadcrumbItemType, getBreadcrumbProps } from '@/utils/getBreadcrumbProps';
+import { CollapseddWidth } from './constant';
 
 export type BasicLayoutProps = Partial<RouterTypes<Route>> &
   SiderbarProps &
@@ -33,12 +29,8 @@ export type BasicLayoutProps = Partial<RouterTypes<Route>> &
     collapsed?: boolean;
     siderWidth?: number;
     onCollapse?: (collapsed: boolean) => void;
-    footerRender?: WithFalse<
-      (props: any, defaultDom: React.ReactNode) => React.ReactNode
-    >;
-    headerRender?: WithFalse<
-      (props: any, defautDom: React.ReactNode) => React.ReactNode
-    >;
+    footerRender?: WithFalse<(props: any, defaultDom: React.ReactNode) => React.ReactNode>;
+    headerRender?: WithFalse<(props: any, defautDom: React.ReactNode) => React.ReactNode>;
     menuDataRender?: (data: MenuDataItem[]) => MenuDataItem[];
     breadcrumbRender?: (value: BreadcrumbItemType[]) => BreadcrumbItemType[];
     isMobile?: boolean;
@@ -72,10 +64,7 @@ const renderFooter = (props: BasicLayoutProps): React.ReactNode => {
   return <Footer {...props} />;
 };
 
-const renderDeafultTitle = (
-  props: BasicLayoutProps,
-  menuData?: MenuDataItem[],
-): TitleInfo => {
+const renderDeafultTitle = (props: BasicLayoutProps, menuData?: MenuDataItem[]): TitleInfo => {
   const getTitle = (item: MenuDataItem) => `${item.title}-${props.title}`;
 
   const currentRoute = getMatchMenu(props.location?.pathname, menuData) || {
@@ -88,6 +77,13 @@ const renderDeafultTitle = (
   };
 };
 
+const getPaddingLeft = (hasLeftPadding: boolean, collapsed: boolean | undefined, siderWidth: number): number | undefined => {
+  if (hasLeftPadding) {
+    return collapsed ? CollapseddWidth : siderWidth;
+  }
+  return 0;
+};
+
 const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const {
     style,
@@ -98,7 +94,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     route = {
       routes: [],
     },
-    siderWidth,
+    siderWidth = 208,
     contentStyle,
     onCollapse: propsOnCollapse,
     ...rest
@@ -114,6 +110,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     menuData?: MenuDataItem[];
     breadcrumbMap?: Map<string, MenuDataItem>;
   }>(() => getMenuData(routes));
+
+  const hasLeftPadding = !isMobile;
 
   const { menuData, breadcrumbMap } = menuInfoData;
   const pageInfo = renderDeafultTitle(props, menuData);
@@ -168,6 +166,10 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const className = classnames(props.className, basicClassName, {
     [`${basicClassName}-mobile`]: isMobile,
   });
+  /**
+   * 计算sliderbar宽度
+   */
+  const leftSiderWidth = getPaddingLeft(hasLeftPadding, collapsed, siderWidth);
 
   const contextClassName = classnames(`${basicClassName}-content`, {
     //
@@ -179,7 +181,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         prefixCls,
         isMobile,
         collapsed,
-        siderWidth,
+        siderWidth: leftSiderWidth,
         menuData,
         breadcrumb: breadcrumbProps,
       }}
@@ -195,11 +197,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           {siderbarDom}
           <Layout>
             {headerDom}
-            <AppMain
-              {...rest}
-              className={contextClassName}
-              style={contentStyle}
-            >
+            <AppMain {...rest} className={contextClassName} style={contentStyle}>
               {props.children}
             </AppMain>
             {footerDom}
