@@ -1,13 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
+import Dialog from '@/components/Dialog';
 import { getMenuList } from '@/api/menu';
 import { format } from '@/utils/dateUtils';
 import { formatStatusToLabel } from '@/utils/constantUtils';
+import { CoreTableActionType } from '@/typing';
+import MenuForm from './components/MenuForm';
 import './menu.scss';
 
 export interface MenuPageProps {
@@ -16,6 +19,11 @@ export interface MenuPageProps {
 
 const MenuPage: React.FC<MenuPageProps> = props => {
   const formRef: SearchProps<any>['formRef'] = useRef();
+  const actionRef = useRef<CoreTableActionType>();
+  const [row, setRow] = useState<any>();
+  const [selectRows, setSelectRows] = useState<any[]>();
+  const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
+  const [updateDialogVisible, handleUpdateDialogVisible] = useState<boolean>(false);
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
@@ -72,20 +80,39 @@ const MenuPage: React.FC<MenuPageProps> = props => {
       width: 80,
       fixed: 'right',
       render: (value, row, index) => {
-        return <a>编辑</a>;
+        return <a onClick={() => handleUpdateDialog(row)}>编辑</a>;
       },
       hideInSearch: true,
     },
   ];
+
+  const handleUpdateDialog = (value: any) => {
+    setRow(value);
+    handleUpdateDialogVisible(true);
+  };
+
+  const handleAdd = async (values: any) => {
+    console.log('创建菜单 ->入参:', values);
+  };
+
+  const handleUpdate = async (values: any) => {
+    console.log('修改菜单 -> 入参:', values);
+  };
 
   return (
     <GridContent>
       <AzTable
         columns={columns}
         formRef={formRef}
+        actionRef={actionRef}
+        rowSelection={{
+          onSelect: (record, selected, list) => {
+            setSelectRows(list);
+          },
+        }}
         toolbarLeftRender={props => (
           <React.Fragment>
-            <Button type="primary" icon={<PlusOutlined />}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateDialogVisible(true)}>
               新建
             </Button>
           </React.Fragment>
@@ -99,6 +126,12 @@ const MenuPage: React.FC<MenuPageProps> = props => {
         bordered
         sticky
       />
+      <Dialog title="添加菜单" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
+        <MenuForm onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
+      </Dialog>
+      <Dialog title="修改菜单" destroyOnClose visible={updateDialogVisible} onCancel={() => handleUpdateDialogVisible(false)}>
+        <MenuForm onCancel={() => handleUpdateDialogVisible(false)} onSubmit={handleUpdate} />
+      </Dialog>
     </GridContent>
   );
 };
