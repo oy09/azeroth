@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { Button, message } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu, message } from 'antd';
+import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
@@ -10,7 +10,7 @@ import FooterToolbar from '@/components/FooterToolbar';
 import { getMenuList } from '@/api/menu';
 import { format } from '@/utils/dateUtils';
 import { formatStatusToLabel } from '@/utils/constantUtils';
-import { CoreTableActionType } from '@/typing';
+import { CoreTableActionType, AntdMenuEvent } from '@/typing';
 import { createMenu, updateMenu, deleteMenu } from '@/api/menu';
 import { isNil } from 'lodash';
 import MenuForm from './components/MenuForm';
@@ -133,6 +133,26 @@ const MenuPage: React.FC<MenuPageProps> = props => {
     }
   };
 
+  const batchEvent: { [key: string]: Function } = {
+    enabled: () => {
+      console.log('批量启用');
+    },
+    disabled: () => {
+      console.log('批量禁用');
+    },
+  };
+
+  const handleBatchEvent = (e: AntdMenuEvent) => {
+    batchEvent[e.key] && batchEvent[e.key](e);
+  };
+
+  const batchMenu = (
+    <Menu onClick={handleBatchEvent}>
+      <Menu.Item key="enabled">启用</Menu.Item>
+      <Menu.Item key="disabled">禁用</Menu.Item>
+    </Menu>
+  );
+
   return (
     <GridContent>
       <AzTable
@@ -149,20 +169,6 @@ const MenuPage: React.FC<MenuPageProps> = props => {
             <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateDialogVisible(true)}>
               新建
             </Button>
-            {selectRows?.length > 0 && (
-              <div className="extra-tool">
-                <Button
-                  danger
-                  onClick={async () => {
-                    await handleRemove(selectRows);
-                    setSelectRows([]);
-                    actionRef.current?.reloadAndRest();
-                  }}
-                >
-                  批量删除({selectRows.length})
-                </Button>
-              </div>
-            )}
           </React.Fragment>
         )}
         request={async (params, sort, filter) => getMenuList(params)}
@@ -182,11 +188,23 @@ const MenuPage: React.FC<MenuPageProps> = props => {
             </div>
           }
         >
-          <Button danger type="primary">
+          <Button
+            danger
+            type="primary"
+            onClick={async () => {
+              await handleRemove(selectRows);
+              setSelectRows([]);
+              actionRef.current?.reloadAndRest();
+            }}
+          >
             批量删除
           </Button>
-          <Button type="primary">批量禁用</Button>
-          <Button type="primary">批量启用</Button>
+          <Dropdown overlay={batchMenu}>
+            <Button>
+              批量修改
+              <DownOutlined />
+            </Button>
+          </Dropdown>
         </FooterToolbar>
       )}
       <Dialog title="添加菜单" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
