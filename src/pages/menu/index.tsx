@@ -10,7 +10,7 @@ import { getMenuList } from '@/api/menu';
 import { format } from '@/utils/dateUtils';
 import { formatStatusToLabel } from '@/utils/constantUtils';
 import { CoreTableActionType } from '@/typing';
-import { createMenu, updateMenu } from '@/api/menu';
+import { createMenu, updateMenu, deleteMenu } from '@/api/menu';
 import { isNil } from 'lodash';
 import MenuForm from './components/MenuForm';
 import './menu.scss';
@@ -23,7 +23,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
   const formRef: SearchProps<any>['formRef'] = useRef();
   const actionRef = useRef<CoreTableActionType>();
   const [row, setRow] = useState<any>();
-  const [selectRows, setSelectRows] = useState<any[]>();
+  const [selectRows, setSelectRows] = useState<any[]>([]);
   const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
   const [updateDialogVisible, handleUpdateDialogVisible] = useState<boolean>(false);
   const columns: AzColumnType<any>[] = [
@@ -119,6 +119,19 @@ const MenuPage: React.FC<MenuPageProps> = props => {
     }
   };
 
+  const handleRemove = async (rows: any[]) => {
+    const hide = message.loading('正在删除中···');
+    try {
+      const ids = rows.map(item => item.id);
+      await deleteMenu({ ids });
+      hide();
+      message.success('删除成功');
+    } catch (reason) {
+      hide();
+      message.warn(`删除失败: ${reason.message}`);
+    }
+  };
+
   return (
     <GridContent>
       <AzTable
@@ -135,6 +148,20 @@ const MenuPage: React.FC<MenuPageProps> = props => {
             <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateDialogVisible(true)}>
               新建
             </Button>
+            {selectRows?.length > 0 && (
+              <div className="extra-tool">
+                <Button
+                  danger
+                  onClick={async () => {
+                    await handleRemove(selectRows);
+                    setSelectRows([]);
+                    actionRef.current?.reloadAndRest();
+                  }}
+                >
+                  批量删除({selectRows.length})
+                </Button>
+              </div>
+            )}
           </React.Fragment>
         )}
         request={async (params, sort, filter) => getMenuList(params)}

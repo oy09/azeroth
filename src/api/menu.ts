@@ -13,5 +13,5 @@ export const updateMenu = (id: string, data: any) => {
 };
 
 export const deleteMenu = (data: any) => {
-  return request.post('/admin-api/menu/delete');
+  return request.post('/admin-api/menu/delete', data);
 };
