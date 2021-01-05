@@ -3,6 +3,11 @@
  * @author ouyang
  */
 
+export interface Values {
+  value: number;
+  label: string;
+}
+
 // 状态
 export const STATUS = [
   { value: 0, label: '启用' },

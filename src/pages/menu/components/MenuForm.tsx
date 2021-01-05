@@ -1,7 +1,7 @@
 import styles from './MenuForm.scss';
 import React, { useRef, useState } from 'react';
 import { Form, Button, Input, Select, Row, Col } from 'antd';
-import { STATUS } from '@/utils/constant';
+import { STATUS, Values } from '@/utils/constant';
 
 export interface FormProps {
   onCancel?: () => void;
@@ -13,8 +13,10 @@ const MenuForm: React.FC<FormProps> = props => {
   const { initialValues, onCancel, onSubmit } = props;
   const formRef = useRef<any>();
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+  const [statusList] = useState<Values[]>(() => STATUS.filter(item => item.value !== 2));
 
   const defaultFormValue = {
+    status: 0,
     ...initialValues,
   };
 
@@ -22,9 +24,14 @@ const MenuForm: React.FC<FormProps> = props => {
     setSubmitLoading(true);
     onSubmit &&
       onSubmit(values).then(() => {
-        setSubmitLoading(false);
         formRef.current?.resetFields();
+        setSubmitLoading(false);
       });
+  };
+
+  const handleCancel = () => {
+    onCancel && onCancel();
+    formRef.current?.resetFields();
   };
 
   const twoFromOneRow = {
@@ -32,6 +39,8 @@ const MenuForm: React.FC<FormProps> = props => {
     lg: 8,
     xl: 6,
   };
+
+  console.log('123:', submitLoading);
 
   return (
     <div className={styles.menuForm}>
@@ -51,7 +60,7 @@ const MenuForm: React.FC<FormProps> = props => {
         </Form.Item>
         <Form.Item rules={[{ required: true, message: '请选择一个状态' }]} name="status" label="状态">
           <Select allowClear placeholder="请选择状态">
-            {STATUS.map(item => (
+            {statusList.map(item => (
               <Select.Option key={item.value} value={item.value}>
                 {item.label}
               </Select.Option>
@@ -70,11 +79,14 @@ const MenuForm: React.FC<FormProps> = props => {
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item name="url" label="超链接">
+          <Input allowClear placeholder="请输入超链接" />
+        </Form.Item>
         <Form.Item name="comment" label="备注">
-          <Input.TextArea allowClear placeholder="请输入备注" />
+          <Input.TextArea placeholder="请输入备注" />
         </Form.Item>
         <div className="tool">
-          <Button htmlType="reset" onClick={() => onCancel && onCancel()}>
+          <Button htmlType="reset" onClick={handleCancel}>
             取消
           </Button>
           <Button type="primary" htmlType="submit" loading={submitLoading}>

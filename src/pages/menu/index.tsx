@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
@@ -10,6 +10,8 @@ import { getMenuList } from '@/api/menu';
 import { format } from '@/utils/dateUtils';
 import { formatStatusToLabel } from '@/utils/constantUtils';
 import { CoreTableActionType } from '@/typing';
+import { createMenu, updateMenu } from '@/api/menu';
+import { isNil } from 'lodash';
 import MenuForm from './components/MenuForm';
 import './menu.scss';
 
@@ -49,7 +51,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
       dataIndex: 'status',
       align: 'center',
       width: 80,
-      renderText: value => (value ? formatStatusToLabel(value) : '-'),
+      renderText: value => (!isNil(value) ? formatStatusToLabel(value) : '-'),
     },
     {
       title: '备注',
@@ -93,10 +95,26 @@ const MenuPage: React.FC<MenuPageProps> = props => {
 
   const handleAdd = async (values: any) => {
     console.log('创建菜单 ->入参:', values);
+    try {
+      await createMenu(values);
+      handleCreateDialogVisible(false);
+      actionRef.current?.reload();
+      message.success('创建成功');
+    } catch (reason) {
+      message.warn(`创建菜单失败: ${reason.message || ''}`);
+    }
   };
 
   const handleUpdate = async (values: any) => {
     console.log('修改菜单 -> 入参:', values);
+    try {
+      await updateMenu(values.id, values);
+      handleUpdateDialogVisible(false);
+      actionRef.current?.reload();
+      message.success('修改成功');
+    } catch (reason) {
+      message.warn(`修改菜单失败: ${reason.message || ''}`);
+    }
   };
 
   return (
@@ -130,7 +148,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
         <MenuForm onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
       </Dialog>
       <Dialog title="修改菜单" destroyOnClose visible={updateDialogVisible} onCancel={() => handleUpdateDialogVisible(false)}>
-        <MenuForm onCancel={() => handleUpdateDialogVisible(false)} onSubmit={handleUpdate} />
+        <MenuForm initialValues={row} onCancel={() => handleUpdateDialogVisible(false)} onSubmit={handleUpdate} />
       </Dialog>
     </GridContent>
   );
