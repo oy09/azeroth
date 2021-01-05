@@ -139,6 +139,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     } catch (reason) {
       hide();
       message.warn(`删除失败: ${reason.message}`);
+      return false;
     }
   };
 
@@ -154,6 +155,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       message.success('提交成功');
     } catch (reason) {
       message.warn(`提交失败: ${reason.message || ''}`);
+      return false;
     }
   };
 
