@@ -6,6 +6,7 @@ import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
+import FooterToolbar from '@/components/FooterToolbar';
 import { getMenuList } from '@/api/menu';
 import { format } from '@/utils/dateUtils';
 import { formatStatusToLabel } from '@/utils/constantUtils';
@@ -173,6 +174,21 @@ const MenuPage: React.FC<MenuPageProps> = props => {
         bordered
         sticky
       />
+      {selectRows.length > 0 && (
+        <FooterToolbar
+          extra={
+            <div>
+              已选择 <a style={{ fontWeight: 600 }}>{selectRows.length}</a> 项 &nbsp;&nbsp;
+            </div>
+          }
+        >
+          <Button danger type="primary">
+            批量删除
+          </Button>
+          <Button type="primary">批量禁用</Button>
+          <Button type="primary">批量启用</Button>
+        </FooterToolbar>
+      )}
       <Dialog title="添加菜单" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
         <MenuForm onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
       </Dialog>
