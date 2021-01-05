@@ -2,10 +2,11 @@ import styles from './MenuForm.scss';
 import React, { useRef, useState } from 'react';
 import { Form, Button, Input, Select, Row, Col } from 'antd';
 import { STATUS, Values } from '@/utils/constant';
+import { ReturnSubmitState } from '@/typing';
 
 export interface FormProps {
   onCancel?: () => void;
-  onSubmit?: (values: any) => Promise<void>;
+  onSubmit?: (values: any) => Promise<ReturnSubmitState>;
   initialValues?: any;
 }
 
@@ -23,8 +24,8 @@ const MenuForm: React.FC<FormProps> = props => {
   const handleFinish = (values: any) => {
     setSubmitLoading(true);
     onSubmit &&
-      onSubmit(values).then(() => {
-        formRef.current?.resetFields();
+      onSubmit(values).then(state => {
+        state !== false && formRef.current?.resetFields();
         setSubmitLoading(false);
       });
   };

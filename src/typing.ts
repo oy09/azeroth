@@ -107,3 +107,8 @@ export interface AntdMenuEvent {
   item: React.ReactInstance;
   domEvent: React.MouseEvent<HTMLElement>;
 }
+
+/**
+ * 提交表单返回状态
+ */
+export type ReturnSubmitState = boolean | undefined | void;

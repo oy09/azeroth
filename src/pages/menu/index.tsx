@@ -102,6 +102,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
       message.success('创建成功');
     } catch (reason) {
       message.warn(`创建菜单失败: ${reason.message || ''}`);
+      return false;
     }
   };
 
@@ -114,6 +115,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
       message.success('修改成功');
     } catch (reason) {
       message.warn(`修改菜单失败: ${reason.message || ''}`);
+      return false;
     }
   };
 
