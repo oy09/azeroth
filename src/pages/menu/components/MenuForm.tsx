@@ -40,8 +40,6 @@ const MenuForm: React.FC<FormProps> = props => {
     xl: 6,
   };
 
-  console.log('123:', submitLoading);
-
   return (
     <div className={styles.menuForm}>
       <Form
