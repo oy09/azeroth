@@ -373,6 +373,7 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
   const pagination = mergePagination<T>(propsPagination, action);
 
   const rowSelection: TableRowSelection = {
+    selectedRowKeys,
     ...propsRowSelection,
     onChange: (keys, rows) => {
       if (propsRowSelection && propsRowSelection.onChange) {
