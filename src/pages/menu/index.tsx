@@ -10,7 +10,7 @@ import FooterToolbar from '@/components/FooterToolbar';
 import { format } from '@/utils/dateUtils';
 import { formatStatusToLabel } from '@/utils/constantUtils';
 import { CoreTableActionType, AntdMenuEvent } from '@/typing';
-import { createMenu, updateMenu, deleteMenu, getMenuList, enableItem, disaableItem } from '@/api/menu';
+import { createMenu, updateMenu, deleteMenu, getMenuList, enableItem, disaableItem } from '@/api/admin';
 import { isNil } from 'lodash';
 import MenuForm from './components/MenuForm';
 import './menu.scss';

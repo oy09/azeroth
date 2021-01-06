@@ -6,7 +6,7 @@ import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
-import { getTopicList, createTopic, updateTopic, deleteTopic } from '@/api/topic';
+import { getTopicList, createTopic, updateTopic, deleteTopic } from '@/api/admin';
 import { format } from '@/utils/dateUtils';
 import { CoreTableActionType } from '@/typing';
 import TopicFrom from './components/TopicForm';
