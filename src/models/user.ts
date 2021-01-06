@@ -1,6 +1,6 @@
 import { Effect, Reducer, history } from 'umi';
 import { message } from 'antd';
-import { login, LoginParamsType } from '@/api/login';
+import { login, LoginParamsType } from '@/api/auth';
 import { getUser, getMenu } from '@/api/user';
 import { encryptRSA } from '@/utils/secretUtils';
 import { ResponseData as Response } from '@/typing';
