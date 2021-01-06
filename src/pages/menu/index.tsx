@@ -7,11 +7,10 @@ import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
 import FooterToolbar from '@/components/FooterToolbar';
-import { getMenuList } from '@/api/menu';
 import { format } from '@/utils/dateUtils';
 import { formatStatusToLabel } from '@/utils/constantUtils';
 import { CoreTableActionType, AntdMenuEvent } from '@/typing';
-import { createMenu, updateMenu, deleteMenu } from '@/api/menu';
+import { createMenu, updateMenu, deleteMenu, getMenuList, enableItem, disaableItem } from '@/api/menu';
 import { isNil } from 'lodash';
 import MenuForm from './components/MenuForm';
 import './menu.scss';
@@ -94,6 +93,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
     handleUpdateDialogVisible(true);
   };
 
+  // 添加
   const handleAdd = async (values: any) => {
     console.log('创建菜单 ->入参:', values);
     try {
@@ -107,6 +107,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
     }
   };
 
+  // 修改
   const handleUpdate = async (values: any) => {
     console.log('修改菜单 -> 入参:', values);
     try {
@@ -120,6 +121,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
     }
   };
 
+  // 删除
   const handleRemove = async (rows: any[]) => {
     const hide = message.loading('正在删除中···');
     try {
@@ -127,18 +129,38 @@ const MenuPage: React.FC<MenuPageProps> = props => {
       await deleteMenu({ ids });
       hide();
       message.success('删除成功');
+      actionRef.current?.reloadAndRest();
     } catch (reason) {
       hide();
       message.warn(`删除失败: ${reason.message}`);
     }
   };
 
+  // 批量操作
   const batchEvent: { [key: string]: Function } = {
-    enabled: () => {
-      console.log('批量启用');
+    enabled: async () => {
+      const hide = message.loading('批量操作中···');
+      try {
+        const ids = selectRows.map(item => item.id);
+        await enableItem({ ids });
+        actionRef.current?.reloadAndRest();
+        hide();
+      } catch (reason) {
+        hide();
+        message.warn(`批量启用失败: ${reason.message || ''}`);
+      }
     },
-    disabled: () => {
-      console.log('批量禁用');
+    disabled: async () => {
+      const hide = message.loading('批量操作中···');
+      try {
+        const ids = selectRows.map(item => item.id);
+        await disaableItem({ ids });
+        actionRef.current?.reloadAndRest();
+        hide();
+      } catch (reason) {
+        hide();
+        message.warn(`批量禁用失败: ${reason.message || ''}`);
+      }
     },
   };
 
@@ -160,7 +182,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
         formRef={formRef}
         actionRef={actionRef}
         rowSelection={{
-          onSelect: (record, selected, list) => {
+          onChange: (_, list) => {
             setSelectRows(list);
           },
         }}
@@ -188,23 +210,22 @@ const MenuPage: React.FC<MenuPageProps> = props => {
             </div>
           }
         >
-          <Button
-            danger
-            type="primary"
-            onClick={async () => {
-              await handleRemove(selectRows);
-              setSelectRows([]);
-              actionRef.current?.reloadAndRest();
-            }}
-          >
-            批量删除
-          </Button>
-          <Dropdown overlay={batchMenu}>
+          <Dropdown arrow placement="topCenter" overlay={batchMenu}>
             <Button>
               批量修改
               <DownOutlined />
             </Button>
           </Dropdown>
+          <Button
+            danger
+            type="primary"
+            onClick={async () => {
+              await handleRemove(selectRows);
+              actionRef.current?.reloadAndRest();
+            }}
+          >
+            批量删除
+          </Button>
         </FooterToolbar>
       )}
       <Dialog title="添加菜单" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>

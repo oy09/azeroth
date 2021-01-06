@@ -15,3 +15,11 @@ export const updateMenu = (id: string, data: any) => {
 export const deleteMenu = (data: any) => {
   return request.post('/admin-api/menu/delete', data);
 };
+
+export const enableItem = (data: any) => {
+  return request.put('/admin-api/menu/enable', data);
+};
+
+export const disaableItem = (data: any) => {
+  return request.put('/admin-api/menu/disable', data);
+};
