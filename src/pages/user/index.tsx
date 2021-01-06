@@ -9,7 +9,7 @@ import FooterToolbar from '@/components/FooterToolbar';
 import Dialog from '@/components/Dialog';
 import { getUserList } from '@/api/admin';
 import { format } from '@/utils/dateUtils';
-import { formatGenderToLabel } from '@/utils/constantUtils';
+import { formatGenderToLabel, formatStatusToLabel, formatCreateTypeToLabel } from '@/utils/constantUtils';
 import './user.scss';
 
 export interface UserPageProps {
@@ -42,12 +42,14 @@ const UserPage: React.FC<UserPageProps> = props => {
       dataIndex: 'status',
       width: 100,
       align: 'center',
+      renderText: value => (!isNil(value) ? formatStatusToLabel(value) : '-'),
     },
     {
       title: '用户类型',
       dataIndex: 'createType',
       width: 120,
       align: 'center',
+      renderText: value => (!isNil(value) ? formatCreateTypeToLabel(value) : '-'),
     },
     {
       title: '手机号码',

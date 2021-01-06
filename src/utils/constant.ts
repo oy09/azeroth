@@ -31,3 +31,9 @@ export const GENDER = [
   { value: 1, label: '男' },
   { value: 2, label: '女' },
 ];
+
+// 用户创建/注册类型
+export const CREATE_TYPE = [
+  { value: 0, label: '管理平台' },
+  { value: 1, label: '微信小程序' },
+];
