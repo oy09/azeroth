@@ -17,7 +17,7 @@ const MenuForm: React.FC<FormProps> = props => {
   const [statusList] = useState<Values[]>(() => STATUS.filter(item => item.value !== 2));
 
   const defaultFormValue = {
-    status: 0,
+    status: 1,
     ...initialValues,
   };
 
