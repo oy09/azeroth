@@ -374,7 +374,12 @@ const AzTable = <T extends {}, U extends ParamsType>(props: TableProps<T, U>) =>
 
   const rowSelection: TableRowSelection = {
     ...propsRowSelection,
-    onChange: (keys, rows) => {},
+    onChange: (keys, rows) => {
+      if (propsRowSelection && propsRowSelection.onChange) {
+        propsRowSelection.onChange(keys, rows);
+      }
+      setSelectedRowsAndKeys(keys, rows);
+    },
   };
 
   // 全屏
