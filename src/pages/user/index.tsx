@@ -1,12 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import FooterToolbar from '@/components/FooterToolbar';
 import Dialog from '@/components/Dialog';
+import { getUserList } from '@/api/admin';
 import './user.scss';
-import { Button } from 'antd';
 
 export interface UserPageProps {
   className?: string;
@@ -106,6 +107,7 @@ const UserPage: React.FC<UserPageProps> = props => {
         search={{
           labelWidth: 120,
         }}
+        request={(params, sort, filter) => getUserList(params)}
         scroll={{ x: '100%' }}
         rowKey="id"
         bordered

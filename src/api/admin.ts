@@ -1,5 +1,9 @@
 import request from '@/utils/request';
 
+/**
+ * 菜单管理
+ */
+
 export const getMenuList = (params: any) => {
   return request.get('/admin-api/menu/getList', { params });
 };
@@ -16,13 +20,17 @@ export const deleteMenu = (data: any) => {
   return request.post('/admin-api/menu/delete', data);
 };
 
-export const enableItem = (data: any) => {
+export const enableMenu = (data: any) => {
   return request.put('/admin-api/menu/enable', data);
 };
 
-export const disaableItem = (data: any) => {
+export const disaableMenu = (data: any) => {
   return request.put('/admin-api/menu/disable', data);
 };
+
+/**
+ * 话题管理
+ */
 
 export const getTopicList = (params: any) => {
   return request.get('/admin-api/topic/getList', { params });
@@ -38,4 +46,32 @@ export const updateTopic = (id: string, data: any) => {
 
 export const deleteTopic = (data: any) => {
   return request.post('/admin-api/topic/deleteList', data);
+};
+
+/**
+ * 用户管理
+ */
+
+export const getUserList = (params: any) => {
+  return request.get('/admin-api/user/getList', { params });
+};
+
+export const createUser = (data: any) => {
+  //
+};
+
+export const updateUser = (data: any) => {
+  //
+};
+
+export const deleteUser = (data: any) => {
+  //
+};
+
+export const enableUser = (data: any) => {
+  //
+};
+
+export const disableUser = (data: any) => {
+  //
 };

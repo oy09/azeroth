@@ -10,7 +10,7 @@ import FooterToolbar from '@/components/FooterToolbar';
 import { format } from '@/utils/dateUtils';
 import { formatStatusToLabel } from '@/utils/constantUtils';
 import { CoreTableActionType, AntdMenuEvent } from '@/typing';
-import { createMenu, updateMenu, deleteMenu, getMenuList, enableItem, disaableItem } from '@/api/admin';
+import { createMenu, updateMenu, deleteMenu, getMenuList, enableMenu, disaableMenu } from '@/api/admin';
 import { isNil } from 'lodash';
 import MenuForm from './components/MenuForm';
 import './menu.scss';
@@ -142,7 +142,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
       const hide = message.loading('批量操作中···');
       try {
         const ids = selectRows.map(item => item.id);
-        await enableItem({ ids });
+        await enableMenu({ ids });
         actionRef.current?.reloadAndRest();
         hide();
       } catch (reason) {
@@ -154,7 +154,7 @@ const MenuPage: React.FC<MenuPageProps> = props => {
       const hide = message.loading('批量操作中···');
       try {
         const ids = selectRows.map(item => item.id);
-        await disaableItem({ ids });
+        await disaableMenu({ ids });
         actionRef.current?.reloadAndRest();
         hide();
       } catch (reason) {
