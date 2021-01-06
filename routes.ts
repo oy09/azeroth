@@ -69,7 +69,7 @@ const routes: AzRoute[] = [
         path: 'role',
         title: '角色管理',
         name: 'role',
-        icon: 'setting',
+        icon: 'userSwitch',
         component: '@/pages/role',
       },
       {
