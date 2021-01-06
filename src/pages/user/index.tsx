@@ -1,12 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { isNil } from 'lodash';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import FooterToolbar from '@/components/FooterToolbar';
 import Dialog from '@/components/Dialog';
 import { getUserList } from '@/api/admin';
+import { format } from '@/utils/dateUtils';
+import { formatGenderToLabel } from '@/utils/constantUtils';
 import './user.scss';
 
 export interface UserPageProps {
@@ -63,12 +66,14 @@ const UserPage: React.FC<UserPageProps> = props => {
       dataIndex: 'gender',
       width: 120,
       align: 'center',
+      renderText: value => (!isNil(value) ? formatGenderToLabel(value) : '-'),
     },
     {
       title: '创建时间',
       dataIndex: 'createdTime',
       width: 180,
       align: 'center',
+      renderText: value => (value ? format(value) : '-'),
     },
     {
       title: '操作',

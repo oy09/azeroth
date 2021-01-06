@@ -24,3 +24,10 @@ export const TOPIC_TYPE = [
   { value: 5, label: '房屋销售' },
   { value: 6, label: '二手闲置' },
 ];
+
+// 性别
+export const GENDER = [
+  { value: 0, label: '保密' },
+  { value: 1, label: '男' },
+  { value: 2, label: '女' },
+];
