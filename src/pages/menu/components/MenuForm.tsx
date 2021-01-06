@@ -69,7 +69,7 @@ const MenuForm: React.FC<FormProps> = props => {
         <Row gutter={20}>
           <Col span={12}>
             <Form.Item rules={[{ required: true, message: '请输入编码' }]} labelCol={twoFromOneRow} name="code" label="编码">
-              <Input allowClear placeholder="请输入编码" maxLength={10} />
+              <Input allowClear placeholder="请输入编码" maxLength={30} />
             </Form.Item>
           </Col>
           <Col span={12}>
