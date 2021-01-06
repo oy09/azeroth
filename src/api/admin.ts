@@ -57,15 +57,15 @@ export const getUserList = (params: any) => {
 };
 
 export const createUser = (data: any) => {
-  //
+  return request.post('/admin-api/user/create', data);
 };
 
 export const updateUser = (data: any) => {
-  //
+  return request.put(`/admin-api/user/update/${data.id}`, data);
 };
 
 export const deleteUser = (data: any) => {
-  //
+  return request.put('/admin-api/user/delete', data);
 };
 
 export const enableUser = (data: any) => {
