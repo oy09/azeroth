@@ -75,3 +75,23 @@ export const enableUser = (data: any) => {
 export const disableUser = (data: any) => {
   //
 };
+
+/**
+ * 角色管理
+ */
+
+export const getRoleList = (params: any) => {
+  return request.get('/admin-api/role/getList', { params });
+};
+
+export const createRole = (data: any) => {
+  return request.post('/admin-api/role/create', data);
+};
+
+export const updateRole = (id: string, data: any) => {
+  return request.put(`/admin-api/role/update/${id}`, data);
+};
+
+export const deleteRole = (data: any) => {
+  return request.put('/admin-api/role/delete', data);
+};

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import GridContent from '@/layouts/GridContent';
 import { AzTable } from '@/components/Table';
@@ -7,7 +7,9 @@ import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import FooterToolbar from '@/components/FooterToolbar';
 import Dialog from '@/components/Dialog';
+import { getRoleList, createRole, updateRole, deleteRole } from '@/api/admin';
 import { CoreTableActionType } from '@/typing';
+import RoleForm from './components/RoleForm';
 import './role.scss';
 
 export interface RolePageProps {
@@ -86,15 +88,16 @@ const RolePage: React.FC<RolePageProps> = props => {
   };
 
   const handleAdd = async (values: any) => {
-    //
+    console.log('添加角色:', values);
+    handleUpdateDialogVisible(false);
   };
 
   const handleUpdate = async (values: any) => {
-    //
+    console.log('修改角色:', values);
   };
 
   const handleRemove = async (values: any) => {
-    //
+    console.log('删除角色:', values);
   };
 
   return (
@@ -114,6 +117,8 @@ const RolePage: React.FC<RolePageProps> = props => {
         search={{
           labelWidth: 120,
         }}
+        request={(params, sort, filter) => getRoleList(params)}
+        onRequestError={reason => message.error(`查询角色列表失败: ${reason.message || ''}`)}
         scroll={{ x: '100%' }}
         rowKey="id"
         bordered
@@ -127,10 +132,10 @@ const RolePage: React.FC<RolePageProps> = props => {
         </FooterToolbar>
       )}
       <Dialog title="添加角色" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
-        1
+        <RoleForm onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
       </Dialog>
       <Dialog title="修改角色" destroyOnClose visible={updateDialogVisible} onCancel={() => handleUpdateDialogVisible(false)}>
-        2
+        <RoleForm initialValues={row} onCancel={() => handleUpdateDialogVisible(false)} onSubmit={handleUpdate} />
       </Dialog>
     </GridContent>
   );
