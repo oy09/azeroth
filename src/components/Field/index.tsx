@@ -11,13 +11,28 @@ import pickProps from './pickProps';
  * 多表单组件集合
  */
 
-export type FieldValueType = 'textarea' | 'date' | 'option' | 'text' | 'index' | 'code';
+export type FieldValueType =
+  | 'textarea'
+  | 'date'
+  | 'option'
+  | 'text'
+  | 'index'
+  | 'select'
+  | 'checkbox'
+  | 'radio'
+  | 'switch'
+  | 'code';
+
+export type FieldValueObjectType = {
+  type: 'progress' | 'money' | 'percent';
+  status: 'normal' | 'active' | 'success' | 'exception' | undefined;
+};
 
 export type FieldMode = 'read' | 'update';
 
 export type FieldTextType = string | number | React.ReactText[] | null;
 
-export type AzFormFieldProps = AzSchema<string, FieldValueType, AzFormItemProps>;
+export type AzFormFieldProps = AzSchema<string, FieldValueType | FieldValueObjectType, AzFormItemProps>;
 
 export interface AzFormItemProps extends FormItemProps {
   placeholder?: string;

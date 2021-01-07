@@ -48,19 +48,52 @@ export interface CoreTableActionType {
   cleanSelected: () => void;
 }
 
+type AzSchemaValueEnumMap = Map<React.ReactText, AzSchemaValueEnumType | React.ReactNode>;
+
+type AzSchemaValueEnumType = {
+  /**
+   * @name 展示文本
+   */
+  text: React.ReactNode;
+  /**
+   * @name 状态
+   */
+  status: string;
+  /**
+   * @name 自定义颜色
+   */
+  color?: string;
+  /**
+   * @name 是否禁用
+   */
+  disabled?: boolean;
+};
+
+type AzSchemaValueEnumObj = {
+  [key: string]: AzSchemaValueEnumType | React.ReactNode;
+};
+
 /**
  * 公共组件模型
  */
 export type AzSchema<T = unknown, U = string, Extra = unknown> = {
   key?: React.ReactText;
   dataIndex?: string | number | (string | number)[];
-  // 渲染模式
-  valueType?: ((entity: T) => U) | U;
-  // 值枚举
-  valueEnum?: any;
-  // 标题组件
+  /**
+   * 选择渲染模式
+   */
+  valueType?: ((entity: T, type: any) => U) | U;
+  /**
+   * @name 映射值类型
+   */
+  valueEnum?: AzSchemaValueEnumObj;
+  /**
+   * @name 标题组件
+   */
   title?: ((schema: AzSchema<T, U, Extra>, type: string, dom: React.ReactNode) => React.ReactNode) | React.ReactNode;
-  // 展示提示信息
+  /**
+   * @name 展示提示信息 hover提示信息
+   */
   tooltip?: string;
   render?: (
     text: string,
@@ -71,9 +104,17 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
   ) => React.ReactNode;
   renderFormItem?: (...args: any[]) => React.ReactNode;
   renderText?: (text: string, record: T, index: number, action: UseReqeustTableAction<ResponseData<any>>) => any;
-  // 表单属性
+  /**
+   * @name 表单属性
+   */
   fieldProps?: any;
+  /**
+   * @name 请求服务器接口抽象
+   */
   request?: any;
+  /**
+   * @name 请求服务器的参数
+   */
   params?: {
     [key: string]: any;
   };
