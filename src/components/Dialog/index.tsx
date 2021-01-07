@@ -8,7 +8,7 @@ const Dialog: React.FC<DialogProps> = props => {
   const { title, visible, onCancel, width } = props;
 
   return (
-    <Modal title={title} width={width || '70%'} visible={visible} onCancel={onCancel} footer={null} {...props}>
+    <Modal destroyOnClose title={title} width={width || '70%'} visible={visible} onCancel={onCancel} footer={null} {...props}>
       {props.children}
     </Modal>
   );
