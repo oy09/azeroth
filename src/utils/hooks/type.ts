@@ -23,5 +23,7 @@ export interface RequestOptions extends Omit<AxiosRequestConfig, 'adapter'> {
   dataSerializer?: (data: any) => string;
   // 请求错误回调
   onRequestError?: (e: Error) => void;
+  // 默认数据
+  defaultData?: any;
   [key: string]: any;
 }
