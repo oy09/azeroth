@@ -95,3 +95,23 @@ export const updateRole = (id: string, data: any) => {
 export const deleteRole = (data: any) => {
   return request.put('/admin-api/role/delete', data);
 };
+
+/**
+ * 菜单树管理
+ */
+
+export const getMenuTreeList = (params?: any) => {
+  return request.get('/admin-api/menu-tree/getList');
+};
+
+export const createMenuTree = (data: any) => {
+  return request.post('/admin-api/menu-tree/create', data);
+};
+
+export const updateMenuTree = (data: any) => {
+  return request.put('/admin-api/menu-tree/update', data);
+};
+
+export const deleteMenuTree = (data: any) => {
+  return request.put('/admin-api/menu-tree/delete', data);
+};
