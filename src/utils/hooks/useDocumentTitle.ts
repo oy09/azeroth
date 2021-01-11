@@ -12,11 +12,10 @@ export interface Info {
  * @param defaultTitle 应用默认标题
  */
 const useDocumentTitle = (option: Info, defaultTitle: string) => {
-  const titleText =
-    typeof option.pageName === 'string' ? option.title : defaultTitle;
+  const titleText = typeof option.pageName === 'string' ? option.title : defaultTitle;
   useEffect(() => {
     if (titleText) {
-      console.log('title:', titleText);
+      // console.log('title:', titleText);
       document.title = titleText;
     }
   }, [option.title]);

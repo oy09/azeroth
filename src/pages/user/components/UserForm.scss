@@ -1,0 +1,21 @@
+@charset "utf-8";
+
+.UserForm {
+  :global {
+    .tool {
+      text-align: right;
+
+      .ant-btn {
+        margin: 0 12px;
+      }
+
+      .atn-btn:first-child {
+        margin-left: 0;
+      }
+
+      .ant-btn:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

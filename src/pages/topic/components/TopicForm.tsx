@@ -4,10 +4,11 @@ import { Form, Button, Select, Switch, Input, Row, Col, DatePicker } from 'antd'
 import { first } from 'lodash';
 import { STATUS, TOPIC_TYPE } from '@/utils/constant';
 import { firstTimeFromDay, toUnix } from '@/utils/dateUtils';
+import { ReturnSubmitState } from '@/typing';
 
 export interface FormProps {
   onCancel?: () => void;
-  onSubmit?: (values: any) => Promise<void>;
+  onSubmit?: (values: any) => Promise<ReturnSubmitState>;
   initialValues?: any;
   itemVisibleMap?: {
     [key: string]: boolean;
@@ -33,8 +34,8 @@ const TopicForm: React.FC<FormProps> = props => {
     }
     setSubmitLoading(true);
     onSubmit &&
-      onSubmit(values).then(() => {
-        formRef.current?.resetFields();
+      onSubmit(values).then(state => {
+        state !== false && formRef.current?.resetFields();
         setSubmitLoading(false);
       });
   };

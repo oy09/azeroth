@@ -6,7 +6,7 @@ import { AzTable } from '@/components/Table';
 import { AzColumnType } from '@/components/Table/Table';
 import { SearchProps } from '@/components/Table/Query';
 import Dialog from '@/components/Dialog';
-import { getTopicList, createTopic, updateTopic, deleteTopic } from '@/api/topic';
+import { getTopicList, createTopic, updateTopic, deleteTopic } from '@/api/admin';
 import { format } from '@/utils/dateUtils';
 import { CoreTableActionType } from '@/typing';
 import TopicFrom from './components/TopicForm';
@@ -23,7 +23,6 @@ const TopicPage: React.FC<TopicPageProps> = props => {
   const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
   const [updateDialogVisible, handleUpdateDialogVisible] = useState<boolean>(false);
   const [selectRows, setSelectRows] = useState<any[]>([]);
-  // const { dataSource } = useRequest('/api/topic', { params: { page: 1, pageSize: 20 } })
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
@@ -139,6 +138,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
     } catch (reason) {
       hide();
       message.warn(`删除失败: ${reason.message}`);
+      return false;
     }
   };
 
@@ -154,6 +154,7 @@ const TopicPage: React.FC<TopicPageProps> = props => {
       message.success('提交成功');
     } catch (reason) {
       message.warn(`提交失败: ${reason.message || ''}`);
+      return false;
     }
   };
 

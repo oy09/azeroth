@@ -1,5 +1,9 @@
 import request from '@/utils/request';
 
+/**
+ * 授权登录接口
+ */
+
 export interface LoginParamsType {
   account: string;
   password: string;

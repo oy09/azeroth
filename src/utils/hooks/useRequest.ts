@@ -8,7 +8,7 @@ import windowsFocusSubscribe from './windowFocus';
 import { ResponseData } from '@/typing';
 
 export interface RequestAction<T> {
-  dataSource?: ResponseData<T>;
+  dataSource: ResponseData<T>;
   loading: boolean;
   execute: (...args: any[]) => Promise<any>;
   reload: () => Promise<any>;
@@ -47,7 +47,7 @@ const deafultOptions: RequestOptions = {
  * 屏幕聚焦自动请求
  * @param service
  */
-const useRequest = <T, P extends any>(url: string, options: RequestOptions = {}): RequestAction<T> => {
+const useRequest = <T, P = any>(url: string, options: RequestOptions = {}): RequestAction<T> => {
   const { onRequestError, windowsFocus = false, focusTimespan = 5000 } = options;
   const globalOptions = useContext(RequestConfigContext);
   const finalOptions = {
@@ -56,7 +56,7 @@ const useRequest = <T, P extends any>(url: string, options: RequestOptions = {})
     ...options,
   };
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<ResponseData<T>>();
+  const [data, setData] = useState<ResponseData<T>>(options.defaultData);
   const [axiosToken, setAxiosToken] = useState<CancelTokenSource>();
   const [instance] = useState<AxiosInstance>(() => {
     const { requestInterceptors, responseInterceptors } = options;

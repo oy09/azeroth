@@ -3,10 +3,15 @@
  * @author ouyang
  */
 
+export interface Values {
+  value: number;
+  label: string;
+}
+
 // 状态
 export const STATUS = [
-  { value: 0, label: '启用' },
-  { value: 1, label: '禁用' },
+  { value: 0, label: '禁用' },
+  { value: 1, label: '启用' },
   { value: 2, label: '删除' },
 ];
 
@@ -18,4 +23,17 @@ export const TOPIC_TYPE = [
   { value: 4, label: '求职信息' },
   { value: 5, label: '房屋销售' },
   { value: 6, label: '二手闲置' },
+];
+
+// 性别
+export const GENDER = [
+  { value: 0, label: '保密' },
+  { value: 1, label: '男' },
+  { value: 2, label: '女' },
+];
+
+// 用户创建/注册类型
+export const CREATE_TYPE = [
+  { value: 0, label: '管理平台' },
+  { value: 1, label: '微信小程序' },
 ];

@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+.MenuTreePage {
+  :global {
+    .tool {
+      margin-bottom: 14px;
+    }
+
+    .tree-view {
+      padding: 14px 0;
+      background: #fff;
+    }
+
+    .tree-node {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .operate {
+      & > a {
+        padding: 0 10px;
+        text-align: center;
+      }
+    }
+  }
+}

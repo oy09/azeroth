@@ -81,7 +81,7 @@ export const mergePagination = <T>(
     pageSize,
     onChange: (newPage, newPageSize) => {
       if (current !== newPage || pageSize !== newPageSize) {
-        action.setPageInfo({ pageSize, page: newPage });
+        action.setPageInfo({ pageSize: newPageSize, page: newPage });
       }
 
       const { onChange } = pagination as TablePaginationConfig;

@@ -59,11 +59,25 @@ const routes: AzRoute[] = [
         component: '@/pages/menu',
       },
       {
+        path: 'menuTree',
+        title: '菜单树管理',
+        name: 'menuTree',
+        icon: 'apartment',
+        component: '@/pages/menuTree',
+      },
+      {
         path: 'account',
         title: '用户管理',
         name: 'account',
         icon: 'user',
         component: '@/pages/user',
+      },
+      {
+        path: 'role',
+        title: '角色管理',
+        name: 'role',
+        icon: 'userSwitch',
+        component: '@/pages/role',
       },
       {
         path: 'config',
