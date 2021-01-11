@@ -34,7 +34,7 @@ const deafultOptions: RequestOptions = {
  * 屏幕聚焦自动请求
  * @param service
  */
-const useRequest = <T = any, P = any>(url: RequestUrlType, options: RequestOptions = {}): RequestAction<T> => {
+const useRequest = <T = any, P = any>(url: RequestUrlType, options: RequestOptions<ResponseData<T>> = {}): RequestAction<T> => {
   const { onRequestError, windowsFocus = false, focusTimespan = 5000, formatResult } = options;
   const globalOptions = useContext(RequestConfigContext);
   const [loading, setLoading] = useState<boolean>(false);

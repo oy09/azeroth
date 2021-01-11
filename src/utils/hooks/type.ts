@@ -29,12 +29,12 @@ export type RequestType =
   | 'transformResponse'
   | 'baseURL';
 
-export interface RequestOptions extends Pick<AxiosRequestConfig, RequestType> {
+export interface RequestOptions<T = any> extends Pick<AxiosRequestConfig, RequestType> {
   url?: string;
   defaultData?: any;
   windowsFocus?: boolean;
   focusTimespan?: number;
   manualRequest?: boolean;
-  formatResult?: (data?: any) => any;
+  formatResult?: (data: T) => any;
   onRequestError?: (reason: Error) => void;
 }
