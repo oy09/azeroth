@@ -38,7 +38,7 @@ const useRequest = <T = any, P = any>(url: RequestUrlType, options: RequestOptio
   const { onRequestError, windowsFocus = false, focusTimespan = 5000, formatResult } = options;
   const globalOptions = useContext(RequestConfigContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<ResponseData<T>>(options.defaultData);
+  const [data, setData] = useState<T>(options.defaultData);
   const [axiosToken, setAxiosToken] = useState<CancelTokenSource>();
   const [instance] = useState<Pick<AxiosInstance, 'request'>>(() => {
     if (typeof url === 'string') {
