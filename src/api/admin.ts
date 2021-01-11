@@ -1,3 +1,7 @@
+/**
+ * 系统级Api
+ */
+
 import request from '@/utils/request';
 
 /**
