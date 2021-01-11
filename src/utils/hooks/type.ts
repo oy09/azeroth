@@ -3,6 +3,8 @@ import { AxiosResponse, AxiosRequestConfig } from 'axios';
 export type OnInterceptorsSuccess<T> = (value: T) => T | Promise<T>;
 export type OnInterceptorsFailure<T> = (value: Error) => any;
 
+export type RequestUrlType = string | ((option: RequestOptions) => Promise<any> | void | undefined | null);
+
 /**
  * 请求选项
  * 优化点
@@ -14,28 +16,25 @@ export type OnInterceptorsFailure<T> = (value: Error) => any;
  * 2. responseFulfiled项拦截器，做二次封装，方法传入AxiosResponse，但返回只返回数据（responseData），返回的数据由useRequest处理
  * responseFulfiled: (AxiosResponse) => ResponseData
  */
-export interface RequestOptions extends Omit<AxiosRequestConfig, 'adapter'> {
-  /**
-   * 请求拦截器
-   */
-  requestInterceptors?: [
-    {
-      onFulfiled?: OnInterceptorsSuccess<AxiosRequestConfig>;
-      onRejected?: OnInterceptorsFailure<Error>;
-    },
-  ];
-  // 响应拦截器
-  responseInterceptors?: [
-    {
-      onFulfiled?: OnInterceptorsSuccess<AxiosResponse>;
-      onRejected?: OnInterceptorsFailure<Error>;
-    },
-  ];
-  // 提交数据序列化
-  dataSerializer?: (data: any) => string;
-  // 请求错误回调
-  onRequestError?: (e: Error) => void;
-  // 默认数据
+
+export type RequestType =
+  | 'cancelToken'
+  | 'params'
+  | 'method'
+  | 'timeout'
+  | 'withCredentials'
+  | 'validateStatus'
+  | 'paramsSerializer'
+  | 'transformRequest'
+  | 'transformResponse'
+  | 'baseURL';
+
+export interface RequestOptions extends Pick<AxiosRequestConfig, RequestType> {
+  url?: string;
   defaultData?: any;
-  [key: string]: any;
+  windowsFocus?: boolean;
+  focusTimespan?: number;
+  manualRequest?: boolean;
+  formatResult?: (data?: any) => any;
+  onRequestError?: (reason: Error) => void;
 }
