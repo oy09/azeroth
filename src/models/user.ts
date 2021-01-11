@@ -60,7 +60,7 @@ const Usermodel: UserModelType = {
       }
     },
     *getMenu() {
-      console.log('请求菜单接口');
+      // console.log('请求菜单接口');
     },
     *login(action, { call }) {
       const payload = { ...action.payload } as LoginParamsType;

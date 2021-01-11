@@ -22,26 +22,17 @@ export type HeaderProps = Partial<PureSettings> & {
   rightContentRender?: WithFalse<(props: HeaderProps) => React.ReactNode>;
   // 需要面包屑数据
   breadcrumb?: BreadcrumbItemType[];
-  breadcrumbItemRender?: (
-    value: BreadcrumbItemType,
-    index: number,
-  ) => React.ReactNode;
+  breadcrumbItemRender?: (value: BreadcrumbItemType, index: number) => React.ReactNode;
 };
 
 class Header extends React.PureComponent<HeaderProps, any> {
   renderContent() {
-    const {
-      prefixCls,
-      contentRender,
-      rightContentRender,
-      breadcrumb,
-      breadcrumbItemRender,
-    } = this.props;
+    const { prefixCls, contentRender, rightContentRender, breadcrumb, breadcrumbItemRender } = this.props;
     const headerCls = `${prefixCls}-global-header`;
     const rightCls = `${prefixCls}-global-header-right`;
     const navCls = `${prefixCls}-global-header-nav`;
 
-    console.log('header content props:', this.props);
+    // console.log('header content props:', this.props);
 
     let defaultDom = (
       <div style={{ background: '#fff' }} className={headerCls}>
@@ -50,31 +41,19 @@ class Header extends React.PureComponent<HeaderProps, any> {
             <Breadcrumb>
               {breadcrumb.map((item, index) => {
                 if (breadcrumbItemRender) {
-                  return (
-                    <Breadcrumb.Item key={item.path}>
-                      {breadcrumbItemRender(item, index)}
-                    </Breadcrumb.Item>
-                  );
+                  return <Breadcrumb.Item key={item.path}>{breadcrumbItemRender(item, index)}</Breadcrumb.Item>;
                 }
                 if (!item.hiddenBreadcrumb && item.name) {
                   if (isUrl(item.path)) {
                     return (
                       <Breadcrumb.Item key={item.path}>
-                        <a
-                          href={item.path}
-                          target={item.target || '_blank'}
-                          title={item.name}
-                        >
+                        <a href={item.path} target={item.target || '_blank'} title={item.name}>
                           {item.name}
                         </a>
                       </Breadcrumb.Item>
                     );
                   } else if (index === breadcrumb.length - 1) {
-                    return (
-                      <Breadcrumb.Item key={item.path}>
-                        {item.name}
-                      </Breadcrumb.Item>
-                    );
+                    return <Breadcrumb.Item key={item.path}>{item.name}</Breadcrumb.Item>;
                   } else if (item.isParent) {
                     if (item.needRedirect) {
                       return (
@@ -83,11 +62,7 @@ class Header extends React.PureComponent<HeaderProps, any> {
                         </Breadcrumb.Item>
                       );
                     }
-                    return (
-                      <Breadcrumb.Item key={item.path}>
-                        {item.name}
-                      </Breadcrumb.Item>
-                    );
+                    return <Breadcrumb.Item key={item.path}>{item.name}</Breadcrumb.Item>;
                   } else {
                     return (
                       <Breadcrumb.Item key={item.path}>
@@ -100,12 +75,8 @@ class Header extends React.PureComponent<HeaderProps, any> {
             </Breadcrumb>
           </div>
         )}
-        <div style={{ flex: '1 1 0%' }}>
-          {contentRender && contentRender(this.props)}
-        </div>
-        <div className={rightCls}>
-          {rightContentRender && rightContentRender(this.props)}
-        </div>
+        <div style={{ flex: '1 1 0%' }}>{contentRender && contentRender(this.props)}</div>
+        <div className={rightCls}>{rightContentRender && rightContentRender(this.props)}</div>
       </div>
     );
 
@@ -113,12 +84,7 @@ class Header extends React.PureComponent<HeaderProps, any> {
   }
 
   render() {
-    const {
-      style: styleProps,
-      className: classNameProps,
-      prefixCls,
-      headerHeight,
-    } = this.props;
+    const { style: styleProps, className: classNameProps, prefixCls, headerHeight } = this.props;
 
     const baseClassName = `${prefixCls}-header`;
     const classNames = classnames(classNameProps, baseClassName);
