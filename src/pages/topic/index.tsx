@@ -23,7 +23,6 @@ const TopicPage: React.FC<TopicPageProps> = props => {
   const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
   const [updateDialogVisible, handleUpdateDialogVisible] = useState<boolean>(false);
   const [selectRows, setSelectRows] = useState<any[]>([]);
-  // const { dataSource } = useRequest('/api/topic', { params: { page: 1, pageSize: 20 } })
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
