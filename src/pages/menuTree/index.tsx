@@ -62,7 +62,7 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
   };
 
   const handleAdd = async (values: any) => {
-    return null;
+    return undefined;
   };
 
   const titleRender = (data: any) => {
