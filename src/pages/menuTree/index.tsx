@@ -6,8 +6,15 @@ import Dialog from '@/components/Dialog';
 import { getMenuTreeList } from '@/api/admin';
 import { getMenuList } from '@/api';
 import useRequest from '@/utils/hooks/useRequest';
+import { STATUS_MAP } from '@/utils/constant';
 import MenuTreeForm from './components/MenuTreeForm';
 import styles from './menuTree.scss';
+
+export interface FormValues {
+  status: number;
+  parentId?: string;
+  children: FormValues[];
+}
 
 export interface MenuTreePageProps {
   //
@@ -61,8 +68,20 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
     handleDialogVisible(true);
   };
 
-  const handleAdd = async (values: any) => {
-    return undefined;
+  const handleAdd = async (values: FormValues) => {
+    const next = {
+      ...values,
+      children: values.children.map((id, index) => {
+        return {
+          id,
+          index,
+          parentId: values.parentId,
+          status: STATUS_MAP.ENABLE,
+        };
+      }),
+    };
+    console.log('add form values:', next);
+    handleDialogVisible(false);
   };
 
   const titleRender = (data: any) => {
@@ -89,7 +108,7 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
     );
   };
 
-  console.log('menuList:', menuList);
+  // console.log('menuList:', menuList);
 
   return (
     <GridContent className={styles.MenuTreePage}>

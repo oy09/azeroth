@@ -8,11 +8,17 @@ export interface Values {
   label: string;
 }
 
+export const STATUS_MAP = {
+  DISABLE: 0,
+  ENABLE: 1,
+  DELETE: 2,
+};
+
 // 状态
 export const STATUS = [
-  { value: 0, label: '禁用' },
-  { value: 1, label: '启用' },
-  { value: 2, label: '删除' },
+  { value: STATUS_MAP.DISABLE, label: '禁用' },
+  { value: STATUS_MAP.ENABLE, label: '启用' },
+  { value: STATUS_MAP.DELETE, label: '删除' },
 ];
 
 // 话题类型
