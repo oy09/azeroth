@@ -109,11 +109,11 @@ export const getMenuTreeList = (params?: any) => {
 };
 
 export const createMenuTree = (data: any) => {
-  return request.post('/admin-api/menu-tree/create', data);
+  return request.post('/admin-api/menu-tree/createLocalMenu', data);
 };
 
 export const updateMenuTree = (data: any) => {
-  return request.put('/admin-api/menu-tree/update', data);
+  return request.put('/admin-api/menu-tree/updateLocalMenu', data);
 };
 
 export const deleteMenuTree = (data: any) => {

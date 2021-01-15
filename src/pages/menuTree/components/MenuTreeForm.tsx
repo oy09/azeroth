@@ -7,9 +7,15 @@ import { ReturnSubmitState } from '@/typing';
 
 export interface FormProps {
   onCancel?: () => void;
-  onSubmit?: (values: any) => Promise<ReturnSubmitState>;
+  onSubmit?: (values: FormValues) => Promise<ReturnSubmitState>;
   initialValues?: any;
   menuList?: Values[];
+}
+
+export interface FormValues {
+  status: number;
+  id?: string;
+  children: FormValues[];
 }
 
 const MenuTreeForm: React.FC<FormProps> = props => {
@@ -27,13 +33,22 @@ const MenuTreeForm: React.FC<FormProps> = props => {
     onCancel && onCancel();
   };
 
-  const handleFinish = (values: any) => {
-    console.log('form values:', values);
+  const handleFinish = (values: FormValues) => {
     setSubmitLoading(true);
     onSubmit &&
       onSubmit(values).then(() => {
         setSubmitLoading(false);
       });
+  };
+
+  const renderSelect = (data: Values[] = []) => {
+    return data.map(item => {
+      return (
+        <Select.Option key={item.value} value={item.value}>
+          {item.label}
+        </Select.Option>
+      );
+    });
   };
 
   return (
@@ -51,33 +66,29 @@ const MenuTreeForm: React.FC<FormProps> = props => {
       >
         <Form.Item name="status" label="状态" rules={[{ required: true, message: '请选择状态' }]}>
           <Select allowClear placeholder="请选择状态">
-            {statusList.map(item => (
-              <Select.Option key={item.value} value={item.value}>
-                {item.label}
-              </Select.Option>
-            ))}
+            {renderSelect(statusList)}
           </Select>
         </Form.Item>
-        <Form.Item name="parentId" label="根节点">
-          <Select placeholder="请选择节点"></Select>
-        </Form.Item>
+        {defaultValues.id && (
+          <Form.Item name="id" label="根节点">
+            <Select allowClear disabled placeholder="请选择节点">
+              {renderSelect(menuList)}
+            </Select>
+          </Form.Item>
+        )}
         <Form.Item name="children" label="子节点" rules={[{ required: true, message: '至少选择一个节点' }]}>
           <Select allowClear mode="multiple" placeholder="请选择节点">
-            {menuList?.map(item => (
-              <Select.Option key={item.value} value={item.value}>
-                {item.label}
-              </Select.Option>
-            ))}
+            {renderSelect(menuList)}
           </Select>
         </Form.Item>
-        <div className="tool">
-          <Button htmlType="reset" onClick={handleCancel}>
+        <Form.Item className="tool">
+          <Button key="reset" onClick={handleCancel}>
             取消
           </Button>
-          <Button type="primary" htmlType="submit" loading={submitloading}>
+          <Button key="submit" type="primary" htmlType="submit" loading={submitloading}>
             确定
           </Button>
-        </div>
+        </Form.Item>
       </Form>
     </div>
   );
