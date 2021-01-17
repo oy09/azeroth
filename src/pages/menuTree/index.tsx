@@ -68,9 +68,10 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
 
   // 添加菜单关系
   const handleAdd = async (values: FormValues) => {
+    const { id: parentId, children } = values;
     const next = {
-      ...values,
-      children: values.children.map((id, index) => {
+      parentId,
+      children: children.map((id, index) => {
         return {
           id,
         };
@@ -104,8 +105,17 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
   };
 
   // 修改
-  const handleUpdate = async (values: any) => {
-    console.log('添加菜单项:', values);
+  const handleUpdate = async (values: FormValues) => {
+    const { id: parentId, children } = values;
+    const next = {
+      parentId,
+      children: children.map(id => {
+        return {
+          id,
+        };
+      }),
+    };
+    console.log('添加菜单项:', next);
   };
 
   const titleRender = (data: any) => {
