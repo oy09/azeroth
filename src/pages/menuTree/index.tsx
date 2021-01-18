@@ -61,7 +61,9 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
     setNode({
       ...row,
       id: row.key,
+      children: row.children.map((item: any) => item.key),
     });
+    console.log('row:', row);
     handleUpdateDialogVisible(true);
   };
 
