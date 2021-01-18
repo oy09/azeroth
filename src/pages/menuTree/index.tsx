@@ -6,7 +6,6 @@ import Dialog from '@/components/Dialog';
 import { getMenuTreeList, createMenuTree, updateMenuTree, deleteMenuTree } from '@/api/admin';
 import { getMenuList } from '@/api';
 import useRequest from '@/utils/hooks/useRequest';
-import { STATUS_MAP } from '@/utils/constant';
 import MenuTreeForm, { FormValues } from './components/MenuTreeForm';
 import styles from './menuTree.scss';
 
@@ -115,7 +114,14 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
         };
       }),
     };
-    console.log('添加菜单项:', next);
+    console.log('update form values:', next);
+    try {
+      await updateMenuTree(next);
+      handleUpdateDialogVisible(false);
+      reload();
+    } catch (reason) {
+      message.warn(`编辑失败: ${reason.message || ''}`);
+    }
   };
 
   const titleRender = (data: any) => {
