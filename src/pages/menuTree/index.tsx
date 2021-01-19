@@ -140,12 +140,16 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
   };
 
   const treeRender = (data?: any[], loading?: boolean) => {
-    if (!data || (data.length === 0 && loading === false)) {
-      return <Empty />;
+    if (!data || data.length === 0) {
+      return (
+        <Spin spinning={loading}>
+          <Empty />
+        </Spin>
+      );
     }
     return (
       <Spin spinning={loading}>
-        <Tree draggable blockNode titleRender={titleRender} treeData={data || []} />
+        <Tree blockNode defaultExpandAll draggable={false} titleRender={titleRender} treeData={data} />
       </Spin>
     );
   };
