@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Tree, Button, Spin, Empty, message } from 'antd';
+import { flatMapDeep } from 'lodash';
 import { TreeProps } from 'antd/lib/tree/Tree';
 import GridContent from '@/layouts/GridContent';
 import Dialog from '@/components/Dialog';
@@ -149,7 +150,7 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
     }
     return (
       <Spin spinning={loading}>
-        <Tree blockNode defaultExpandAll draggable={false} titleRender={titleRender} treeData={data} />
+        <Tree blockNode defaultExpandAll autoExpandParent draggable={false} titleRender={titleRender} treeData={data} />
       </Spin>
     );
   };
