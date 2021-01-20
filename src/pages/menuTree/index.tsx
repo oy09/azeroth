@@ -68,6 +68,15 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
     handleUpdateDialogVisible(true);
   };
 
+  const handleRootUpdateDialog = (row: any) => {
+    console.log('row:', row);
+    setNode({
+      id: undefined,
+      children: row.map((item: any) => item.key),
+    });
+    handleUpdateDialogVisible(true);
+  };
+
   // 添加菜单关系
   const handleAdd = async (values: FormValues) => {
     const { id: parentId, children } = values;
@@ -157,6 +166,9 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
       <div className="tool">
         <Button type="primary" onClick={() => handleDialogVisible(true)}>
           新增
+        </Button>
+        <Button type="primary" onClick={() => handleRootUpdateDialog(treeList)}>
+          编辑
         </Button>
       </div>
       <div className="tree-view">{treeRender(treeList, loading)}</div>
