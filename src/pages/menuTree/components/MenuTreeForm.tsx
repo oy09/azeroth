@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { Form, Button, Select } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { STATUS, Values } from '@/utils/constant';
+import DragSelect from '@/components/DragSelect';
 import { ReturnSubmitState } from '@/typing';
 
 export interface FormProps {
@@ -77,9 +78,9 @@ const MenuTreeForm: React.FC<FormProps> = props => {
           </Form.Item>
         )}
         <Form.Item name="children" label="子节点" rules={[{ required: true, message: '至少选择一个节点' }]}>
-          <Select allowClear mode="multiple" placeholder="请选择节点">
+          <DragSelect allowClear mode="multiple" placeholder="请选择节点">
             {renderSelect(menuList)}
-          </Select>
+          </DragSelect>
         </Form.Item>
         <Form.Item className="tool">
           <Button key="reset" onClick={handleCancel}>
