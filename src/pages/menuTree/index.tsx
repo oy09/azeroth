@@ -93,17 +93,14 @@ const MenuTreePage: React.FC<MenuTreePageProps> = props => {
 
   // 删除菜单
   const handleDelete = async (values: any) => {
-    const data = {
-      ids: [values.key],
-    };
     try {
-      await deleteMenuTree(data);
+      await deleteMenuTree(values.key);
       reload();
     } catch (reason) {
       message.warn(`删除失败: ${reason.message || ''}`);
       return false;
     }
-    console.log('delete menus:', data);
+    console.log('delete menus:', values);
   };
 
   // 修改

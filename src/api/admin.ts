@@ -116,6 +116,6 @@ export const updateMenuTree = (data: any) => {
   return request.put('/admin-api/menu-tree/updateLocalMenu', data);
 };
 
-export const deleteMenuTree = (data: any) => {
-  return request.put('/admin-api/menu-tree/delete', data);
+export const deleteMenuTree = (id: string) => {
+  return request.put(`/admin-api/menu-tree/delete/${id}`);
 };
