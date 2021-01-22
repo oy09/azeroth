@@ -8,8 +8,10 @@ import { AzColumnType } from '@/components/Table/Table';
 import FooterToolbar from '@/components/FooterToolbar';
 import Dialog from '@/components/Dialog';
 import { getUserList, createUser, updateUser, deleteUser } from '@/api/admin';
+import { getRoleList } from '@/api';
 import { format } from '@/utils/dateUtils';
 import { formatGenderToLabel, formatStatusToLabel, formatCreateTypeToLabel } from '@/utils/constantUtils';
+import useRequest from '@/utils/hooks/useRequest';
 import { CoreTableActionType } from '@/typing';
 import UserForm from './components/UserForm';
 import './user.scss';
@@ -25,6 +27,18 @@ const UserPage: React.FC<UserPageProps> = props => {
   const [selectRow, setSelectRow] = useState<any[]>([]);
   const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
   const [updateDialogVisible, handleUpdateDialogVisible] = useState<boolean>(false);
+  const { dataSource: roleList } = useRequest<any[]>(() => getRoleList(), {
+    defaultData: [],
+    formatResult: response => {
+      return response.data.map(item => {
+        return {
+          value: item.id,
+          label: item.name,
+        };
+      });
+    },
+  });
+
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
@@ -184,10 +198,15 @@ const UserPage: React.FC<UserPageProps> = props => {
         </FooterToolbar>
       )}
       <Dialog title="添加用户" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
-        <UserForm onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
+        <UserForm roleList={roleList} onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
       </Dialog>
       <Dialog title="编辑用户" destroyOnClose visible={updateDialogVisible} onCancel={() => handleUpdateDialogVisible(false)}>
-        <UserForm initialValue={row} onCancel={() => handleUpdateDialogVisible(false)} onSubmit={handleUpdate} />
+        <UserForm
+          roleList={roleList}
+          initialValue={row}
+          onCancel={() => handleUpdateDialogVisible(false)}
+          onSubmit={handleUpdate}
+        />
       </Dialog>
     </GridContent>
   );

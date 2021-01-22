@@ -2,10 +2,11 @@ import styles from './UserForm.scss';
 import React, { useRef, useState } from 'react';
 import { Form, Input, Select, Button } from 'antd';
 import { ReturnSubmitState } from '@/typing';
-import { STATUS, CREATE_TYPE, GENDER } from '@/utils/constant';
+import { STATUS, CREATE_TYPE, GENDER, Values } from '@/utils/constant';
 
 export interface FormProps {
   initialValue?: any;
+  roleList?: any;
   onCancel?: () => void;
   onSubmit?: (values: any) => Promise<ReturnSubmitState>;
 }
@@ -16,12 +17,23 @@ const UserForm: React.FC<FormProps> = props => {
   const formRef = useRef<any>();
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [statusList] = useState(() => STATUS.filter(item => item.value !== 2));
+  const [roleList] = useState(() => props.roleList || []);
 
   const defaultFormValue = {
     status: 1,
     gender: 0,
     type: 0,
     ...initialValue,
+  };
+
+  const renderSelect = (data: Values[] = []) => {
+    return data.map(item => {
+      return (
+        <Select.Option key={item.value} value={item.value}>
+          {item.label}
+        </Select.Option>
+      );
+    });
   };
 
   const handleFinish = (values: any) => {
@@ -56,11 +68,7 @@ const UserForm: React.FC<FormProps> = props => {
         </Form.Item>
         <Form.Item name="status" label="状态" rules={[{ required: true, message: '请选择一个状态' }]}>
           <Select allowClear placeholder="请选择状态">
-            {statusList.map(item => (
-              <Select.Option key={item.value} value={item.value}>
-                {item.label}
-              </Select.Option>
-            ))}
+            {renderSelect(statusList)}
           </Select>
         </Form.Item>
         <Form.Item name="account" label="用户名" rules={[{ required: true, message: '请输入用户名' }]}>
@@ -71,11 +79,7 @@ const UserForm: React.FC<FormProps> = props => {
         </Form.Item>
         <Form.Item name="createType" label="创建类型" rules={[{ required: true, message: '请选择一个类型' }]}>
           <Select allowClear placeholder="请选择用户注册类型">
-            {CREATE_TYPE.map(item => (
-              <Select.Option key={item.value} value={item.value}>
-                {item.label}
-              </Select.Option>
-            ))}
+            {renderSelect(CREATE_TYPE)}
           </Select>
         </Form.Item>
         <Form.Item name="nick" label="昵称" rules={[{ required: true, message: '请输入昵称' }]}>
@@ -84,11 +88,12 @@ const UserForm: React.FC<FormProps> = props => {
         <Form.Item label="头像" hidden></Form.Item>
         <Form.Item name="gender" label="性别" rules={[{ required: true, message: '请选择一个性别' }]}>
           <Select allowClear placeholder="请选择性别">
-            {GENDER.map(item => (
-              <Select.Option key={item.value} value={item.value}>
-                {item.label}
-              </Select.Option>
-            ))}
+            {renderSelect(GENDER)}
+          </Select>
+        </Form.Item>
+        <Form.Item name="roleList" label="角色">
+          <Select allowClear mode="multiple" placeholder="请选择角色">
+            {renderSelect(roleList)}
           </Select>
         </Form.Item>
         <div className="tool">
