@@ -4,5 +4,9 @@
 import request from '@/utils/request';
 
 export const getMenuList = () => {
-  return request.get('api/menu/list');
+  return request.get('/api/base/getMenuList');
+};
+
+export const getRoleList = () => {
+  return request.get('/api/base/getRoleList');
 };
