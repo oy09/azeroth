@@ -64,6 +64,7 @@ const solution2 = (value: number): string => {
     numberStr.splice(1, 0, insertNum + '');
     return numberStr.join('');
   }
+  // 寻找比它大的
   if (numberStr[0] === '-') {
     numberStr.splice(1, 0, insertNum + '');
     if (parseInt(numberStr.join('')) < -8000) {
@@ -73,6 +74,8 @@ const solution2 = (value: number): string => {
   }
   const result: string[] = [];
   let tag = true;
+
+  // 寻找比它小的
   numberStr.forEach(i => {
     if (tag && parseInt(i) < insertNum) {
       result.push(insertNum + '');
