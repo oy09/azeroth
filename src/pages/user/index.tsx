@@ -68,9 +68,10 @@ const UserPage: React.FC<UserPageProps> = props => {
     },
     {
       title: '角色列表',
-      dataIndex: 'roleList',
+      dataIndex: 'roles',
       width: 200,
       align: 'center',
+      renderText: (value: any[]) => (value && value.length ? value.map(item => item.name).join(',') : '-'),
     },
     {
       title: '昵称',

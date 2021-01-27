@@ -103,7 +103,7 @@ export type AzSchema<T = unknown, U = string, Extra = unknown> = {
     schema: AzSchema<T, U, Extra>,
   ) => React.ReactNode;
   renderFormItem?: (...args: any[]) => React.ReactNode;
-  renderText?: (text: string, record: T, index: number, action: UseReqeustTableAction<ResponseData<any>>) => any;
+  renderText?: (text: any, record: T, index: number, action: UseReqeustTableAction<ResponseData<any>>) => any;
   /**
    * @name 表单属性
    */
