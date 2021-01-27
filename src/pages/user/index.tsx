@@ -113,7 +113,10 @@ const UserPage: React.FC<UserPageProps> = props => {
   ];
 
   const handleUpdateDialog = (row: any) => {
-    setRow(row);
+    setRow({
+      ...row,
+      roleList: row.roles.map((item: any) => item.id),
+    });
     handleUpdateDialogVisible(true);
   };
 
