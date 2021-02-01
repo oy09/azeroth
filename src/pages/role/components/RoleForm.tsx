@@ -1,6 +1,7 @@
 import styles from './RoleForm.scss';
 import React, { useState } from 'react';
-import { Form, Button, Input, Select } from 'antd';
+import { Form, Button, Input, Select, Tree } from 'antd';
+import { TreeProps } from 'antd/lib/tree/Tree';
 import { STATUS } from '@/utils/constant';
 import { ReturnSubmitState } from '@/typing';
 
@@ -11,6 +12,8 @@ export interface FormProps {
   itemVisibleMap?: {
     [key: string]: boolean;
   };
+  // 菜单树源数据
+  menuList?: any[];
 }
 
 const RoleForm: React.FC<FormProps> = props => {
@@ -18,6 +21,7 @@ const RoleForm: React.FC<FormProps> = props => {
 
   const [statusList] = useState(() => STATUS.filter(item => item.value !== 2));
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+  const [menuList] = useState(() => props.menuList || []);
 
   const initialValue = {
     status: 1,
@@ -31,8 +35,6 @@ const RoleForm: React.FC<FormProps> = props => {
         setSubmitLoading(false);
       });
   };
-
-  console.log('loading:', submitLoading);
 
   return (
     <div className={styles.RoleForm}>
@@ -66,6 +68,9 @@ const RoleForm: React.FC<FormProps> = props => {
         </Form.Item>
         <Form.Item name="comment" label="备注">
           <Input.TextArea allowClear placeholder="角色备注信息" />
+        </Form.Item>
+        <Form.Item name="menus" label="菜单列表">
+          <Tree treeData={menuList} autoExpandParent defaultExpandAll checkable />
         </Form.Item>
         <div className="tool">
           <Button htmlType="reset" onClick={() => onCancel && onCancel()}>

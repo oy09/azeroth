@@ -9,8 +9,11 @@ import { SearchProps } from '@/components/Table/Query';
 import FooterToolbar from '@/components/FooterToolbar';
 import Dialog from '@/components/Dialog';
 import { getRoleList, createRole, updateRole, deleteRole } from '@/api/admin';
+import { getMenuTree } from '@/api';
 import { formatStatusToLabel } from '@/utils/constantUtils';
 import { format } from '@/utils/dateUtils';
+import { transformAntdMenuTreeData } from '@/utils/componenttUtils';
+import useRequest from '@/utils/hooks/useRequest';
 import { CoreTableActionType } from '@/typing';
 import RoleForm from './components/RoleForm';
 import './role.scss';
@@ -26,6 +29,19 @@ const RolePage: React.FC<RolePageProps> = props => {
   const [selectRows, setSelectRows] = useState<any[]>([]);
   const [createDialogVisible, handleCreateDialogVisible] = useState<boolean>(false);
   const [updateDialogVisible, handleUpdateDialogVisible] = useState<boolean>(false);
+  const { dataSource: menuList } = useRequest<any[]>(() => getMenuTree(), {
+    defaultData: [],
+    formatResult: response => {
+      const option = {
+        key: 'menuId',
+        title: 'name',
+        children: 'children',
+      };
+      const data = transformAntdMenuTreeData(response.data, option);
+      return data;
+    },
+  });
+
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
@@ -134,6 +150,8 @@ const RolePage: React.FC<RolePageProps> = props => {
     }
   };
 
+  console.log('menuList:', menuList);
+
   return (
     <GridContent>
       <AzTable
@@ -170,7 +188,7 @@ const RolePage: React.FC<RolePageProps> = props => {
         </FooterToolbar>
       )}
       <Dialog title="添加角色" visible={createDialogVisible} onCancel={() => handleCreateDialogVisible(false)}>
-        <RoleForm onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
+        <RoleForm menuList={menuList} onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
       </Dialog>
       <Dialog title="修改角色" destroyOnClose visible={updateDialogVisible} onCancel={() => handleUpdateDialogVisible(false)}>
         <RoleForm initialValues={row} onCancel={() => handleUpdateDialogVisible(false)} onSubmit={handleUpdate} />
