@@ -97,10 +97,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     siderWidth = 208,
     contentStyle,
     onCollapse: propsOnCollapse,
+    menuDataRender,
     ...rest
   } = props;
   // console.log('basicLayout props:', props);
   const { routes = [] } = route;
+
+  const menu = undefined;
+  const formatMessage = (value: string) => value;
 
   const [collapsed, onCollapse] = useMergedState<boolean>(false, {
     value: props.collapsed,
@@ -109,7 +113,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
   const [menuInfoData] = useMergedState<{
     menuData?: MenuDataItem[];
     breadcrumbMap?: Map<string, MenuDataItem>;
-  }>(() => getMenuData(routes));
+  }>(() => getMenuData(routes || [], menu, formatMessage, menuDataRender));
 
   const hasLeftPadding = !isMobile;
 

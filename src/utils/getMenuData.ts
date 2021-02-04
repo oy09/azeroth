@@ -3,16 +3,10 @@ import { Route, MenuDataItem } from '@/typing';
 const defaultFilterMenuData = (data: MenuDataItem[] = []): MenuDataItem[] => {
   return data
     .filter((item: MenuDataItem) => {
-      return (
-        item && (item.title || item.children) && !item.hidden && !item.redirect
-      );
+      return item && (item.title || item.children) && !item.hidden && !item.redirect;
     })
     .map((item: MenuDataItem) => {
-      if (
-        item.children &&
-        Array.isArray(item.children) &&
-        item.children.some((child: MenuDataItem) => child && child.title)
-      ) {
+      if (item.children && Array.isArray(item.children) && item.children.some((child: MenuDataItem) => child && child.title)) {
         const children = defaultFilterMenuData(item.children);
         if (children.length) {
           return {
@@ -29,9 +23,7 @@ const defaultFilterMenuData = (data: MenuDataItem[] = []): MenuDataItem[] => {
     .filter(item => item);
 };
 
-const transformToBreadcrumbMap = (
-  routes: Route[],
-): Map<string, MenuDataItem> => {
+const transformToBreadcrumbMap = (routes: Route[]): Map<string, MenuDataItem> => {
   const arrayToMap = (routes: Route[], initialValue = new Map()) => {
     return routes.reduce((acc, current) => {
       if (!current.hidden && current.title) {
@@ -47,12 +39,17 @@ const transformToBreadcrumbMap = (
   return arrayToMap(routes, new Map());
 };
 
-const getMenuData = (routes: Route[] = []) => {
+const getMenuData = (
+  routes: Route[] = [],
+  menu?: { local?: boolean },
+  formatMessage?: (value: string) => string,
+  menuDataRender?: (menuData: MenuDataItem[]) => MenuDataItem[],
+) => {
   const data = defaultFilterMenuData(routes);
   const breadcrumbMap = transformToBreadcrumbMap(routes);
 
   return {
-    menuData: data,
+    menuData: menuDataRender ? menuDataRender(data) : data,
     // 面包屑数据
     breadcrumbMap: breadcrumbMap,
   };

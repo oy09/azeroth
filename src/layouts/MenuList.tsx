@@ -2,6 +2,7 @@ import React, { CSSProperties, useState, useEffect } from 'react';
 import { Menu } from 'antd';
 import { Link } from 'umi';
 import Icon, { createFromIconfontCN } from '@ant-design/icons';
+import { PageLoading } from '@ant-design/pro-layout';
 import { MenuProps, MenuMode } from 'antd/es/menu';
 import { MenuTheme } from 'antd/es/menu/MenuContext';
 import { WithFalse, MenuDataItem, RouterTypes, Route } from '@/typing';
@@ -25,6 +26,7 @@ export interface MenuListProps extends Partial<RouterTypes<Route>> {
   mode?: MenuMode;
   menuData?: MenuDataItem[];
   postMenuData?: (menuData?: MenuDataItem[]) => MenuDataItem[];
+  loading?: boolean;
   isMobile?: boolean;
 }
 
@@ -49,19 +51,16 @@ const MenuList: React.FC<MenuListProps> = props => {
   } = props;
   const [menuUtils] = useState(() => new MenuUtil(props));
 
-  const [selectedKeys, setSelectedKeys] = useMergedState<string[] | undefined>(
-    [],
-    {
-      value: propsSelectedKeys,
-      onChange: onSelect
-        ? keys => {
-            if (onSelect && keys) {
-              onSelect(keys);
-            }
+  const [selectedKeys, setSelectedKeys] = useMergedState<string[] | undefined>([], {
+    value: propsSelectedKeys,
+    onChange: onSelect
+      ? keys => {
+          if (onSelect && keys) {
+            onSelect(keys);
           }
-        : undefined,
-    },
-  );
+        }
+      : undefined,
+  });
 
   useEffect(() => {
     const keys = getSelectedMenuKeys(location.pathname || '/', menuData || []);
@@ -71,9 +70,18 @@ const MenuList: React.FC<MenuListProps> = props => {
       }
     });
 
-    return () =>
-      window.cancelAnimationFrame && window.cancelAnimationFrame(animationId);
+    return () => window.cancelAnimationFrame && window.cancelAnimationFrame(animationId);
   }, [location.pathname, collapsed]);
+
+  if (props.loading) {
+    return <PageLoading />;
+  }
+
+  const finalData = props.postMenuData ? props.postMenuData(menuData) : menuData;
+
+  if (finalData && finalData?.length < 1) {
+    return null;
+  }
 
   return (
     <Menu
@@ -87,7 +95,7 @@ const MenuList: React.FC<MenuListProps> = props => {
       defaultOpenKeys={[]}
       {...menuProps}
     >
-      {menuUtils.getNavMenu(menuData, false)}
+      {menuUtils.getNavMenu(finalData, false)}
     </Menu>
   );
 };
@@ -101,13 +109,7 @@ const getIcon = (icon: string | React.ReactNode): React.ReactNode => {
   if (typeof icon === 'string' && icon !== '') {
     if (isUrl(icon) || isImg(icon)) {
       // 外链资源
-      return (
-        <Icon
-          component={() => (
-            <img src={icon} alt="icon" className="az-siderbar-menu-icon" />
-          )}
-        />
-      );
+      return <Icon component={() => <img src={icon} alt="icon" className="az-siderbar-menu-icon" />} />;
     } else if (icon.startsWith('icon-')) {
       // 本地资源
       return <IconFont type={icon} />;
@@ -151,11 +153,7 @@ class MenuUtil {
         </Menu.SubMenu>
       );
     }
-    return (
-      <Menu.Item key={data.key || data.path}>
-        {this.getMenuItemPath(data, isChildren)}
-      </Menu.Item>
-    );
+    return <Menu.Item key={data.key || data.path}>{this.getMenuItemPath(data, isChildren)}</Menu.Item>;
   }
 
   getMenuItemPath(data: MenuDataItem, isChildren: boolean) {
@@ -189,11 +187,6 @@ class MenuUtil {
   }
 
   hasChildren(data: MenuDataItem) {
-    return (
-      data &&
-      !data.hidden &&
-      data?.children &&
-      data.children.some(child => child && !child.hidden && !!child.name)
-    );
+    return data && !data.hidden && data?.children && data.children.some(child => child && !child.hidden && !!child.name);
   }
 }
