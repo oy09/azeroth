@@ -26,11 +26,11 @@ const TopicPage: React.FC<TopicPageProps> = props => {
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
-      tooltip: '查看数据数量和位置',
+      dataIndex: '_no',
       hideInSearch: true,
       width: 50,
       align: 'center',
-      render: (text, record, index) => index + 1,
+      renderText: (text, record, index) => index + 1,
     },
     {
       title: 'id',

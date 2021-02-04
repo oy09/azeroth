@@ -43,9 +43,10 @@ const UserPage: React.FC<UserPageProps> = props => {
     {
       title: '序号',
       hideInSearch: true,
+      dataIndex: '_no',
       width: 50,
       align: 'center',
-      render: (_1, _2, index) => index + 1,
+      renderText: (_1, _2, index) => index + 1,
     },
     {
       title: '用户名',

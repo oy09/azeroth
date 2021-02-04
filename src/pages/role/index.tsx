@@ -45,6 +45,7 @@ const RolePage: React.FC<RolePageProps> = props => {
   const columns: AzColumnType<any>[] = [
     {
       title: '序号',
+      dataIndex: '_no',
       hideInSearch: true,
       width: 50,
       align: 'center',

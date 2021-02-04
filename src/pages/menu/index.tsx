@@ -30,9 +30,10 @@ const MenuPage: React.FC<MenuPageProps> = props => {
     {
       title: '序号',
       hideInSearch: true,
+      dataIndex: '_no',
       width: 50,
       align: 'center',
-      render: (text, record, index) => index + 1,
+      renderText: (text, record, index) => index + 1,
     },
     {
       title: '编码',
