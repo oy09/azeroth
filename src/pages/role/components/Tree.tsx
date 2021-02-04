@@ -26,7 +26,7 @@ const Tree: React.FC<TreeProps> = props => {
     autoExpandParent: true,
     defaultExpandAll: true,
     checkable: true,
-    selectedKeys: value,
+    checkedKeys: value,
     onCheck: handleCheck,
     ...props,
   };
