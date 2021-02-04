@@ -150,8 +150,6 @@ const RolePage: React.FC<RolePageProps> = props => {
     }
   };
 
-  console.log('menuList:', menuList);
-
   return (
     <GridContent>
       <AzTable
@@ -191,7 +189,12 @@ const RolePage: React.FC<RolePageProps> = props => {
         <RoleForm menuList={menuList} onCancel={() => handleCreateDialogVisible(false)} onSubmit={handleAdd} />
       </Dialog>
       <Dialog title="修改角色" destroyOnClose visible={updateDialogVisible} onCancel={() => handleUpdateDialogVisible(false)}>
-        <RoleForm initialValues={row} onCancel={() => handleUpdateDialogVisible(false)} onSubmit={handleUpdate} />
+        <RoleForm
+          menuList={menuList}
+          initialValues={row}
+          onCancel={() => handleUpdateDialogVisible(false)}
+          onSubmit={handleUpdate}
+        />
       </Dialog>
     </GridContent>
   );

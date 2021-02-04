@@ -1,9 +1,9 @@
 import styles from './RoleForm.scss';
 import React, { useState } from 'react';
-import { Form, Button, Input, Select, Tree } from 'antd';
-import { TreeProps } from 'antd/lib/tree/Tree';
+import { Form, Button, Input, Select } from 'antd';
 import { STATUS } from '@/utils/constant';
 import { ReturnSubmitState } from '@/typing';
+import Tree from './Tree';
 
 export interface FormProps {
   onCancel?: () => void;
@@ -69,8 +69,8 @@ const RoleForm: React.FC<FormProps> = props => {
         <Form.Item name="comment" label="备注">
           <Input.TextArea allowClear placeholder="角色备注信息" />
         </Form.Item>
-        <Form.Item name="menus" label="菜单列表">
-          <Tree treeData={menuList} autoExpandParent defaultExpandAll checkable />
+        <Form.Item name="menuList" label="菜单列表">
+          <Tree treeData={menuList} />
         </Form.Item>
         <div className="tool">
           <Button htmlType="reset" onClick={() => onCancel && onCancel()}>
