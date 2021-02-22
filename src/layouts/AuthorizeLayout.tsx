@@ -21,6 +21,8 @@ const Layout: React.FC<LayoutProps> = props => {
   const [ready, setReady] = useState<boolean>(false);
   const dispatch = useDispatch();
   const currentUser = useSelector<GlobalStoreType, CurrentUser>(state => state.user.current as CurrentUser);
+  // 服务端数据，通过getMenu 处理
+  const currentMenu = useSelector<GlobalStoreType, any>(state => state.user.menus);
   const loading = useSelector<GlobalStoreType, boolean>(state => state.loading.models.user);
 
   // 判断是否登录
@@ -83,6 +85,7 @@ const Layout: React.FC<LayoutProps> = props => {
       breadcrumbRender={breadcrumbDataRender}
       rightContentRender={() => <RightContent />}
       onCollapse={handleCollapse}
+      menuDataRender={value => value}
     >
       {props.children}
     </BasicLayout>

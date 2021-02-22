@@ -59,8 +59,13 @@ const Usermodel: UserModelType = {
         console.warn('请求用户接口失败:', reason);
       }
     },
-    *getMenu() {
-      // console.log('请求菜单接口');
+    *getMenu(action, { put, call }) {
+      try {
+        const response: Response<any> = yield call(getMenu);
+        yield put({ type: 'updateMenu', payload: response.data });
+      } catch (reason) {
+        console.warn('请求菜单列表失败:', reason);
+      }
     },
     *login(action, { call }) {
       const payload = { ...action.payload } as LoginParamsType;
